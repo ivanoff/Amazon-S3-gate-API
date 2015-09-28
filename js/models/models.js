@@ -76,6 +76,7 @@ exports.registerModel = function ( modelName, modelObject ) {
 // Usage:
 //      myLibrary.showModels();
 exports.showModels = function( params ) {
+    if ( typeof( params ) === 'undefined' ) params = { displayEverything: false };
     if ( ! this.registeredModels ) {
         console.log( 'There is no registered models' );
     } else {

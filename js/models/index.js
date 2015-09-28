@@ -44,9 +44,15 @@ myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { name  : "Alex Barda
 console.log( 'Check 4:' );
 myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
 
-
 myLibrary.dispose();
+
+myLibrary.registerModel( "user2", {
+  id:   { type: "uuid", required: true },        // property “id” must be uuid
+  name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
+} );
 
 myLibrary.showModels();
 
+//myLibrary.dispose();
 
+myLibrary.showModels();
