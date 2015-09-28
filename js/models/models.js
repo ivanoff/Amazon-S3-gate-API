@@ -151,7 +151,7 @@ myLibrary.validate = function( modelName, entity ) {
 }
 
 myLibrary.dispose = function() {
-    delete( this.registeredModels );
+    this.registeredModels = null;
     console.log( 'All modules are removed' );
 }
 
