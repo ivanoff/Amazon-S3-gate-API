@@ -58,7 +58,7 @@ var Types = {
 var myLibrary = Object.create( Types );
 
 myLibrary.errors = [];
-myLibrary.registeredModels = Object.create({});
+myLibrary.registeredModels = [];
 
 myLibrary.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
@@ -151,7 +151,7 @@ myLibrary.validate = function( modelName, entity ) {
 }
 
 myLibrary.dispose = function() {
-    this.registeredModels = null;
+    this.registeredModels = [];
     console.log( 'All modules are removed' );
 }
 
