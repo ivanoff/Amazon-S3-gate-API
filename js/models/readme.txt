@@ -23,8 +23,6 @@ If you need add new type, please follow to "Add type" article.
 
 Module description
 -------------
-myLibrary contains "Types" properties with description to validate of each type ( "min" and 
-"max" properties, add "check" method to check validation ).
 Methods and properties of myLibrary:
   registeredModels( modelName, modelObject ) - register model modelName with modelObject
   registeredModels - list of registered models
@@ -35,16 +33,18 @@ Methods and properties of myLibrary:
   errors - list of errors
   showErrors() - show all errors and clear list of errors
   consoleTrueOrError() - show true or list of errors in console
+"Types" properties located in types.js and included description to validate of each type 
+( "min" and "max" properties, add "check" method to check validation ).
 
 
 Add type
 -------------
-If you need add new type, you can do it in Types variable. Be shure to add "check" method 
+If you need add new type, you can do it in Types variable in types.js. Be shure to add "check" method 
 to check new inserted type. Also you can add "min" and "max" properties to check length.
 
 For example, new type "password". It type must contains minimum 4 chars: at least one lower 
 and one upper case, digit and special chars.
-Add code below to models.js in Types variable:
+Add code below to types.js in list property:
 password : {
     min   : 4,         // string.min Minimum length of the string
     max   : Infinity,  // string.max Maximum length of the string
@@ -163,7 +163,9 @@ There is no registered models
 
 File list
 -------------
-models.js   script with library and examples
+index.js    script with examples
+models.js   script with library
+types.js    list of types
 readme.txt  this readme
 
 

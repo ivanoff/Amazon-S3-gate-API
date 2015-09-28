@@ -1,44 +1,12 @@
 
-// All types defenition
-var Types = {
-    uuid : { // uuid methods
-        // uuid.check returns true if parameter looks like UUID, false otherwise 
-        check : function( uuid ){
-            return uuid && uuid.match(/^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/);
-        },
-    },
-    string : { // string properties and methods
-        min   : 0,        // string.min Minimum length of the string
-        max   : Infinity, // string.max Maximum length of the string
-        check : function( string ){ // string.check check sting type and size
-            return (( typeof string === 'string' || string instanceof String )
-                    && string.length >= this.min 
-                    && string.length <= this.max );
-        },
-    },
-    number : { // number properties and methods
-        min   : -Infinity,   // number.min Minimum number value
-        max   : Infinity,    // number.max Maximum number value
-        check : function( number ){ // number.check check number type and size
-            return typeof number === 'number' 
-                    && number >= this.min 
-                    && number <= this.max;
-        },
-    },
-    date : { // date methods
-        check : function( date ){  // date.check Maximum length of the string
-            return date instanceof Date && typeof date.getMonth === 'function';
-        },
-    },
-}
+// Get all types defenition from types.js
+var Types = require( './types' );
+exports.types = Types.list;
 
+exports.errors = [];
+exports.registeredModels = [];
 
-var myLibrary = Object.create( Types );
-
-myLibrary.errors = [];
-myLibrary.registeredModels = [];
-
-myLibrary.registerModel = function ( modelName, modelObject ) {
+exports.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
     if ( ! modelName ) {
         throw new Error('Name is undefined');
@@ -58,27 +26,27 @@ myLibrary.registerModel = function ( modelName, modelObject ) {
         if ( !o[key].type ) {
             throw new Error('No field "type" in key "'+ key +'" in model "'+ modelName +'"');
         }
-        if ( ! this[ o[key].type ] ) {
+        if ( ! this.types[ o[key].type ] ) {
             throw new Error('No type "'+ o[key].type +'" in Types: key "'+ key +'" in model "'+ modelName+'"');
         }
         // check for range in new object
         if ( typeof o[key].min !== 'undefined' 
-                && typeof this[ o[key].type ].min !== 'undefined' 
-                && this[ o[key].type ].min > o[key].min ) {
+                && typeof this.types[ o[key].type ].min !== 'undefined' 
+                && this.types[ o[key].type ].min > o[key].min ) {
             throw new Error('In model "'+ modelName +'", key "'+ key +'" minimal value ( '+ o[key].min +' ) is less than acceptable minimal in Types'
-                            + ' ( ' + this[ o[key].type ].min + ' )' );
+                            + ' ( ' + this.types[ o[key].type ].min + ' )' );
         }
         if ( typeof o[key].max !== 'undefined' 
-                && typeof this[ o[key].type ].max !== 'undefined' 
-                && this[ o[key].type ].max < o[key].max ) {
+                && typeof this.types[ o[key].type ].max !== 'undefined' 
+                && this.types[ o[key].type ].max < o[key].max ) {
             throw new Error('In model "'+ modelName +'", key "'+ key +'" maximal value ( '+ o[key].max +' ) is in excess of maximal acceptable value in Types'
-                            + ' ( ' + this[ o[key].type ].min + ' )' );
+                            + ' ( ' + this.types[ o[key].type ].min + ' )' );
         }
 
         // get properties and methods from Types
-        for( var key_parent in this[ o[key].type ] ){
+        for( var key_parent in this.types[ o[key].type ] ){
             if ( !o[ key ][ key_parent ] ) {
-                o[ key ][ key_parent ] = this[ o[key].type ][ key_parent ];
+                o[ key ][ key_parent ] = this.types[ o[key].type ][ key_parent ];
             }
         }
     }
@@ -88,7 +56,7 @@ myLibrary.registerModel = function ( modelName, modelObject ) {
     console.log( '+Model "' + modelName +'" was registered');
 }
 
-myLibrary.showModels = function( full ) {
+exports.showModels = function( full ) {
     if ( ! this.registeredModels ) {
         console.log( 'There is no registered models' );
     } else {
@@ -104,11 +72,11 @@ myLibrary.showModels = function( full ) {
     }
 }
 
-myLibrary.showModelsFull = function() {
+exports.showModelsFull = function() {
     this.showModels( 1 );
 }
 
-myLibrary.validate = function( modelName, entity ) {
+exports.validate = function( modelName, entity ) {
     var modelObject = this.registeredModels[ modelName ];
     // check for required field
     for( var key in modelObject ){
@@ -128,69 +96,21 @@ myLibrary.validate = function( modelName, entity ) {
     return !this.errors.length;
 }
 
-myLibrary.dispose = function() {
+exports.dispose = function() {
     this.registeredModels = [];
     console.log( 'All modules are removed' );
 }
 
-myLibrary.showErrors = function() {
+exports.showErrors = function() {
     console.log( 'Errors:' );
     console.log( '  ' + this.errors.join("\n  ") );
     this.errors = [];
 }
 
-myLibrary.consoleTrueOrError = function( validated ) {
+exports.consoleTrueOrError = function( validated ) {
     if ( validated ) { 
         console.log( 'true' )
     } else { 
         this.showErrors() 
     }
 }
-
-
-// Main body
-
-myLibrary.registerModel( "user", {
-  id:   { type: "uuid", required: true },        // property “id” must be uuid and always must be present in given entity
-  name: { type: "string", min: 1, max: 64 },     // property “name” must be String and contain 1-64 characters, optional
-  createdAt: { type: "date" },                   // property “createdAt” must be a date, optional
-  counter:   { type: "number", min: 0, max: 64 },// property “counter” must be a Number and greater or equal to Zero, optional
-} );
-
-
-myLibrary.registerModel( "user2", {
-  id:   { type: "uuid", required: true },        // property “id” must be uuid
-  name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
-} );
-
-myLibrary.showModelsFull();
-
-console.log( 'Check 1:' );
-myLibrary.consoleTrueOrError ( 
-    myLibrary.validate( "user", {
-      id    : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53",
-      name  : "Alex Bardanov",
-      createdAt : new Date(),
-      counter   : 0,
-    }) 
-);
-
-console.log( 'Check 2:' );
-myLibrary.consoleTrueOrError ( 
-    myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", }) 
-);
-
-/// Required field key not found exception
-console.log( 'Check 3:' );
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { name  : "Alex Bardanov" }) );
-
-/// 2 errors: Field not matched with type exception and Field not found
-console.log( 'Check 4:' );
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
-
-
-myLibrary.dispose();
-
-myLibrary.showModels();
-
-
