@@ -89,12 +89,23 @@ myLibrary.consoleTrueOrError (
 Exceptions
 -------------
 Name is undefined
+    myLibrary.registerModel( "Name", { id: { type: "uuid", required: true } } );
+
 Model in "modelName" is undefined
+    myLibrary.registerModel( "modelName", NaN );
+
 Model "modelName" is already registered
-No field "type" in key "key" in model "modelName"
-No type "type" in Types: key "key" in model "modelName"
-In model "modelName", key "key" minimal value is less than acceptable minimal in Types
-In model "modelName", key "key" maximal value is in excess of maximal acceptable value in Types
+    myLibrary.registerModel( "modelName", { id: { type: "uuid", min: 1, max: 5, required: true } } );
+    myLibrary.registerModel( "modelName", { id: { type: "name" } } );
+
+No field "name" in key "name" in model "modelName"
+    myLibrary.consoleTrueOrError ( myLibrary.validate( "modelName", { name  : "Alex Bardanov" }) );
+
+No type field exception
+    myLibrary.registerModel( "name_exception", { date: { parameter: "date" } } );
+
+No guid type exception
+    myLibrary.registerModel( "name_exception", { id: { type: "guid" } } );
 
 
 Errors
@@ -102,6 +113,12 @@ Errors
 Required field "key" not found in model "modelName"
 Field "key" not found in model "modelName"
 Field "key" not matched with type "type" in model "modelName"
+    2 errors: Field not matched with type exception and Field not found
+        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
+    Size minimum check error
+        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "" }) );
+    Size maximum check error
+        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
 
 
 Output example
