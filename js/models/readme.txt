@@ -16,11 +16,9 @@ Usage
 -------------
 node models.js
 
-If you want validate new object, then insert before "myLibrary.dispose();" line:
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", "entity" ) );
+There is instruction to validate new object in "Validate object" article.
 
-If you need add new type, you can do it in Types variable. Be shure to add "check" method 
-to check new inserted type. Also you can add "min" and "max" properties to check length.
+If you need add new type, please follow to "Add type" article.
 
 
 Module description
@@ -37,7 +35,56 @@ Methods and properties of myLibrary:
   errors - list of errors
   showErrors() - show all errors and clear list of errors
   consoleTrueOrError() - show true or list of errors in console
-  
+
+
+Add type
+-------------
+If you need add new type, you can do it in Types variable. Be shure to add "check" method 
+to check new inserted type. Also you can add "min" and "max" properties to check length.
+
+For example, new type "password". It type must contains minimum 4 chars: at least one lower 
+and one upper case, digit and special chars.
+Add code below to models.js in Types variable:
+password : {
+    min   : 4,         // string.min Minimum length of the string
+    max   : Infinity,  // string.max Maximum length of the string
+    check : function( password ){   // check password type and size
+        if ( ( typeof string === 'string' || string instanceof String )
+                && string.length >= this.min 
+                && string.length <= this.max 
+                && string.match(/((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).+)/) 
+        ) 
+            return true
+        else 
+            return false;
+    },
+},
+
+
+Register model
+-------------
+For register model you need to use registerModel method.
+
+myLibrary.registerModel( "user_password", {
+  id:   { type: "uuid", required: true },     // property “id” must be uuid
+    // property “name” must be String and contain 4-128
+  name: { type: "string", min: 4, max: 128, required: true }, 
+    // property “password” must be String and contain 4-128 chars: 
+    // at least one lower and one upper case, digit and special chars.
+  password: { type: "password", max: 128, required: true },       
+} );
+
+
+Validate object  
+-------------
+If you want validate new object, then insert before "myLibrary.dispose();" line:
+myLibrary.consoleTrueOrError ( myLibrary.validate( "user", "entity" ) );
+
+For example, validate based on "user" model:
+myLibrary.consoleTrueOrError ( 
+    myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", password : "A1z!" }) 
+);
+
 
 Exceptions
 -------------
