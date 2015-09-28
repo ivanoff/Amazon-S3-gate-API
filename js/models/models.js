@@ -12,8 +12,7 @@ var Types = {
         },
         // uuid.check returns true if parameter looks like UUID, false otherwise 
         check : function( uuid ){
-            return uuid && uuid.match(/^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/)?
-                true : false;
+            return uuid && uuid.match(/^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/)?;
         },
     },
     // string properties and methods
@@ -24,12 +23,9 @@ var Types = {
         max   : Infinity,
         // string.check check sting type and size
         check : function( string ){
-            if ( ( typeof string === 'string' || string instanceof String )
+            return (( typeof string === 'string' || string instanceof String )
                     && string.length >= this.min 
-                    && string.length <= this.max ) 
-                return true
-            else 
-                return false;
+                    && string.length <= this.max );
         },
     },
     // number properties and methods
@@ -40,16 +36,14 @@ var Types = {
         max   : Infinity,
         // number.check check number type and size
         check : function( number ){
-            return !isNaN(parseFloat( number )) && number >= this.min && number <= this.max ? 
-                true : false;
+            return typeof number === 'number' && number >= this.min && number <= this.max;
         },
     },
     // date methods
     date : {
         // date.check Maximum length of the string
         check : function( date ){
-            return date instanceof Date && typeof date.getMonth === 'function'?
-                true : false;
+            return date instanceof Date && typeof date.getMonth === 'function';
         },
     },
 }
@@ -147,7 +141,7 @@ myLibrary.validate = function( modelName, entity ) {
             this.errors.push( 'Field "'+ key +'" not matched with type "'+ modelObject[ key ].type +'" in model "'+ modelName+'"' );
         }
     }
-    return this.errors.length? false : true;
+    return !this.errors.length;
 }
 
 myLibrary.dispose = function() {
