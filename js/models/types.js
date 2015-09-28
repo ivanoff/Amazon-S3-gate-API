@@ -1,3 +1,6 @@
+/****
+ List of types to validate
+****/
 
 exports.list = {
 

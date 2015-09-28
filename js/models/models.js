@@ -1,4 +1,8 @@
 
+/****
+ Export JavaScript library to validate Objects
+****/
+
 // Get all types defenition from types.js
 var Types = require( './types' );
 exports.types = Types.list;
