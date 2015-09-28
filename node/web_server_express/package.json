@@ -1,0 +1,23 @@
+{
+  "name": "web_server_express",
+  "version": "0.0.1",
+  "description": "web server using the NodeJS and MongoDB",
+  "main": "web_server_express.js",
+  "dependencies": {
+    "body-parser": "^1.14.0",
+    "config": "^1.16.0",
+    "express": "^4.13.3",
+    "mongodb": "^2.0.43",
+    "node-uuid": "^1.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeJS",
+    "MongoDB"
+  ],
+  "author": "Dimitry Ivanov <2@ivanoff.org.ua>",
+  "license": "Apache 2.0"
+}

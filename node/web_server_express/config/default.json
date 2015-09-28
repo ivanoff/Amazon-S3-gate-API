@@ -1,0 +1,31 @@
+{
+
+  // Database config
+  "DB" : {
+    "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl",
+    "collection" : "users"
+  },
+
+  // Server config
+  "SERVER" : {
+    "port" : 3000
+  },
+
+  // Errors code
+  "ERROR" : {
+    "101" : "First name not found",
+    "102" : "Last name not found",
+    "103" : "Email field not found",
+
+    "111" : "first_name don't match (contains special chars)",
+    "112" : "last_name don't match (contains special chars)",
+    "113" : "email field don't match",
+
+    "121" : "User not found",
+
+    "201" : "Insert was fail",
+    "201" : "Update was fail"
+
+  }
+
+}
