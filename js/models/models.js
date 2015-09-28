@@ -1,6 +1,8 @@
 
 /****
  Export JavaScript library to validate Objects
+ Usage:
+    myLibrary = require( './models' );
 ****/
 
 // Get all types defenition from types.js
@@ -10,6 +12,15 @@ exports.types = Types.list;
 exports.errors = [];
 exports.registeredModels = [];
 
+// Register new model. 
+// Parameters: modelName - name of the model, modelObject - model object
+//      .registeredModels property has information about all registered modules
+//      Each module must have unique name of the model till .dispose them
+// Usage:
+//      myLibrary.registerModel( "user", {
+//        id:   { type: "uuid", required: true },        // property “id” must be uuid
+//        name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
+//      } );
 exports.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
     if ( ! modelName ) {
@@ -60,14 +71,18 @@ exports.registerModel = function ( modelName, modelObject ) {
     console.log( '+Model "' + modelName +'" was registered');
 }
 
-exports.showModels = function( full ) {
+// Show information of registered models. All registered models are stored in .registeredModels
+// If params.displayEverything is true, module will show additional info
+// Usage:
+//      myLibrary.showModels();
+exports.showModels = function( params ) {
     if ( ! this.registeredModels ) {
         console.log( 'There is no registered models' );
     } else {
         console.log( 'List of registered models' );
         for( var modelName in this.registeredModels ){
             console.log( '  - ' + modelName );
-            if( full ) {
+            if( params.displayEverything ) {
                 for( var key in this.registeredModels[ modelName ] ){
                     console.log( '      ' + key + ' : ' + this.registeredModels[ modelName ][ key ].type );
                 }
@@ -76,10 +91,16 @@ exports.showModels = function( full ) {
     }
 }
 
-exports.showModelsFull = function() {
-    this.showModels( 1 );
+// Show expanded information of registared models
+// Usage:
+//      myLibrary.showModelsExpanded();
+exports.showModelsExpanded = function() {
+    this.showModels( { displayEverything: true } );
 }
 
+// Check if entity pass modelName's validation
+// Usage:
+//      myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov" }) 
 exports.validate = function( modelName, entity ) {
     var modelObject = this.registeredModels[ modelName ];
     // check for required field
@@ -100,17 +121,28 @@ exports.validate = function( modelName, entity ) {
     return !this.errors.length;
 }
 
+// "Forget" about all registered models
+// Usage:
+//     myLibrary.dispose();
 exports.dispose = function() {
     this.registeredModels = [];
     console.log( 'All modules are removed' );
 }
 
+// In console show all accumulated errors, and erase them
+// Usage:
+//      myLibrary.showErrors();
 exports.showErrors = function() {
     console.log( 'Errors:' );
     console.log( '  ' + this.errors.join("\n  ") );
     this.errors = [];
 }
 
+// If validated is true, then show "true" in console, show all errors, otherwise
+// Usage:
+//      myLibrary.consoleTrueOrError ( 
+//          myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", }) 
+//      );
 exports.consoleTrueOrError = function( validated ) {
     if ( validated ) { 
         console.log( 'true' )

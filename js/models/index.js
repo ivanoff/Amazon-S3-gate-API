@@ -19,7 +19,7 @@ myLibrary.registerModel( "user2", {
   name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
 } );
 
-myLibrary.showModelsFull();
+myLibrary.showModelsExpanded();
 
 console.log( 'Check 1:' );
 myLibrary.consoleTrueOrError ( 
