@@ -143,6 +143,40 @@ curl -d "last_name=dd" 127.0.0.1:3000/users/4804aa7b-c7c4-47d3-beb0
     Error 404: Not found. #121: User not found 
 
 
+Config file example
+-------------
+Configuration file is config/default.json. It contains information about database, servers' port 
+and list of errors.
+Example of config file: 
+
+{
+  // Database config
+  "DB" : {
+    "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl",
+    "collection" : "users"
+  },
+  // Server config
+  "SERVER" : {
+    "port" : 3000
+  },
+  // Errors code
+  "ERROR" : {
+    "101" : "First name not found",
+    "102" : "Last name not found",
+    "103" : "Email field not found",
+
+    "111" : "first_name don't match (contains special chars)",
+    "112" : "last_name don't match (contains special chars)",
+    "113" : "email field don't match",
+
+    "121" : "User not found",
+
+    "201" : "Insert was fail",
+    "202" : "Update was fail"
+  }
+}
+
+
 File list
 -------------
 web_server_express.js   web script to launch
