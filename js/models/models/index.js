@@ -2,6 +2,8 @@
  Main file. Using module library, add new model and validate data.
  Usage: 
     node index.js
+ Created by:
+    Dimitry, 2@ivanoff.org.ua
 ****/
 
 myLibrary = require( './models' );

@@ -14,7 +14,7 @@ cd models
 
 Usage
 -------------
-node index.js
+node models.js
 
 There is instruction to validate new object in "Validate object" article.
 

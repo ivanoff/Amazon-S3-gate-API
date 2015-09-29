@@ -3,6 +3,8 @@
  Export JavaScript library to validate Objects
  Usage:
     myLibrary = require( './models' );
+ Created by:
+    Dimitry, 2@ivanoff.org.ua
 ****/
 
 // Get all types defenition from types.js

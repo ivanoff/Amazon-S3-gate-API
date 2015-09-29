@@ -148,7 +148,9 @@ app.post('/users/:id', function (req, res) {
 
 })
 
-
+// Delete user from BD
+// Example:
+//   curl -X "DELETE" 127.0.0.1:3000/users/fc2d9b8f-4569-437c-b29f-5d2724c12349
 app.delete('/users/:id', function (req, res) {
     db.collection.remove( { _id : req.params.id } ,function( err, user ) {
         if (err) {
@@ -161,20 +163,4 @@ app.delete('/users/:id', function (req, res) {
     })
 })
 
-
-//app.post('/users', function (req, res) {
-
-//})
-
-app.get('/i', function (req, res) {
-  var collection = db.get().collection( COLLECTION );
-
-  collection.insert({_id: uuid.v4(),name: 'tacoa', tasty: true}, function(err, result) {
-    collection.find({name: 'tacoa'}).toArray(function(err, docs) {
-      console.log(docs[0])
-    })
-  })
-  
-  res.send('i');
-})
 

@@ -1,5 +1,7 @@
 /****
  List of types to validate
+ Created by:
+    Dimitry, 2@ivanoff.org.ua
 ****/
 
 exports.list = {
