@@ -9,7 +9,7 @@
     "express": "^4.13.3",
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3",
-    "models": "https://github.com/ivanoff/gl/tree/master/js/models/models"
+    "models": "https://github.com/ivanoff/gl/tree/master/js"
   },
   "repository": { 
     "type": "git", 
