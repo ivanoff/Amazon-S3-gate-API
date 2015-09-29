@@ -1,0 +1,18 @@
+{
+  "name": "models",
+  "version": "0.0.1",
+  "description": "Check validation",
+  "main": "models.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivanoff/gl/tree/master/js/models/models"
+  },
+  "keywords": [
+    "validation"
+  ],
+  "author": "Dimitry Ivanov <2@ivanoff.org.ua>",
+  "license": "Apache 2.0"
+}
