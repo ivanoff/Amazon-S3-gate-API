@@ -1,4 +1,14 @@
 
+/****
+ Module for working with MongoDB
+ Usage:
+    db = require( './db' );
+    db.connect( URL, function( err ) { ... } );
+    db.collection.find( ... );
+ Created by:
+    Dimitry, 2@ivanoff.org.ua
+****/
+
 var MongoClient = require( 'mongodb' ).MongoClient;
 
 var state = { db: null };
