@@ -10,6 +10,10 @@
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3"
   },
+  "repository": { 
+    "type": "git", 
+    "url": "https://github.com/ivanoff/gl/tree/master/node/web_server_express"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
