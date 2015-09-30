@@ -23,16 +23,6 @@ var URL        = config.get( 'DB.url' ),
     PORT       = config.get( 'SERVER.port' ),
     ERROR      = config.get( 'ERROR' );
 
-// short template to show list of users
-showUsers = function ( users ) {
-    return "  ID\t\t\t\t\t|  Last name\t|  First name\t|  Email\n" + 
-    users
-      .map(function( e ){
-            return [ e._id, e.name.last, e.name.first, e.email, e.metadata ].join("\t|  ");
-        })
-      .join("\n")
-}
-
 
 // Connect to DB and start express
 db.connect( URL, function( err ) {
@@ -54,13 +44,12 @@ app.get('/', function (req, res) { res.redirect('/users') })
 // Example:
 //   curl 127.0.0.1:3000/users
 // Example output:
-//     ID|  Last name|  First name|  Email
-//     4c5adf87-c7be-47ec-a946-be23d5527e49|  Abramsky|  Max|  aa@aa.ua|
-//     3931b794-1aef-4520-bd39-236017599a4a|  Abramsky|  Linda|  aa@aa.ua|
+//     [{"_id":"4804aa7b-c7c4-47d3-beb0-d08220ac175b","name":{"first":"Max`D`Art","last":"dd"},"email":"max@abramsky.com","metadata":{}}]
 app.get('/users', function (req, res) {
     db.collection.find().toArray(function( err, users ) {
         if ( users[0] ) {
-            res.send( showUsers( users ) );
+            res.contentType('application/json');
+            return res.send( JSON.stringify( users ) );
         } else {
             res.send( "No users found. Please, use POST to add new user." );
         }
@@ -71,12 +60,12 @@ app.get('/users', function (req, res) {
 // Example:
 //   curl 127.0.0.1:3000/users/3931b794-1aef-4520-bd39-236017599a4a
 // Example output:
-//     ID       |  Last name    |  First name   |  Email
-//     3931b794-1aef-4520-bd39-236017599a4a|  Abramsky|  Linda|  aa@aa.ua| 
+//     [{"_id":"3931b794-1aef-4520-bd39-236017599a4a","name":{"first":"Max`D`Art","last":"dd"},"email":"max@abramsky.com","metadata":{}}]
 app.get('/users/:id', function (req, res) {
     db.collection.find( { _id : req.params.id } ).toArray(function( err, users ) {
         if ( users[0] ) {
-            res.send( showUsers( users ) );
+            res.contentType('application/json');
+            return res.send( JSON.stringify( users ) );
         } else {
             res.statusCode = 404;
             error = 121;
@@ -127,7 +116,8 @@ app.post('/users', function (req, res) {
             error = 201;
             return res.send('Error 500: Internal Server Error. #' + error + ": " + ERROR[error] + ' : ' + err );
          } else {
-            return res.send('Recors was inserted. New record id: ' + id );
+            res.contentType('application/json');
+            return res.send( JSON.stringify( { ok : 1, record_id: id } ) );
         }
     } )
 
@@ -177,7 +167,8 @@ app.post('/users/:id', function (req, res) {
                     error = 202;
                     return res.send('Error 500: Internal Server Error. #' + error + ": " + ERROR[error] + ' : ' + err );
                  } else {
-                    return res.send('Recors ' + req.params.id + ' was updated' );
+                    res.contentType('application/json');
+                    return res.send( JSON.stringify( { ok : 1, record_id: req.params.id } ) );
                 }
             } )
 
@@ -199,7 +190,8 @@ app.delete('/users/:id', function (req, res) {
             error = 201;
             return res.send('Error 500: Internal Server Error. #' + error + ": " + ERROR[error] + ' : ' + err );
         } else {
-            return res.send( 'User '+ req.params.id +' removed' );
+            res.contentType('application/json');
+            return res.send( JSON.stringify( { ok : 1, record_id: req.params.id } ) );
         }
     })
 })
