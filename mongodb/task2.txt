@@ -143,3 +143,23 @@ Totals
 
 
 
+Request distribution, based on read preference modes:
+
+full sharedKey, primary/primaryPreferred -- 1-pr2: 50%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 50%, 2-pr1: 0%, 2-pr0: 0%
+
+full sharedKey, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
+
+full sharedKey, nearest -- 1-pr2: 25%, 1-pr1: 25%, 1-pr0: 0% // 2-pr2: 0%, 2-pr1: 0%, 2-pr0: 50%
+
+no full sharedKey, but tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+
+no full sharedKey, but tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
+
+no full sharedKey, but tug, nearest -- 1-pr2: 50%, 1-pr1: 50%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+
+no full sharedKey, no tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+
+no full sharedKey, no tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 100%, 1-pr0: 100% // 2-pr2: 0%, 2-pr1: 100%, 2-pr0: 100%
+
+no full sharedKey, no tug, nearest -- 1-pr2: 100%, 1-pr1: 100%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+
