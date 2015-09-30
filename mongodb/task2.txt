@@ -1,0 +1,145 @@
+Task 2 : Sharding
+
+
+mongos> use ivanoffdb_sharding
+switched to db ivanoffdb_sharding
+
+
+mongos> sh.enableSharding("ivanoffdb_sharding")
+{ "ok" : 1 }
+
+
+mongos> db.users.find()
+{ "_id" : ObjectId("560a72ddc0ca684c0c51d4eb"), "name" : "Shaun", "masterRegion" : "us-east-1" }
+{ "_id" : ObjectId("560a72e1c0ca684c0c51d4ec"), "name" : "Nicholas Angel", "masterRegion" : "us-east-1" }
+{ "_id" : ObjectId("560a72e4c0ca684c0c51d4ed"), "name" : "Graeme Willy", "masterRegion" : "us-east-1" }
+{ "_id" : ObjectId("560a72e7c0ca684c0c51d4ee"), "name" : "Gary King", "masterRegion" : "us-east-1" }
+
+
+mongos> db.inventory.find()
+{ "_id" : ObjectId("560a746a38f8e23d297e01e0"), "masterRegion" : "us-east-1", "ownerId" : "560a72ddc0ca684c0c51d4eb", "name" : "baseball-bat" }
+{ "_id" : ObjectId("560a746d38f8e23d297e01e1"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "police cap" }
+{ "_id" : ObjectId("560a747038f8e23d297e01e2"), "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "RV truck" }
+{ "_id" : ObjectId("560a747838f8e23d297e01e3"), "masterRegion" : "us-east-1", "ownerId" : "560a72e7c0ca684c0c51d4ee", "name" : "beer" }
+{ "_id" : ObjectId("560a824cab39ba8e50fdce80"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "note" }
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.users", { "masterRegion": 1, "_id": 1 } )
+{
+	"proposedKey" : {
+		"masterRegion" : 1,
+		"_id" : 1
+	},
+	"curIndexes" : [
+		{
+			"v" : 1,
+			"key" : {
+				"_id" : 1
+			},
+			"name" : "_id_",
+			"ns" : "ivanoffdb_sharding.users"
+		}
+	],
+	"ok" : 0,
+	"errmsg" : "please create an index that starts with the shard key before sharding."
+}
+
+
+mongos> db.users.createIndex( { "masterRegion": 1, "_id": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443598801, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.users", { "masterRegion": 1, "_id": 1 } )
+{ "collectionsharded" : "ivanoffdb_sharding.users", "ok" : 1 }
+
+
+mongos> db.inventory.createIndex( { "masterRegion": 1, "_id": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443598864, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.inventory", { "masterRegion": 1, "_id": 1 } )
+{ "collectionsharded" : "ivanoffdb_sharding.inventory", "ok" : 1 }
+
+
+mongos> sh.addTagRange( "ivanoffdb_sharding.users", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.users", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+
+
+mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+
+
+For check online statistics
+mongostat --host mongod-1-a-0.training-gl.com:27001,mongod-1-a-1.training-gl.com:27001,mongod-1-a-2.training-gl.com:27001,mongod-1-b-0.training-gl.com:27001,mongod-1-b-1.training-gl.com:27001,mongod-1-b-2.training-gl.com:27001,mongod-2-a-0.training-gl.com:27001,mongod-2-a-1.training-gl.com:27001,mongod-2-a-2.training-gl.com:27001,mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+
+
+
+db.users.insert( {"name" : "Shaun", "masterRegion" : "us-east-1"} )
+Loads mongod-1-a* 100% each
+
+db.users.insert( {"name" : "Shaun", "masterRegion" : "eu-west-1"} )
+Loads mongod-2-b* 100% each
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users.insert( {"name" : "Shaun", "masterRegion" : "us-east-1"} )'
+Loads mongod-2-b* 100% each
+
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users.insert( {"name" : "Shaun", "masterRegion" : "eu-west-1"} )'
+Loads mongod-1-a* 100% each
+
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users.insert( {"name" : "Shaun", "masterRegion" : "2"} )'
+Loads mongod-1-a* 100% each
+
+mongo ivanoffdb_sharding --eval 'db.users.insert( {"name" : "Shaun", "masterRegion" : "2"} )'
+Loads mongod-1-a* 100% each
+
+
+
+mongos> db.users.getShardDistribution()
+
+Shard 1a at 1a/mongod-1-a-0.training-gl.com:27001,mongod-1-a-1.training-gl.com:27001,mongod-1-a-2.training-gl.com:27001
+ data : 65KiB docs : 601 chunks : 1
+ estimated data per chunk : 65KiB
+ estimated docs per chunk : 601
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 100KiB docs : 921 chunks : 2
+ estimated data per chunk : 50KiB
+ estimated docs per chunk : 460
+
+Totals
+ data : 166KiB docs : 1522 chunks : 3
+ Shard 1a contains 39.48% data, 39.48% docs in cluster, avg obj size on shard : 112B
+ Shard 2b contains 60.51% data, 60.51% docs in cluster, avg obj size on shard : 112B
+
+
+
