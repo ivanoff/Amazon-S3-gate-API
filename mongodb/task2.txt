@@ -97,7 +97,7 @@ mongos> sh.shardCollection( "ivanoffdb_sharding.inventory", { "masterRegion": 1,
 { "collectionsharded" : "ivanoffdb_sharding.inventory", "ok" : 1 }
 
 
-mongos> db.files.createIndex( { "masterRegion": 1, "_id": 1 } )
+mongos> db.files.createIndex( { "masterRegion": 1, "ownerId": 1, "name": 1 } )
 {
 	"raw" : {
 		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
@@ -115,25 +115,7 @@ mongos> db.files.createIndex( { "masterRegion": 1, "_id": 1 } )
 }
 
 
-mongos> db.files.createIndex( { "masterRegion": 1, "_id": 1 } )
-{
-	"raw" : {
-		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
-			"createdCollectionAutomatically" : false,
-			"numIndexesBefore" : 1,
-			"numIndexesAfter" : 2,
-			"ok" : 1,
-			"$gleStats" : {
-				"lastOpTime" : Timestamp(1443684056, 1),
-				"electionId" : ObjectId("55f17ecfada686a387e05b06")
-			}
-		}
-	},
-	"ok" : 1
-}
-
-
-mongos> sh.shardCollection( "ivanoffdb_sharding.files", { "masterRegion": 1, "_id": 1 } )
+mongos> sh.shardCollection( "ivanoffdb_sharding.files", { "masterRegion": 1, "ownerId": 1, "name": 1 } )
 { "collectionsharded" : "ivanoffdb_sharding.files", "ok" : 1 }
 
 
@@ -145,8 +127,8 @@ mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "us-east
 mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
 
 
-mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
-mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "us-east-1", ownerId : MinKey, name : MinKey }, { masterRegion: "us-east-1", ownerId : MaxKey, name : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "eu-west-1", ownerId : MinKey, name : MinKey }, { masterRegion: "eu-west-1", ownerId : MaxKey, name : MaxKey }, "eu-west-1" )
 
 
 For check online statistics
