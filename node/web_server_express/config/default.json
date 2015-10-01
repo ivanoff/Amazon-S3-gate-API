@@ -1,17 +1,17 @@
 {
 
-  // Database config
+///// Database config /////
   "DB" : {
     "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl",
     "collection" : "users"
   },
 
-  // Server config
+///// Server config /////
   "SERVER" : {
     "port" : 3000
   },
 
-  // Errors code
+///// Errors code /////
   "ERROR" : {
     "101" : "First name not found",
     "102" : "Last name not found",
