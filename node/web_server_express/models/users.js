@@ -1,11 +1,29 @@
 "use strict"
 
-exports.get = function( req, res, params ){
-    if( !params ) params = {};
-    req.db.collection('users').find( { _id : req.params.id } ).toArray( res );
+exports.modelName = 'users';
+
+exports.get = function( req, res ){
+    req.db.collection(this.modelName)
+        .findOne( { _id : req.params.id }, res );
 };
 
-exports.getAll = function( req, res, params ){
-    req.db.collection('users').find( { } ).toArray( res );
+exports.getAll = function( req, res ){
+    req.db.collection(this.modelName)
+        .find( { } ).toArray( res );
+};
+
+exports.add = function( req, data, res ){
+    req.db.collection(this.modelName)
+        .insert( data, res );
+};
+
+exports.update = function( req, data, res ){
+    req.db.collection(this.modelName)
+        .update( { _id : req.params.id }, data, res );
+};
+
+exports.remove = function( req, res ){
+    req.db.collection(this.modelName)
+        .remove( { _id : req.params.id }, res );
 };
 
