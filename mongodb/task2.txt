@@ -24,6 +24,14 @@ mongos> db.inventory.find()
 { "_id" : ObjectId("560a824cab39ba8e50fdce80"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "note" }
 
 
+mongos> db.files.find()
+{ "_id" : ObjectId("560cdeb327d551bde4da2767"), "masterRegion" : "us-east-1", "ownerId" : "560a72ddc0ca684c0c51d4eb", "name" : "zombe_processes.how_to" }
+{ "_id" : ObjectId("560cdeb327d551bde4da2768"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "wanted.txt" }
+{ "_id" : ObjectId("560cdeb327d551bde4da2769"), "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "Paul_Photo_002.jpg" }
+{ "_id" : ObjectId("560cdeb327d551bde4da276a"), "masterRegion" : "us-east-1", "ownerId" : "560a72e7c0ca684c0c51d4ee", "name" : "map.pcx" }
+{ "_id" : ObjectId("560cdeb327d551bde4da276b"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "note.txt" }
+
+
 mongos> sh.shardCollection( "ivanoffdb_sharding.users", { "masterRegion": 1, "_id": 1 } )
 {
 	"proposedKey" : {
@@ -89,12 +97,56 @@ mongos> sh.shardCollection( "ivanoffdb_sharding.inventory", { "masterRegion": 1,
 { "collectionsharded" : "ivanoffdb_sharding.inventory", "ok" : 1 }
 
 
+mongos> db.files.createIndex( { "masterRegion": 1, "_id": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443684056, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> db.files.createIndex( { "masterRegion": 1, "_id": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443684056, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.files", { "masterRegion": 1, "_id": 1 } )
+{ "collectionsharded" : "ivanoffdb_sharding.files", "ok" : 1 }
+
+
 mongos> sh.addTagRange( "ivanoffdb_sharding.users", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
 mongos> sh.addTagRange( "ivanoffdb_sharding.users", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
 
 
 mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
 mongos> sh.addTagRange( "ivanoffdb_sharding.inventory", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+
+
+mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.files", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
 
 
 For check online statistics
@@ -144,22 +196,22 @@ Totals
 
 
 Request distribution, based on read preference modes:
-
+ 
 full sharedKey, primary/primaryPreferred -- 1-pr2: 50%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 50%, 2-pr1: 0%, 2-pr0: 0%
-
+ 
 full sharedKey, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
-
+ 
 full sharedKey, nearest -- 1-pr2: 25%, 1-pr1: 25%, 1-pr0: 0% // 2-pr2: 0%, 2-pr1: 0%, 2-pr0: 50%
-
+ 
 no full sharedKey, but tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
-
+ 
 no full sharedKey, but tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
-
+ 
 no full sharedKey, but tug, nearest -- 1-pr2: 50%, 1-pr1: 50%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
-
+ 
 no full sharedKey, no tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
-
+ 
 no full sharedKey, no tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 100%, 1-pr0: 100% // 2-pr2: 0%, 2-pr1: 100%, 2-pr0: 100%
-
+ 
 no full sharedKey, no tug, nearest -- 1-pr2: 100%, 1-pr1: 100%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
 

@@ -6,23 +6,53 @@
     Dimitry, 2@ivanoff.org.ua
 ****/
 
-var config  = require( 'config'    );
 var express = require( 'express'   );
+var config  = require( 'config'    );
 var uuid    = require( 'node-uuid' );
 var bodyParser = require('body-parser');
+// Database
+var mongo = require('mongodb');
+var monk  = require('monk');
+var db    = monk('mongodb://gl:gl@ds051933.mongolab.com:51933/gl');
 
-var db = require( './modules/db' );
-var models = require( './modules/models' );
+
+/*
+
+//var index = require('./controllers/index');
+var UsersController = require('./controllers/users');
 
 var app = express();
+
+app.use( function( req,res,next ){
+    req.db = db;
+    next();
+});
+
 app.use( bodyParser.urlencoded({ extended: true }) );
+
+//app.use('/', index);
+//app.use('/users', users);
+
+app.get( '/users', UsersController.getAll );
+
+var URL        = config.get( 'DB.url' ),
+    COLLECTION = config.get( 'DB.collection' ),
+    PORT       = config.get( 'SERVER.port' ),
+    ERROR      = config.get( 'ERROR' );
+
+        app.listen( PORT, function() {
+            console.log( 'Listening on port ' + PORT + '...' )
+        })
+
+/*
+var UsersController = require('./controllers/users');
+
 
 // params from config file ( ./config/default.json )
 var URL        = config.get( 'DB.url' ),
     COLLECTION = config.get( 'DB.collection' ),
     PORT       = config.get( 'SERVER.port' ),
     ERROR      = config.get( 'ERROR' );
-
 
 // Connect to DB and start express
 db.connect( URL, function( err ) {
@@ -45,7 +75,8 @@ app.get('/', function (req, res) { res.redirect('/users') })
 //   curl 127.0.0.1:3000/users
 // Example output:
 //     [{"_id":"4804aa7b-c7c4-47d3-beb0-d08220ac175b","name":{"first":"Max`D`Art","last":"dd"},"email":"max@abramsky.com","metadata":{}}]
-app.get('/users', function (req, res) {
+app.get( '/users', UsersController.getAll );
+app.get('/users1', function (req, res) {
     db.collection.find().toArray(function( err, users ) {
         if ( users[0] ) {
             res.contentType('application/json');
@@ -197,3 +228,4 @@ app.delete('/users/:id', function (req, res) {
 })
 
 
+*/
