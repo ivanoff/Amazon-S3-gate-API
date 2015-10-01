@@ -14,7 +14,11 @@ var app = new express();
 
 var db = require('./controllers/db');
 
-app.use( function( req, res, next ){ req.db = db.get(); next() });
+app.use( function( req, res, next ){ 
+    req.db   = db.get(); 
+    req.uuid = uuid; 
+    next() 
+});
 app.use( bodyParser.urlencoded( { extended: true } ) );
 
 require('./controllers/routes')(app);
