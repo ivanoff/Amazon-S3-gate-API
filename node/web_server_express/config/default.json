@@ -2,8 +2,7 @@
 
 ///// Database config /////
   "DB" : {
-    "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl",
-    "collection" : "users"
+    "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl"
   },
 
 ///// Server config /////

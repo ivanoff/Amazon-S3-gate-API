@@ -13,8 +13,6 @@ module.exports = function (app) {
 
     app.get('/users/:id', function( req, res, next ) {
         UsersModel.get( req, function( err, docs ){
-console.log( '---------------------------------------' );
-console.log( docs );
             if (err)   { return next(err); }
             if (!docs) { return next(404); }
             res.json( docs );
