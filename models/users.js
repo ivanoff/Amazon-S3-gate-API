@@ -2,13 +2,10 @@
 
 exports.get = function( req, res, params ){
     if( !params ) params = {};
-    var collection = req.db.get( 'users' );
-    collection.find( { _id : req.params.id }, params, res );
+    req.db.collection('users').find( { _id : req.params.id } ).toArray( res );
 };
 
 exports.getAll = function( req, res, params ){
-    if( !params ) params = {};
-    var collection = req.db.get( 'users' );
-    collection.find( {}, params, res );
+    req.db.collection('users').find( { } ).toArray( res );
 };
 
