@@ -1,6 +1,6 @@
 {
 
-///// Database config /////
+////// Database config //////
   "DB" : {
     "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl"
   },
@@ -11,7 +11,7 @@
   },
 
 ///// Errors code /////
-  "ERROR" : {
+  "ERRORS" : {
     "101" : "First name not found",
     "102" : "Last name not found",
     "103" : "Email field not found",
@@ -21,6 +21,7 @@
     "113" : "email field don't match",
 
     "121" : "User not found",
+    "122" : "No users found. Please, use POST to add new user",
 
     "201" : "Insert was fail",
     "202" : "Update was fail"

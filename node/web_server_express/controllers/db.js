@@ -6,6 +6,8 @@
     db.collection( ... ).find( ... );
 ****/
 
+"use strict"
+
 var MongoClient = require( 'mongodb' ).MongoClient;
 
 var state = { db: null };

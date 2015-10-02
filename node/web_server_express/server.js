@@ -8,15 +8,20 @@ var mongo = require('mongodb');
 
 var DB_URL     = config.get( 'DB.url' ),
     PORT       = config.get( 'SERVER.port' ),
-    ERROR      = config.get( 'ERROR' );
+    ERRORS     = config.get( 'ERRORS' );
 
 var app = new express();
 
 var db = require('./controllers/db');
 
 app.use( function( req, res, next ){ 
-    req.db   = db.get(); 
-    req.uuid = uuid; 
+    req.db    = db.get(); 
+    req.uuid  = uuid; 
+    req.error = function(n,e){ 
+                    var text=ERRORS[e] || e; 
+                    if( text==e ) e=1; 
+                    res.status(n).json( {error:e, text:text} )
+                }; 
     next() 
 });
 app.use( bodyParser.urlencoded( { extended: true } ) );
