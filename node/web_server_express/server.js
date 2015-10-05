@@ -26,7 +26,7 @@ app.use( function( req, res, next ){
 });
 app.use( bodyParser.urlencoded( { extended: true } ) );
 
-require('./controllers/routes')(app);
+require('./routes')(app);
 
 db.connect( DB_URL, function( err, next ) {
     if ( err ) { return next( err ) }
