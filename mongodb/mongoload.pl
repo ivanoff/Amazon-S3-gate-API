@@ -2,8 +2,10 @@
 use strict;
 $| = 1;
 
-die "Mongo capacity. Using: $0 <DataBase> <Request> <Count_per_second>" if !$ARGV[2] || $ARGV[2] !~ /^\d+$/;
-my ( $db, $r, $c ) = @ARGV;
+die "Mongo capacity. Using: $0 <Request> [<DataBase> [<Count_per_second>]]" if !$ARGV[0];
+my ( $r, $db, $c ) = @ARGV;
+$db ||= 'ivanoffdb_sharding';
+$c  ||= 10;
 
 print "Running $c requests per second on $db database: $r\n";
 
@@ -20,3 +22,4 @@ while ( 1 ) {
     print "mongo $db --eval '$r'\n";
     sleep 1;
 }
+
