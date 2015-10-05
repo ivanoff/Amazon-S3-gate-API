@@ -1,15 +1,12 @@
 /****
- Main Routing
+ Users Routing
 ****/
 
 "use strict"
 
-var indexController = require('./controllers/index')
-var userController  = require('./controllers/users')
+var userController  = require('../controllers/users')
 
 module.exports = function (app) {
-
-    app.get( '/', indexController.getIndex );
 
     app.get    ( '/users',     userController.getAllUsers );
     app.get    ( '/users/:id', userController.getUserById );

@@ -26,7 +26,10 @@ app.use( function( req, res, next ){
 });
 app.use( bodyParser.urlencoded( { extended: true } ) );
 
-require('./routes')(app);
+var normalizedPath = require("path").join(__dirname, "routes");
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+  require("./routes/" + file)(app);
+});
 
 db.connect( DB_URL, function( err, next ) {
     if ( err ) { return next( err ) }
