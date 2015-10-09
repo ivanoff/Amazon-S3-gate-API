@@ -8,8 +8,8 @@
     "config": "^1.16.0",
     "express": "^4.13.3",
     "mongodb": "^2.0.43",
-    "node-uuid": "^1.4.3"
-    "validate-me": "^0.1.1"
+    "node-uuid": "^1.4.3",
+    "validate-me": "^0.2.2"
   },
   "repository": {
     "type": "git",
