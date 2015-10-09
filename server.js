@@ -24,7 +24,7 @@ app.use( function( req, res, next ){
                 }; 
     next() 
 });
-app.use( bodyParser.urlencoded( { extended: true } ) );
+app.use( bodyParser.json() );
 
 var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {

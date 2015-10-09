@@ -1,6 +1,6 @@
 {
   "name": "web_server_express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "web server using the NodeJS and MongoDB",
   "main": "web_server_express.js",
   "dependencies": {
@@ -9,6 +9,7 @@
     "express": "^4.13.3",
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3"
+    "validate-me": "^0.1.1"
   },
   "repository": {
     "type": "git",
