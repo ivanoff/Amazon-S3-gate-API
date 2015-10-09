@@ -1,29 +1,53 @@
 "use strict"
 
-exports.modelName = 'users';
+var vm = require('validate-me');
 
-exports.get = function( req, res ){
-    req.db.collection(this.modelName)
-        .findOne( { _id : req.params.id }, res );
-};
+var modelName = 'users';
 
-exports.getAll = function( req, res ){
-    req.db.collection(this.modelName)
-        .find( { } ).toArray( res );
-};
+var model = {
+        _id:   { type: "uuid", required: true },
+        name: {
+            first : { type: "string", max: 128, required: true },
+            last  : { type: "string", max: 128 },
+        },
+        email:    { type: "email"  },
+        metadata: { type: "object" },
+    };
 
-exports.add = function( req, data, res ){
-    req.db.collection(this.modelName)
-        .insert( data, res );
-};
+vm.registerModel( modelName, model );
 
-exports.update = function( req, data, res ){
-    req.db.collection(this.modelName)
-        .update( { _id : req.params.id }, data, res );
-};
+module.exports = {
 
-exports.remove = function( req, res ){
-    req.db.collection(this.modelName)
-        .remove( { _id : req.params.id }, res );
-};
+    modelName : modelName,
 
+    validate : function( req, res, next ){ 
+        var errors = vm.validate( this.modelName, req );
+        if( errors ) next( JSON.stringify( errors ) );
+    },
+
+    get : function( req, res ){
+        req.db.collection(this.modelName)
+            .findOne( { _id : req.params.id }, res );
+    },
+
+    getAll : function( req, res ){
+        req.db.collection(this.modelName)
+            .find( { } ).toArray( res );
+    },
+
+    add : function( req, data, res ){
+        req.db.collection(this.modelName)
+            .insert( data, res );
+    },
+
+    update : function( req, data, res ){
+        req.db.collection(this.modelName)
+            .update( { _id : req.params.id }, data, res );
+    },
+
+    remove : function( req, res ){
+        req.db.collection(this.modelName)
+            .remove( { _id : req.params.id }, res );
+    }
+
+}
