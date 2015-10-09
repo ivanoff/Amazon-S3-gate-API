@@ -1,1 +1,3 @@
-GL / JS / Models
+## Renamed to validate-me
+
+https://github.com/ivanoff/validate-me
