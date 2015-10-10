@@ -9,7 +9,8 @@
     "express": "^4.13.3",
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3",
-    "validate-me": "^0.2.4"
+    "underscore": "^1.8.3",
+    "validate-me": "^0.2.10"
   },
   "repository": {
     "type": "git",

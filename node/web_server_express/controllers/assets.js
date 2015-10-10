@@ -2,79 +2,61 @@
 
 var AssetsModel = require('../models/assets');
 
-exports.getAllAssets = function( req, res, next ){
-    AssetsModel.getAll( req, function( err, docs ){
+exports.getRootAssets = function( req, res, next ){
+    AssetsModel.getRoot( req, function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 122 ); return next() }
+        if ( !docs ) { req.error( 404, 132 ); return next() }   // No assets found
         res.json( docs );
     });
 };
 
 exports.getAssetById = function( req, res, next ) {
-    AssetsModel.get( req, function( err, docs ){
-        if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 121 ); return next() } // Asset not found
-        res.json( docs );
+    AssetsModel.get( req, function( err, doc ){
+        if ( err  ) { req.error( 500, err ); return next(err) }
+        if ( !doc ) { req.error( 404, 131 ); return next() }   // Asset not found
+        res.json( doc );
     });
 };
 
 exports.addAsset = function( req, res, next ) {
-    if( !req.body.first_name ) { req.error( 500, 101 ); return next(); }
-    if( !req.body.first_name.match(/^[\w\ _`\-]+$/i) ) { req.error( 500, 111 ); return next(); }
+    var doc    = req.body;
+    doc['_id'] = req.uuid.v4();
+    doc['userId'] = req.params.userId;
+    if( !req.params.path ) { doc['path'] = '' };
 
-    if( !req.body.last_name ) { req.error( 500, 102 ); return next(); }
-    if( !req.body.last_name.match(/^[\w\ _`\-]+$/i) ) { req.error( 500, 112 ); return next(); }
-
-    if( !req.body.email ) { req.error( 500, 103 ); return next(); }
-    if( !req.body.email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+/i) ) { req.error( 500, 113 ); return next(); }
-
-    var id = req.uuid.v4()
-    var data = {
-        _id: id,
-        name: {
-            first : req.body.first_name,
-            last  : req.body.last_name,
-        },
-        email: req.body.email,
-        metadata: req.body.metadata? req.body.metadata : {},
-    }
-
-    AssetsModel.add( req, data, function( err, result, next ){
+    AssetsModel.validate( doc, function( err ) {
         if ( err ) { req.error( 500, err ); return next(err) }
-        res.json( { ok : 1, _id: id } );
-    });
-};
 
-exports.updateAsset = function( req, res, next ) {
-    AssetsModel.get( req, function( err, docs ){
-        if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 121 ); return next() }  // Asset not found
-
-        if( req.body.first_name ) {
-            if( !req.body.first_name.match(/^[\w\ _`\-]+$/i) ) { req.error( 500, 111 ); return next(); }
-            else { docs.name.first = req.body.first_name };
-        }
-        if( req.body.last_name ) {
-            if( !req.body.last_name.match(/^[\w\ _`\-]+$/i) ) { req.error( 500, 112 ); return next(); }
-            else { docs.name.last = req.body.last_name };
-        }
-        if( req.body.email ) {
-            if( !req.body.email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+/i) ) { req.error( 500, 113 ); return next(); }
-            else { docs.email = req.body.email };
-        }
-        if ( req.body.metadata ) docs.metadata = req.body.metadata;
-
-        AssetsModel.update( req, docs, function( err, result, next ){
+        AssetsModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
-            res.json( { ok : 1, _id: docs._id } );
+            res.json( { ok : 1, _id: doc['_id'] } );
         });
     });
 };
 
+exports.updateAsset = function( req, res, next ) {
+    AssetsModel.get( req, function( err, doc ){
+        if ( err  ) { req.error( 500, err ); return next(err) }
+        if ( !doc ) { req.error( 404, 121 ); return next() }  // Asset not found
+
+        doc = req._.extend( doc, req.body );
+
+        AssetsModel.validate( doc, function( err ) {
+            if ( err ) { req.error( 500, err ); return next(err) }
+
+            AssetsModel.update( req, doc, function( err, result, next ){
+                if ( err ) { req.error( 500, err ); return next(err) }
+                res.json( { ok : 1, _id: doc._id } );
+            });
+        });
+
+    });
+};
+
 exports.deleteAsset = function( req, res, next ) {
-    AssetsModel.remove( req, function( err, docs ){
-        if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 121 ); return next() } // Asset not found
-        res.json( { ok : 1, _id: req.params.id } );
+    AssetsModel.remove( req, function( err, doc ){
+        if ( err  ) { req.error( 500, err ); return next(err) }
+        if ( !doc ) { req.error( 404, 121 ); return next() } // Asset not found
+        res.json( { ok : 1, _id: req.params.assetId } );
     });
 };

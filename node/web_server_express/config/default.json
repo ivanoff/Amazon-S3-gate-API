@@ -23,6 +23,9 @@
     "121" : "User not found",
     "122" : "No users found. Please, use POST to add new user",
 
+    "131" : "Asset not found",
+    "132" : "No assets found. Please, use POST to add new one",
+
     "201" : "Insert was fail",
     "202" : "Update was fail"
 

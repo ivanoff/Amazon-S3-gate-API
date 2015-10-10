@@ -5,6 +5,7 @@ var express = require('express');
 var uuid = require( 'node-uuid' );
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
+var _ = require('underscore');
 
 var DB_URL     = config.get( 'DB.url' ),
     PORT       = config.get( 'SERVER.port' ),
@@ -15,6 +16,7 @@ var app = new express();
 var db = require('./controllers/db');
 
 app.use( function( req, res, next ){ 
+    req._     = _; 
     req.db    = db.get(); 
     req.uuid  = uuid; 
     req.error = function(n,e){ 
