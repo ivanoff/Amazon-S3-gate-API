@@ -5,10 +5,10 @@ var vm = require('validate-me');
 var modelName = 'users';
 
 var model = {
-        _id:   { type: "uuid", required: true },
+        '_id':   { type: "uuid", required: true },
         name: {
-            first : { type: "string", max: 128, required: true },
-            last  : { type: "string", max: 128 },
+            first : { type: "string", max: 128, required: true, match : /^[\w\ _`\-]+$/i },
+            last  : { type: "string", max: 128, match : /^[\w\ _`\-]+$/i },
         },
         email:    { type: "email"  },
         metadata: { type: "object" },
@@ -20,9 +20,10 @@ module.exports = {
 
     modelName : modelName,
 
-    validate : function( req, res, next ){ 
+    validate : function( req, next ){ 
         var errors = vm.validate( this.modelName, req );
-        if( errors ) next( JSON.stringify( errors ) );
+        if( errors ) return next( JSON.stringify( errors ) );
+        return next( false );
     },
 
     get : function( req, res ){

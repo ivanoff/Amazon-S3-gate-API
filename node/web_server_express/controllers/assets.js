@@ -10,7 +10,7 @@ exports.getAllAssets = function( req, res, next ){
     });
 };
 
-exports.getAssertById = function( req, res, next ) {
+exports.getAssetById = function( req, res, next ) {
     AssetsModel.get( req, function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
         if ( !docs ) { req.error( 404, 121 ); return next() } // Asset not found

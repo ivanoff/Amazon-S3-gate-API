@@ -5,7 +5,7 @@ var UsersModel = require('../models/users');
 exports.getAllUsers = function( req, res, next ){
     UsersModel.getAll( req, function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 122 ); return next() }
+        if ( !docs ) { req.error( 404, 122 ); return next() }   // No users found
         res.json( docs );
     });
 };
@@ -13,22 +13,23 @@ exports.getAllUsers = function( req, res, next ){
 exports.getUserById = function( req, res, next ) {
     UsersModel.get( req, function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 121 ); return next() } // User not found
+        if ( !docs ) { req.error( 404, 121 ); return next() }   // User not found
         res.json( docs );
     });
 };
 
 exports.addUser = function( req, res, next ) {
-
     var data  = req.body;
-//    data['_id'] = req.uuid.v4();
+    data['_id'] = req.uuid.v4();
 
-    UsersModel.validate( data, res, next );
+    UsersModel.validate( data, function( err ) {
+        if ( err ) { req.error( 500, err ); return next(err) }
 
-//    UsersModel.add( req, data, function( err, result, next ){
-//        if ( err ) { req.error( 500, err ); return next(err) }
-//        res.json( { ok : 1, _id: id } );
-//    });
+        UsersModel.add( req, data, function( err, result, next ){
+            if ( err ) { req.error( 500, err ); return next(err) }
+            res.json( { ok : 1, _id: data['_id'] } );
+        });
+    });
 };
 
 exports.updateUser = function( req, res, next ) {
