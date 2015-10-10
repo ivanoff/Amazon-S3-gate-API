@@ -14,7 +14,15 @@ exports.getAssetById = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, 131 ); return next() }   // Asset not found
-        res.json( doc );
+        if ( doc.type != 'folder' ) {
+            res.json( doc );
+        } else {
+            AssetsModel.getFolderContent( req, doc.path + '/' + doc.name, function( err, doc ){
+                if ( err  ) { req.error( 500, err ); return next(err) }
+                if ( !doc ) { req.error( 404, 131 ); return next() }   // Asset not found
+                res.json( doc );
+            });
+        }
     });
 };
 
@@ -32,6 +40,34 @@ exports.addAsset = function( req, res, next ) {
             res.json( { ok : 1, _id: doc['_id'] } );
         });
     });
+};
+
+exports.addAssetToFolder = function( req, res, next ) {
+    var doc    = req.body;
+    doc['_id'] = req.uuid.v4();
+    doc['userId'] = req.params.userId;
+    if( !req.params.path ) { doc['path'] = '' };
+
+//Promisesis?
+    if( req.params.assetId ) {
+        AssetsModel.get( req, function( err, docFolder ){
+            if ( err ) { req.error( 500, err ); return next(err) }
+            if ( !docFolder ) { req.error( 404, 131 ); return next() }  // Asset not found
+            if ( docFolder.type != 'folder' ) 
+                        { req.error( 404, 133 ); return next() }  // Asset is not folder
+            doc['path'] = docFolder.path + '/' + docFolder.name
+
+            AssetsModel.validate( doc, function( err ) {
+                if ( err ) { req.error( 500, err ); return next(err) }
+        
+                AssetsModel.add( req, doc, function( err, result, next ){
+                    if ( err ) { req.error( 500, err ); return next(err) }
+                    res.json( { ok : 1, _id: doc['_id'] } );
+                });
+            });
+        })
+    }
+
 };
 
 exports.updateAsset = function( req, res, next ) {
