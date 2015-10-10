@@ -14,7 +14,5 @@ module.exports = function (app) {
     app.post   ( '/users/:id/assets/:id', assetController.updateAsset  );
     app.delete ( '/users/:id/assets/:id', assetController.deleteAsset  );
 
-    app.get    ( '/users/:id/assets',     assetController.getAllAssets );
-
 }
 
