@@ -39,6 +39,11 @@ module.exports = {
             .find( { userId : req.params.userId, path : '' } ).toArray( res );
     },
 
+    getFolderContent : function( req, path, res ){
+        req.db.collection(this.modelName)
+            .find( { userId : req.params.userId, path : path } ).toArray( res );
+    },
+
     add : function( req, data, res ){
         req.db.collection(this.modelName)
             .insert( data, res );
@@ -46,12 +51,12 @@ module.exports = {
 
     update : function( req, data, res ){
         req.db.collection(this.modelName)
-            .update( { _id : req.params.assetId }, data, res );
+            .update( { userId : req.params.userId, _id : req.params.assetId }, data, res );
     },
 
     remove : function( req, res ){
         req.db.collection(this.modelName)
-            .remove( { _id : req.params.assetId }, res );
+            .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
     }
 
 }

@@ -25,6 +25,7 @@
 
     "131" : "Asset not found",
     "132" : "No assets found. Please, use POST to add new one",
+    "133" : "Asset is not folder",
 
     "201" : "Insert was fail",
     "202" : "Update was fail"
