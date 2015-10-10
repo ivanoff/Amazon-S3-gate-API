@@ -1,29 +1,57 @@
 "use strict"
 
-exports.modelName = 'asserts';
+var vm = require('validate-me');
 
-exports.get = function( req, res ){
-    req.db.collection(this.modelName)
-        .findOne( { _id : req.params.id }, res );
-};
+var modelName = 'assets';
 
-exports.getAll = function( req, res ){
-    req.db.collection(this.modelName)
-        .find( { } ).toArray( res );
-};
+var model = {
+        '_id': { type: "uuid", required: true },
+        masterRegion: { type: "string" },
+        userId: { type: "uuid", required: true },
+        path: { type: "string" },  // full path to document
+        name: { type: "string", min:1, match: /[^\/]/, required: true },
+        type: { type: "string", required: true },  // type of document
+        size: { type: "integer" }, // size in bytes
+        permissions: { type: "integer", min: 11, max: 33 },  
+            //first digit - owner's rights, last one - other user's
+            //1-can write, 2-can read, 3-can read and write
+    };
 
-exports.add = function( req, data, res ){
-    req.db.collection(this.modelName)
-        .insert( data, res );
-};
+vm.registerModel( modelName, model );
 
-exports.update = function( req, data, res ){
-    req.db.collection(this.modelName)
-        .update( { _id : req.params.id }, data, res );
-};
+module.exports = {
 
-exports.remove = function( req, res ){
-    req.db.collection(this.modelName)
-        .remove( { _id : req.params.id }, res );
-};
+    modelName : modelName,
 
+    validate : function( req, next ){ 
+        var errors = vm.validate( this.modelName, req );
+        if( errors ) return next( JSON.stringify( errors ) );
+        return next( false );
+    },
+
+    get : function( req, res ){
+        req.db.collection(this.modelName)
+            .findOne( { userId : req.params.userId, _id : req.params.assetId }, res );
+    },
+
+    getRoot : function( req, res ){
+        req.db.collection(this.modelName)
+            .find( { userId : req.params.userId, path : '' } ).toArray( res );
+    },
+
+    add : function( req, data, res ){
+        req.db.collection(this.modelName)
+            .insert( data, res );
+    },
+
+    update : function( req, data, res ){
+        req.db.collection(this.modelName)
+            .update( { _id : req.params.assetId }, data, res );
+    },
+
+    remove : function( req, res ){
+        req.db.collection(this.modelName)
+            .remove( { _id : req.params.assetId }, res );
+    }
+
+}

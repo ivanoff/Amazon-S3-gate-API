@@ -6,9 +6,10 @@ var modelName = 'users';
 
 var model = {
         '_id':   { type: "uuid", required: true },
+        masterRegion: { type: "string" },
         name: {
-            first : { type: "string", max: 128, required: true, match : /^[\w\ _`\-]+$/i },
-            last  : { type: "string", max: 128, match : /^[\w\ _`\-]+$/i },
+            first: { type: "string", max: 128, match : /^[\w\ _`\-]+$/i, required: true },
+            last : { type: "string", max: 128, match : /^[\w\ _`\-]+$/i },
         },
         email:    { type: "email"  },
         metadata: { type: "object" },
@@ -28,7 +29,7 @@ module.exports = {
 
     get : function( req, res ){
         req.db.collection(this.modelName)
-            .findOne( { _id : req.params.id }, res );
+            .findOne( { _id : req.params.userId }, res );
     },
 
     getAll : function( req, res ){
@@ -43,12 +44,12 @@ module.exports = {
 
     update : function( req, data, res ){
         req.db.collection(this.modelName)
-            .update( { _id : req.params.id }, data, res );
+            .update( { _id : req.params.userId }, data, res );
     },
 
     remove : function( req, res ){
         req.db.collection(this.modelName)
-            .remove( { _id : req.params.id }, res );
+            .remove( { _id : req.params.userId }, res );
     }
 
 }

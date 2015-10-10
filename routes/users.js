@@ -8,11 +8,11 @@ var userController  = require('../controllers/users')
 
 module.exports = function (app) {
 
-    app.get    ( '/users',     userController.getAllUsers );
-    app.get    ( '/users/:id', userController.getUserById );
-    app.post   ( '/users',     userController.addUser     );
-    app.post   ( '/users/:id', userController.updateUser  );
-    app.delete ( '/users/:id', userController.deleteUser  );
+    app.get    ( '/users',         userController.getAllUsers );
+    app.get    ( '/users/:userId', userController.getUserById );
+    app.post   ( '/users',         userController.addUser     );
+    app.post   ( '/users/:userId', userController.updateUser  );
+    app.delete ( '/users/:userId', userController.deleteUser  );
 
 }
 
