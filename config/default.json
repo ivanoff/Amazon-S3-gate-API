@@ -1,15 +1,5 @@
 {
 
-////// Database config //////
-  "DB" : {
-    "url" : "mongodb://gl:gl@ds051933.mongolab.com:51933/gl"
-  },
-
-///// Server config /////
-  "SERVER" : {
-    "port" : 3000
-  },
-
 ///// Errors code /////
   "ERRORS" : {
     "101" : "First name not found",

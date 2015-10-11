@@ -54,6 +54,11 @@ module.exports = {
             .update( { userId : req.params.userId, _id : req.params.assetId }, data, res );
     },
 
+    search : function( req, res ){
+        req.db.collection(this.modelName)
+            .find( { userId : req.params.userId, name : new RegExp( req.params.name, 'i' ) } ).toArray( res );
+    },
+
     remove : function( req, res ){
         req.db.collection(this.modelName)
             .remove( { userId : req.params.userId, _id : req.params.assetId }, res );

@@ -89,6 +89,14 @@ exports.updateAsset = function( req, res, next ) {
     });
 };
 
+exports.search = function( req, res, next ){
+    AssetsModel.search( req, function( err, docs ){
+        if ( err   ) { req.error( 500, err ); return next(err) }
+        if ( !docs ) { req.error( 404, 132 ); return next() }
+        res.json( docs );
+    });
+};
+
 exports.deleteAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }

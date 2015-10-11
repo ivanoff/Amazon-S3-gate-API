@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 var _ = require('underscore');
 
-var DB_URL     = config.get( 'DB.url' ),
-    PORT       = config.get( 'SERVER.port' ),
+var DB_URL     = process.env.DB_URL,
+    PORT       = process.env.SERVER_PORT,
     ERRORS     = config.get( 'ERRORS' );
 
 var app = new express();
