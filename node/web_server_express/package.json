@@ -5,6 +5,7 @@
   "main": "web_server_express.js",
   "dependencies": {
     "body-parser": "^1.14.0",
+    "bunyan": "^1.5.1",
     "config": "^1.16.0",
     "express": "^4.13.3",
     "mongodb": "^2.0.43",
