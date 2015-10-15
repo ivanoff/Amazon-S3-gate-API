@@ -5,7 +5,7 @@ LOG_PATH=./log
 
 :loop
 
-    node index.js
+    node.exe index.js
     pause
 
 goto loop
