@@ -2,14 +2,17 @@
   "name": "web_server_express",
   "version": "0.0.2",
   "description": "web server using the NodeJS and MongoDB",
-  "main": "web_server_express.js",
+  "main": "index.js",
   "dependencies": {
     "body-parser": "^1.14.0",
     "bunyan": "^1.5.1",
     "config": "^1.16.0",
     "express": "^4.13.3",
+    "mocha": "^2.3.3",
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3",
+    "should": "^7.1.0",
+    "supertest": "^1.1.0",
     "underscore": "^1.8.3",
     "validate-me": "^0.2.10"
   },
@@ -19,7 +22,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node_modules/.bin/supervisor app",
+    "test": "node_modules/.bin/mocha -w"
   },
   "keywords": [
     "NodeJS",
