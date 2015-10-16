@@ -6,6 +6,7 @@ LOG_PATH=./log
 :loop
 
     node.exe index.js
+    echo "PRESS ENTER TO RESTART OR CTRL-C TO EXIT"
     pause
 
 goto loop

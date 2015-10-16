@@ -27,7 +27,9 @@ exports.addUser = function( req, res, next ) {
 
         UsersModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
-            res.json( { ok : 1, _id: doc['_id'] } );
+            res.location( '/users/'+doc['_id'] );
+            res.status( 201 );
+            res.json( doc );
         });
     });
 };
