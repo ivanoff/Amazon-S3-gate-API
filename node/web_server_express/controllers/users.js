@@ -1,12 +1,14 @@
 "use strict"
 
 var UsersModel = require('../models/users');
-var assetController  = require('./assets')
+var assetController  = require('./assets');
+
+var ERROR = require('config').get('ERRORS');
 
 exports.getAllUsers = function( req, res, next ){
     UsersModel.getAll( req, function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
-        if ( !docs ) { req.error( 404, 122 ); return next() }   // No users found
+        if ( !docs ) { req.error( 404, ERROR.NO_USERS ); return next() }   // No users found
         res.json( docs );
     });
 };
@@ -14,7 +16,7 @@ exports.getAllUsers = function( req, res, next ){
 exports.getUserById = function( req, res, next ) {
     UsersModel.get( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
-        if ( !doc ) { req.error( 404, 121 ); return next() }   // User not found
+        if ( !doc ) { req.error( 404, ERROR.USER_NOT_FOUND ); return next() }   // User not found
         res.json( doc );
     });
 };
@@ -38,7 +40,7 @@ exports.addUser = function( req, res, next ) {
 exports.updateUser = function( req, res, next ) {
     UsersModel.get( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
-        if ( !doc ) { req.error( 404, 121 ); return next() }  // User not found
+        if ( !doc ) { req.error( 404, ERROR.USER_NOT_FOUND ); return next() }  // User not found
 
         //luck of nested
         doc = req._.extend( doc, req.body );
@@ -58,7 +60,7 @@ exports.updateUser = function( req, res, next ) {
 exports.removeUser = function( req, res, next ) {
     UsersModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
-        if ( !doc ) { req.error( 404, 121 ); return next() } // User not found
+        if ( !doc ) { req.error( 404, ERROR.USER_NOT_FOUND ); return next() } // User not found
         assetController.removeAllUsersAssets( req, function( req, res ){
             if ( err ) { req.error( 500, err ); return next(err) }
         } );

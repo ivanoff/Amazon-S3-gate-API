@@ -2,6 +2,8 @@
 
 var vm = require('validate-me');
 
+var ERROR = require('config').get('ERRORS');
+
 var modelName = 'assets';
 
 var model = {
@@ -62,7 +64,7 @@ module.exports = {
     remove : function( req, res ){
         this.get( req, function( err, doc ){
             if ( err  ) { req.error( 500, err ); return next(err) }
-            if ( !doc ) { req.error( 404, 131 ); return next() }  // Asset not found
+            if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
 
             if( doc.type == 'folder' ) {
                 //delete all nested assets in folder
