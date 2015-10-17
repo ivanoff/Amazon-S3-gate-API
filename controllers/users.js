@@ -1,6 +1,7 @@
 "use strict"
 
 var UsersModel = require('../models/users');
+var assetController  = require('./assets')
 
 exports.getAllUsers = function( req, res, next ){
     UsersModel.getAll( req, function( err, docs ){
@@ -54,10 +55,13 @@ exports.updateUser = function( req, res, next ) {
     });
 };
 
-exports.deleteUser = function( req, res, next ) {
+exports.removeUser = function( req, res, next ) {
     UsersModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, 121 ); return next() } // User not found
+        assetController.removeAllUsersAssets( req, function( req, res ){
+            if ( err ) { req.error( 500, err ); return next(err) }
+        } );
         res.json( { ok : 1, _id: req.params.userId } );
     });
 };

@@ -60,8 +60,25 @@ module.exports = {
     },
 
     remove : function( req, res ){
+        this.get( req, function( err, doc ){
+            if ( err  ) { req.error( 500, err ); return next(err) }
+            if ( !doc ) { req.error( 404, 131 ); return next() }  // Asset not found
+
+            if( doc.type == 'folder' ) {
+                //delete all nested assets in folder
+                var path = doc.path + '/' + doc.name;
+                req.db.collection(this.modelName)
+                    .remove( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
+            }
+            req.db.collection(this.modelName)
+                .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
+
+        }.bind(this));
+    },
+
+    removeAll : function( req, res ){
         req.db.collection(this.modelName)
-            .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
+            .remove( { userId : req.params.userId }, res );
     }
 
 }
