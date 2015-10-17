@@ -101,10 +101,16 @@ exports.search = function( req, res, next ){
     });
 };
 
-exports.deleteAsset = function( req, res, next ) {
+exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
-        if ( !doc ) { req.error( 404, 121 ); return next() } // Asset not found
+        if ( !doc ) { req.error( 404, 131 ); return next() } // Asset not found
         res.json( { ok : 1, _id: req.params.assetId } );
+    });
+};
+
+exports.removeAllUsersAssets = function( req, res, next ) {
+    AssetsModel.removeAll( req, function( err, doc ){
+        if ( err  ) { req.error( 500, err ); return next(err) }
     });
 };

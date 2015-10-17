@@ -71,7 +71,6 @@ mongos> sh.shardCollection( "ivanoffdb_sharding.files2", { "masterRegion": 1, "o
 mongos> sh.addTagRange( "ivanoffdb_sharding.users2", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
 mongos> sh.addTagRange( "ivanoffdb_sharding.users2", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
 
-
 mongos> sh.addTagRange( "ivanoffdb_sharding.files2", { masterRegion: "us-east-1", ownerId : MinKey, name : MinKey }, { masterRegion: "us-east-1", ownerId : MaxKey, name : MaxKey }, "us-east-1" )
 mongos> sh.addTagRange( "ivanoffdb_sharding.files2", { masterRegion: "eu-west-1", ownerId : MinKey, name : MinKey }, { masterRegion: "eu-west-1", ownerId : MaxKey, name : MaxKey }, "eu-west-1" )
 

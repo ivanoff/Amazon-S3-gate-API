@@ -13,7 +13,7 @@ module.exports = function (app) {
     app.post   ( '/users/:userId/assets',          assetController.addAsset      );
     app.post   ( '/users/:userId/assets/:assetId', assetController.addAssetToFolder );
     app.put    ( '/users/:userId/assets/:assetId', assetController.updateAsset   );
-    app.delete ( '/users/:userId/assets/:assetId', assetController.deleteAsset   );
+    app.delete ( '/users/:userId/assets/:assetId', assetController.removeAsset   );
 
 }
 

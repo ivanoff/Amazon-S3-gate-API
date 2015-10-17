@@ -46,6 +46,23 @@ POST /users/{id}/asserts/{id}/search/{name}
 поиск папок/файлов по имени, размеру в папке {id}
 
 
+MongoDB schemas
+-------------
+users
+_id, masterRegion, name.first, name.last, email, metadata
+mongos> use ivanoffdb
+mongos> sh.enableSharding("ivanoffdb")
+mongos> db.users2.createIndex( { "masterRegion": 1, "_id": 1 } )
+mongos> sh.shardCollection( "ivanoffdb.users2", { "masterRegion": 1, "_id": 1 } )
+mongos> sh.addTagRange( "ivanoffdb.users2", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb.users2", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+mongos> db.userFiles.createIndex( { email: 1 }, { unique: true } )
+
+assets
+_id, masterRegion, userId, path, name, type, size, permissions
+mongos> db.users2.createIndex( { "masterRegion": 1, "_id": 1 } )
+mongos> db.userFiles.createIndex( { email: 1 }, { unique: true } )
+
 
 Users manager
 
