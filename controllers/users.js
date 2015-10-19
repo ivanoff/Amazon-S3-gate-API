@@ -26,7 +26,7 @@ exports.addUser = function( req, res, next ) {
     doc['_id'] = req.uuid.v4();
 
     UsersModel.validate( doc, function( err ) {
-        if ( err ) { req.error( 500, err ); return next(err) }
+        if ( err ) { req.error( 400, err ); return next(err) }
 
         UsersModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
@@ -46,7 +46,7 @@ exports.updateUser = function( req, res, next ) {
         doc = req._.extend( doc, req.body );
 
         UsersModel.validate( doc, function( err ) {
-            if ( err ) { req.error( 500, err ); return next(err) }
+            if ( err ) { req.error( 400, err ); return next(err) }
 
             UsersModel.update( req, doc, function( err, result, next ){
                 if ( err ) { req.error( 500, err ); return next(err) }
