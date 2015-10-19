@@ -35,7 +35,7 @@ exports.addAsset = function( req, res, next ) {
     if( !req.params.path ) { doc['path'] = '' };
 
     AssetsModel.validate( doc, function( err ) {
-        if ( err ) { req.error( 500, err ); return next(err) }
+        if ( err ) { req.error( 400, err ); return next(err) }
 
         AssetsModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
@@ -62,7 +62,7 @@ exports.addAssetToFolder = function( req, res, next ) {
             doc['path'] = docFolder.path + '/' + docFolder.name
 
             AssetsModel.validate( doc, function( err ) {
-                if ( err ) { req.error( 500, err ); return next(err) }
+                if ( err ) { req.error( 400, err ); return next(err) }
         
                 AssetsModel.add( req, doc, function( err, result, next ){
                     if ( err ) { req.error( 500, err ); return next(err) }
@@ -84,7 +84,7 @@ exports.updateAsset = function( req, res, next ) {
         doc = req._.extend( doc, req.body );
 
         AssetsModel.validate( doc, function( err ) {
-            if ( err ) { req.error( 500, err ); return next(err) }
+            if ( err ) { req.error( 400, err ); return next(err) }
 
             AssetsModel.update( req, doc, function( err, result, next ){
                 if ( err ) { req.error( 500, err ); return next(err) }
