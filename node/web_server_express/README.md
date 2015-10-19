@@ -184,6 +184,7 @@ Configuration file is config/default.json. It contains information about databas
 and list of errors.
 Example of config file: 
 
+```javascript
 {
 ////// Database config //////
   "DB" : {
@@ -207,6 +208,7 @@ Example of config file:
     "202" : "Update was fail"
   }
 }
+```
 
 
 File list

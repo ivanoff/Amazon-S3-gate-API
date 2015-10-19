@@ -10,9 +10,9 @@ var _ = require('underscore');
 
 var app = new express();
 
-var DB_URL     = process.env.DB_URL,
-    PORT       = process.env.SERVER_PORT,
-    LOG_PATH   = process.env.LOG_PATH,
+var DB_URL     = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
+    PORT       = process.env.SERVER_PORT || 3000,
+    LOG_PATH   = process.env.LOG_PATH || './log',
     ERRORS     = config.get( 'ERRORS' );
 
 var db = require('./controllers/db');
