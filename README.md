@@ -32,12 +32,12 @@ _id, masterRegion, userId, path, name, type, size, permissions
 
 GET /users/{id}/assets/resources
 получить информацию об использовании всех ресурсов
-GET /users/{id}/assets/resources/{type}
-получить информацию об использовании ресурсов типа type
-GET /users/{id}/assets/{id}/resources
-получить информацию об использовании всех ресурсов, лежащих в папке {id}
+// GET /users/{id}/assets/resources/{type}
+// получить информацию об использовании ресурсов типа type
+// GET /users/{id}/assets/{id}/resources
+// получить информацию об использовании всех ресурсов, лежащих в папке {id}
 
-_id, masterRegion, userId, filesType, filesCount, totalSize
+_id, masterRegion, userId, assetType, count, totalSize
 
 
 POST /users/{id}/asserts/search/{name}
