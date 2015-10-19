@@ -12,7 +12,7 @@ var model = {
         userId: { type: "uuid", required: true },
         path: { type: "string" },  // full path to document
         name: { type: "string", min:1, match: /[^\/]/, required: true },
-        type: { type: "string", required: true },  // type of document
+        type: { type: "string", match: /^[^_]/, required: true },
         size: { type: "integer" }, // size in bytes
         permissions: { type: "integer", min: 11, max: 33 },  
             //first digit - owner's rights, last one - other user's
