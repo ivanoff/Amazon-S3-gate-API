@@ -22,7 +22,7 @@ module.exports = {
 
     getResourcesTotal : function( req, res ){
         req.db.collection(this.modelName)
-            .findOne( { userId : req.params.userId, assetType : 'video' }, res );
+            .findOne( { userId : req.params.userId, assetType : '_total' }, res );
     },
 
     getResourcesByType : function( req, res ){
