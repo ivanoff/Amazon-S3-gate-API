@@ -32,7 +32,7 @@ exports.addUser = function( req, res, next ) {
         UsersModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
 
-            ResourcesModel.init( req, doc, function(){} );
+            ResourcesModel.initResources( req, doc, function(){} );
 
             res.location( '/users/'+doc['_id'] );
             res.status( 201 );
