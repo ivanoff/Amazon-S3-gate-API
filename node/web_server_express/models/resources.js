@@ -16,18 +16,9 @@ module.exports = {
     modelName : modelName,
 
     getResources : function( req, res ){
-        req.db.collection(this.modelName)
-            .find( { userId : req.params.userId } ).toArray( res );
-    },
-
-    getResourcesTotal : function( req, res ){
-        req.db.collection(this.modelName)
-            .findOne( { userId : req.params.userId, assetType : '_total' }, res );
-    },
-
-    getResourcesByType : function( req, res ){
-        req.db.collection(this.modelName)
-            .findOne( { userId : req.params.userId, assetType : req.params.type }, res );
+        var query = { userId : req.params.userId };
+        if( req.params.type ) query.assetType = req.params.type;
+        req.db.collection(this.modelName).find( query ).toArray( res );
     },
 
     init : function( req, data, res ){

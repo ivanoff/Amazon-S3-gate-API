@@ -8,9 +8,8 @@ var resourceController  = require('../controllers/resources');
 
 module.exports = function (app) {
 
-    app.get    ( '/users/:userId/resources',        resourceController.getResources       );
-    app.get    ( '/users/:userId/resources/_total', resourceController.getResourcesTotal  );
-    app.get    ( '/users/:userId/resources/:type',  resourceController.getResourcesByType );
+    app.get    ( '/users/:userId/resources',       resourceController.getResources );
+    app.get    ( '/users/:userId/resources/:type', resourceController.getResources );
 
 }
 
