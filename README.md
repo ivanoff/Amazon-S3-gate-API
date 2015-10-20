@@ -46,6 +46,138 @@ POST /users/{id}/asserts/{id}/search/{name}
 поиск папок/файлов по имени, размеру в папке {id}
 
 
+## Command line example
+
+* Add user "John Richard the XIII"
+```shell
+curl -d '{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}' -H "Content-Type: application/json" http://localhost:3000/users
+```
+```json
+{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo","_id":"d536ef67-4aea-450f-bd1f-209120d28679","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679","_usefulAssets":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets","_usefulResources":"/users/d536ef67-4aea-450f-bd1f-209120d28679/resources"}
+```
+
+
+* Show just added user
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679
+```
+```json
+{"_id":"d536ef67-4aea-450f-bd1f-209120d28679","name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}
+```
+
+
+* Show his assets
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
+```
+```json
+[]
+```
+
+
+* Show user's used resources
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
+```
+```json
+[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":0,"totalSize":0}]
+```
+
+
+* Add folder 'video' to root of access
+```shell
+curl -H "Content-Type: application/json" -d '{"name":"video","type":"folder"}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
+```
+```json
+{"name":"video","type":"folder","_id":"fda404c5-330e-4ea7-8817-3b6d59f52432","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"","size":0}
+```
+
+
+* Show root folder
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
+```
+```json
+[{"_id":"fda404c5-330e-4ea7-8817-3b6d59f52432","name":"video","type":"folder","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"","size":0}]
+```
+
+
+* Show user's used resources
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
+```
+```json
+[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":1,"totalSize":0},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":1,"totalSize":0}]
+```
+
+
+* Add 2 movies and one image to 'video' folder
+```shell
+curl -H "Content-Type: application/json" -d '{"name":"hotfuzz2.avi","type":"video","size":1300}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+```
+```json
+{"name":"hotfuzz2.avi","type":"video","size":1300,"_id":"05e34208-7377-4bee-bbee-a9e395e9b315","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/05e34208-7377-4bee-bbee-a9e395e9b315"}
+```
+```shell
+curl -H "Content-Type: application/json" -d '{"name":"hotfuzz.avi","type":"video","size":1000}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+```
+```json
+{"name":"hotfuzz.avi","type":"video","size":1000,"_id":"31b8770b-a857-44ac-9a13-f62cd1238c79","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/31b8770b-a857-44ac-9a13-f62cd1238c79"}
+```
+```shell
+curl -H "Content-Type: application/json" -d '{"name":"nick.jpg","type":"image","size":10}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+```
+```json
+{"name":"nick.jpg","type":"image","size":10,"_id":"c88b71d8-3ca9-47bb-9bd4-0792ca28dc23","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/c88b71d8-3ca9-47bb-9bd4-0792ca28dc23"}
+```
+
+
+* Show content of the 'video' folder
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+```
+```json
+[{"_id":"05e34208-7377-4bee-bbee-a9e395e9b315","name":"hotfuzz2.avi","type":"video","size":1300,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"},{"_id":"31b8770b-a857-44ac-9a13-f62cd1238c79","name":"hotfuzz.avi","type":"video","size":1000,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"},{"_id":"c88b71d8-3ca9-47bb-9bd4-0792ca28dc23","name":"nick.jpg","type":"image","size":10,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"}]
+```
+
+
+* Show user's used resources
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
+```
+```json
+[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":4,"totalSize":2310},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":1,"totalSize":0},{"_id":"562614aafc03aa5758d62f3f","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"video","count":2,"totalSize":2300},{"_id":"56261500fc03aa5758d62f40","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"image","count":1,"totalSize":10}]
+```
+
+
+* Delete 'video' folder
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432 -X DELETE
+```
+```json
+{"ok":1,"_id":"fda404c5-330e-4ea7-8817-3b6d59f52432"}
+```
+
+
+* Try to list of content of removed folder
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+```
+```json
+{"error":1,"text":{"131":"Asset not found"}}
+```
+
+
+* Show user's used resources
+```shell
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
+```
+```json
+[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":0,"totalSize":0},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":0,"totalSize":0},{"_id":"562614aafc03aa5758d62f3f","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"video","count":0,"totalSize":0},{"_id":"56261500fc03aa5758d62f40","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"image","count":0,"totalSize":0}]
+```
+
+
+
 MongoDB schemas
 -------------
 users

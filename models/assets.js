@@ -65,8 +65,8 @@ module.exports = {
 
     remove : function( req, res ){
         this.get( req, function( err, doc ){
-            if ( err  ) { req.error( 500, err ); return res(err) }
-            if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return res() }
+            if ( err  ) { req.error( 500, err ); return next(err) }
+            if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
 
             if( doc.type == 'folder' ) {
                 //delete all nested assets in folder
@@ -81,7 +81,7 @@ module.exports = {
                 req.db.collection(this.modelName)
                     .remove( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
             }
-            this.get( req, function( err, doc) {
+            this.get( req, function( err, doc ) {
                 ResourcesModel.updateResources( req, doc, -1, function(){} )
             });
             req.db.collection(this.modelName)

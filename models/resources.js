@@ -27,6 +27,7 @@ module.exports = {
     },
 
     updateResources : function( req, data, count, res ){
+        if ( !data ) return res();
         if( !data.type ) data.type = '';
         if( !data.size ) data.size = 0;
         if( count < 0  ) data.size = -data.size;
@@ -48,16 +49,6 @@ module.exports = {
         req.db.collection(this.modelName)
             .updateOne( { userId : data.userId, assetType : '_total'}, 
                 { $inc : { count : count, totalSize : data.size } }, res );
-    },
-
-    removeResources : function( req, res ){
-        if( !req.params.type ) req.params.type = '';
-        req.db.collection(this.modelName)
-            .update( { userId : req.params.userId, assetType : req.params.type, 
-                    $inc : { count : -1, totalSize : -data.size } }, res );
-        req.db.collection(this.modelName)
-            .update( { userId : req.params.userId, assetType : '_total', 
-                    $inc : { count : -1, totalSize : -data.size } }, res );
     },
 
 }
