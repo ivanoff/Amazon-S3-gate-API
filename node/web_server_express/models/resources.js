@@ -1,7 +1,5 @@
 "use strict"
 
-var async = require("async");
-
 var modelName = 'resources';
 
 var model = {
@@ -28,8 +26,10 @@ module.exports = {
         req.db.collection(this.modelName).find( query ).toArray( res );
     },
 
-    updateResources : function( req, data, res ){
+    updateResources : function( req, data, count, res ){
         if( !data.type ) data.type = '';
+        if( !data.size ) data.size = 0;
+        if( count < 0  ) data.size = -data.size;
 
         req.db.collection(this.modelName)
             .findOne( { userId : data.userId, assetType : data.type },
@@ -37,20 +37,20 @@ module.exports = {
                 if ( !doc ) {
                     req.db.collection(this.modelName)
                         .insert( { userId : data.userId, assetType : data.type, 
-                                    count : 1, totalSize : data.size }, res );
+                                    count : count, totalSize : data.size }, res );
                 } else {
                     req.db.collection(this.modelName)
                         .updateOne( { userId : data.userId, assetType : data.type }, 
-                                { $inc : { count : 1, totalSize : data.size } }, res );
+                                { $inc : { count : count, totalSize : data.size } }, res );
                 }
             }.bind(this) );
 
         req.db.collection(this.modelName)
             .updateOne( { userId : data.userId, assetType : '_total'}, 
-                { $inc : { count : 1, totalSize : data.size } }, res );
+                { $inc : { count : count, totalSize : data.size } }, res );
     },
 
-    delete : function( req, data, res ){
+    removeResources : function( req, res ){
         if( !req.params.type ) req.params.type = '';
         req.db.collection(this.modelName)
             .update( { userId : req.params.userId, assetType : req.params.type, 

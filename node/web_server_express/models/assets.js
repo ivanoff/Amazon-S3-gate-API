@@ -1,6 +1,7 @@
 "use strict"
 
 var vm = require('validate-me');
+var ResourcesModel = require('./resources');
 
 var ERROR = require('config').get('ERRORS');
 
@@ -47,6 +48,7 @@ module.exports = {
     },
 
     add : function( req, data, res ){
+        ResourcesModel.updateResources( req, data, +1, function(){} );
         req.db.collection(this.modelName)
             .insert( data, res );
     },
@@ -63,15 +65,25 @@ module.exports = {
 
     remove : function( req, res ){
         this.get( req, function( err, doc ){
-            if ( err  ) { req.error( 500, err ); return next(err) }
-            if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
+            if ( err  ) { req.error( 500, err ); return res(err) }
+            if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return res() }
 
             if( doc.type == 'folder' ) {
                 //delete all nested assets in folder
                 var path = doc.path + '/' + doc.name;
+                var cursor = req.db.collection(this.modelName)
+                    .find( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
+                cursor.each(function(err, item) {
+                    if( item ) {
+                        ResourcesModel.updateResources( req, item, -1, function(){} )
+                    }
+                });
                 req.db.collection(this.modelName)
                     .remove( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
             }
+            this.get( req, function( err, doc) {
+                ResourcesModel.updateResources( req, doc, -1, function(){} )
+            });
             req.db.collection(this.modelName)
                 .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
 
