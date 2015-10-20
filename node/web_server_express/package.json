@@ -4,6 +4,7 @@
   "description": "web server using the NodeJS and MongoDB",
   "main": "index.js",
   "dependencies": {
+    "async": "^1.4.2",
     "body-parser": "^1.14.0",
     "bunyan": "^1.5.1",
     "config": "^1.16.0",

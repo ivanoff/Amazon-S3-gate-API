@@ -1,5 +1,7 @@
 "use strict"
 
+var async = require("async");
+
 var modelName = 'resources';
 
 var model = {
@@ -15,33 +17,33 @@ module.exports = {
 
     modelName : modelName,
 
+    initResources : function( req, data, res ){
+        req.db.collection(this.modelName)
+            .insert( { userId : data['_id'], assetType : '_total', count : 0, totalSize : 0 }, res );
+    },
+
     getResources : function( req, res ){
         var query = { userId : req.params.userId };
         if( req.params.type ) query.assetType = req.params.type;
         req.db.collection(this.modelName).find( query ).toArray( res );
     },
 
-    init : function( req, data, res ){
-        req.db.collection(this.modelName)
-            .insert( { userId : data['_id'], assetType : '_total', 
-                       count : 0, totalSize : 0 }, res );
-    },
-
-    update : function( req, data, res ){
+    updateResources : function( req, data, res ){
         if( !data.type ) data.type = '';
+
         req.db.collection(this.modelName)
             .findOne( { userId : data.userId, assetType : data.type },
             function( err, doc ){
-                if ( !doc ) 
+                if ( !doc ) {
                     req.db.collection(this.modelName)
                         .insert( { userId : data.userId, assetType : data.type, 
-                                    count : 0, totalSize : 0 }, res );
-                    }.bind(this)
-            );
-        req.db.collection(this.modelName)
-            .updateOne( { userId : data.userId, assetType : data.type }, 
-                    { $inc : { count : 1, totalSize : data.size } }, res
-            );
+                                    count : 1, totalSize : data.size }, res );
+                } else {
+                    req.db.collection(this.modelName)
+                        .updateOne( { userId : data.userId, assetType : data.type }, 
+                                { $inc : { count : 1, totalSize : data.size } }, res );
+                }
+            }.bind(this) );
 
         req.db.collection(this.modelName)
             .updateOne( { userId : data.userId, assetType : '_total'}, 
