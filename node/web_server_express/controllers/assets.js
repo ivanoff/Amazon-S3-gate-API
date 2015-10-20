@@ -66,6 +66,9 @@ exports.addAssetToFolder = function( req, res, next ) {
         
                 AssetsModel.add( req, doc, function( err, result, next ){
                     if ( err ) { req.error( 500, err ); return next(err) }
+
+                    doc['_usefulLink']      = '/users/'+doc['userId']+'/assets/'+doc['_id'];
+
                     res.location( '/users/'+doc['userId']+'/assets/'+doc['_id'] );
                     res.status( 201 );
                     res.json( doc );
