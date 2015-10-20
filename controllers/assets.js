@@ -1,7 +1,6 @@
 "use strict"
 
 var AssetsModel = require('../models/assets');
-var ResourcesModel = require('../models/resources');
 
 var ERROR = require('config').get('ERRORS');
 
@@ -40,9 +39,6 @@ exports.addAsset = function( req, res, next ) {
 
         AssetsModel.add( req, doc, function( err, result, next ){
             if ( err ) { req.error( 500, err ); return next(err) }
-
-            ResourcesModel.updateResources( req, doc, function(){} );
-
             res.location( '/users/'+doc['userId']+'/assets/'+doc['_id'] );
             res.status( 201 );
             res.json( doc );
