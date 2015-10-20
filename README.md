@@ -49,7 +49,7 @@ POST /users/{id}/asserts/{id}/search/{name}
 ## Command line example
 
 * Add user "John Richard the XIII"
-```shell
+```bash
 curl -d '{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}' -H "Content-Type: application/json" http://localhost:3000/users
 ```
 ```json
@@ -58,7 +58,7 @@ curl -d '{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}' -H 
 
 
 * Show just added user
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679
 ```
 ```json
@@ -67,7 +67,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679
 
 
 * Show his assets
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 ```
 ```json
@@ -76,7 +76,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 
 
 * Show user's used resources
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 ```
 ```json
@@ -85,7 +85,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 
 
 * Add folder 'video' to root of access
-```shell
+```bash
 curl -H "Content-Type: application/json" -d '{"name":"video","type":"folder"}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 ```
 ```json
@@ -94,7 +94,7 @@ curl -H "Content-Type: application/json" -d '{"name":"video","type":"folder"}' h
 
 
 * Show root folder
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 ```
 ```json
@@ -103,7 +103,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 
 
 * Show user's used resources
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 ```
 ```json
@@ -112,19 +112,19 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 
 
 * Add 2 movies and one image to 'video' folder
-```shell
+```bash
 curl -H "Content-Type: application/json" -d '{"name":"hotfuzz2.avi","type":"video","size":1300}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
 ```
 ```json
 {"name":"hotfuzz2.avi","type":"video","size":1300,"_id":"05e34208-7377-4bee-bbee-a9e395e9b315","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/05e34208-7377-4bee-bbee-a9e395e9b315"}
 ```
-```shell
+```bash
 curl -H "Content-Type: application/json" -d '{"name":"hotfuzz.avi","type":"video","size":1000}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
 ```
 ```json
 {"name":"hotfuzz.avi","type":"video","size":1000,"_id":"31b8770b-a857-44ac-9a13-f62cd1238c79","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/31b8770b-a857-44ac-9a13-f62cd1238c79"}
 ```
-```shell
+```bash
 curl -H "Content-Type: application/json" -d '{"name":"nick.jpg","type":"image","size":10}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
 ```
 ```json
@@ -133,7 +133,7 @@ curl -H "Content-Type: application/json" -d '{"name":"nick.jpg","type":"image","
 
 
 * Show content of the 'video' folder
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
 ```
 ```json
@@ -142,7 +142,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda
 
 
 * Show user's used resources
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 ```
 ```json
@@ -151,7 +151,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 
 
 * Delete 'video' folder
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432 -X DELETE
 ```
 ```json
@@ -160,7 +160,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda
 
 
 * Try to list of content of removed folder
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
 ```
 ```json
@@ -169,7 +169,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda
 
 
 * Show user's used resources
-```shell
+```bash
 curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 ```
 ```json
