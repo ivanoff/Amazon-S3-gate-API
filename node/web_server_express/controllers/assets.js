@@ -106,6 +106,19 @@ exports.search = function( req, res, next ){
     });
 };
 
+exports.download = function( req, res, next ) {
+    AssetsModel.get( req, function( err, doc ){
+        if ( err  ) { req.error( 500, err ); return next(err) }
+        if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
+        if ( doc.type != 'folder' ) {
+            req.aws.download( { fileId: doc['_id'] }, function(){} );
+            res.json( doc );
+        } else {
+            next( 'Folder type is not downloadable. But we can zip it. Later. If you want.' );
+        }
+    });
+};
+
 exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
