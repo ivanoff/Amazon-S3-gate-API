@@ -7,6 +7,9 @@ var modelName = 'users';
 var model = {
         '_id':   { type: "uuid", required: true },
         masterRegion: { type: "string" },
+//        login    : { type: "string", required: true },
+//        password : { type: "md5",    required: true },
+//        root     : { type: "integer" },
         name: {
             first: { type: "string", max: 128, match : /^[\w\ _`\-]+$/i, required: true },
             last : { type: "string", max: 128, match : /^[\w\ _`\-]+$/i },
