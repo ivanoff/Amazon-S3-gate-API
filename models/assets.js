@@ -51,6 +51,8 @@ module.exports = {
         ResourcesModel.updateResources( req, data, +1, function(){} );
         req.db.collection(this.modelName)
             .insert( data, res );
+
+        req.aws.upload( { filePath: '/tmp/temp/528968726.jpg', fileId: data['_id'] }, function(){} );
     },
 
     update : function( req, data, res ){

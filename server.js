@@ -4,18 +4,20 @@ var config = require('config');
 var express = require('express');
 var uuid = require( 'node-uuid' );
 var bodyParser = require('body-parser');
-var mongo = require('mongodb');
 var bunyan = require('bunyan');
 var _ = require('underscore');
-
-var app = new express();
+require('mongodb');
+require('s3');
 
 var DB_URL     = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
     PORT       = process.env.SERVER_PORT || 3000,
     LOG_PATH   = process.env.LOG_PATH || './log',
     ERRORS     = config.get( 'ERRORS' );
 
-var db = require('./controllers/db');
+var app = new express();
+
+var db  = require('./controllers/db');
+var aws = require('./controllers/aws');
 
 var log = bunyan.createLogger( { 
   name: "server",
@@ -29,6 +31,7 @@ var log = bunyan.createLogger( {
 app.use( function( req, res, next ){ 
     req._     = _; 
     req.db    = db.get(); 
+    req.aws   = aws;
     req.log   = log; 
     req.uuid  = uuid; 
     req.warn  = function(n,e){ 
@@ -50,6 +53,7 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
 });
 
 exports.start = function( done ) {
+    aws.connect( DB_URL, function( err, next ){  });
     db.connect( DB_URL, function( err, next ) {
         if ( err ) { return next( err ) }
         this.server = app.listen( PORT, function() {
