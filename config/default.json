@@ -1,6 +1,6 @@
 {
 
-///// Errors code /////
+///// Errors codes /////
   "ERRORS" : {
 
     "USER_NOT_FOUND"  : { "121" : "User not found" },
