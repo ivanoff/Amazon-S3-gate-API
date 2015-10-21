@@ -81,9 +81,7 @@ module.exports = {
                 req.db.collection(this.modelName)
                     .remove( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
             }
-            this.get( req, function( err, doc ) {
-                ResourcesModel.updateResources( req, doc, -1, function(){} )
-            });
+            ResourcesModel.updateResources( req, doc, -1, function(){} );
             req.db.collection(this.modelName)
                 .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
 

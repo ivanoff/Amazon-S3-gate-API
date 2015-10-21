@@ -17,7 +17,7 @@
     "should": "^7.1.0",
     "supertest": "^1.1.0",
     "underscore": "^1.8.3",
-    "validate-me": "^0.2.10"
+    "validate-me": "^0.2.12"
   },
   "repository": {
     "type": "git",
