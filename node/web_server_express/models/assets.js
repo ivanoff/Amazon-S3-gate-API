@@ -37,11 +37,6 @@ module.exports = {
             .findOne( { userId : req.params.userId, _id : req.params.assetId }, res );
     },
 
-    getRoot : function( req, res ){
-        req.db.collection(this.modelName)
-            .find( { userId : req.params.userId, path : '' } ).toArray( res );
-    },
-
     getFolderContent : function( req, path, res ){
         req.db.collection(this.modelName)
             .find( { userId : req.params.userId, path : path } ).toArray( res );
@@ -51,8 +46,6 @@ module.exports = {
         ResourcesModel.updateResources( req, data, +1, function(){} );
         req.db.collection(this.modelName)
             .insert( data, res );
-
-        req.aws.upload( { filePath: '/tmp/temp/528968726.jpg', fileId: data['_id'] }, function(){} );
     },
 
     update : function( req, data, res ){
@@ -78,6 +71,7 @@ module.exports = {
                 cursor.each(function(err, item) {
                     if( item ) {
                         ResourcesModel.updateResources( req, item, -1, function(){} )
+                        req.aws.remove( { fileId: item['_id'], userId: req.params.userId }, function(){} );
                     }
                 });
                 req.db.collection(this.modelName)

@@ -86,7 +86,7 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 
 * Add folder 'video' to root of access
 ```bash
-curl -H "Content-Type: application/json" -d '{"name":"video","type":"folder"}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
+curl -H "Content-Type: application/json" -d '{"name":"video"}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 ```
 ```json
 {"name":"video","type":"folder","_id":"fda404c5-330e-4ea7-8817-3b6d59f52432","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"","size":0}
@@ -111,24 +111,30 @@ curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
 ```
 
 
-* Add 2 movies and one image to 'video' folder
+* Upload one image to root folder
 ```bash
-curl -H "Content-Type: application/json" -d '{"name":"hotfuzz2.avi","type":"video","size":1300}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+curl -F "file=@/tmp/temp/index.jpeg" http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
 ```
 ```json
-{"name":"hotfuzz2.avi","type":"video","size":1300,"_id":"05e34208-7377-4bee-bbee-a9e395e9b315","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/05e34208-7377-4bee-bbee-a9e395e9b315"}
+
 ```
+
+
+* Show image parameters
 ```bash
-curl -H "Content-Type: application/json" -d '{"name":"hotfuzz.avi","type":"video","size":1000}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/d536ef67-4aea-450f-bd1f-209120d28679
 ```
 ```json
-{"name":"hotfuzz.avi","type":"video","size":1000,"_id":"31b8770b-a857-44ac-9a13-f62cd1238c79","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/31b8770b-a857-44ac-9a13-f62cd1238c79"}
+
 ```
+
+
+* Download image to root folder
 ```bash
-curl -H "Content-Type: application/json" -d '{"name":"nick.jpg","type":"image","size":10}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
+curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/d536ef67-4aea-450f-bd1f-209120d28679?download
 ```
 ```json
-{"name":"nick.jpg","type":"image","size":10,"_id":"c88b71d8-3ca9-47bb-9bd4-0792ca28dc23","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/c88b71d8-3ca9-47bb-9bd4-0792ca28dc23"}
+
 ```
 
 
