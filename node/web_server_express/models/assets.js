@@ -37,11 +37,6 @@ module.exports = {
             .findOne( { userId : req.params.userId, _id : req.params.assetId }, res );
     },
 
-    getRoot : function( req, res ){
-        req.db.collection(this.modelName)
-            .find( { userId : req.params.userId, path : '' } ).toArray( res );
-    },
-
     getFolderContent : function( req, path, res ){
         req.db.collection(this.modelName)
             .find( { userId : req.params.userId, path : path } ).toArray( res );
@@ -76,14 +71,13 @@ module.exports = {
                 cursor.each(function(err, item) {
                     if( item ) {
                         ResourcesModel.updateResources( req, item, -1, function(){} )
+                        req.aws.remove( { fileId: item['_id'], userId: req.params.userId }, function(){} );
                     }
                 });
                 req.db.collection(this.modelName)
                     .remove( { userId : req.params.userId, path : new RegExp('^'+path+'(/.*)?$') } );
             }
-            this.get( req, function( err, doc ) {
-                ResourcesModel.updateResources( req, doc, -1, function(){} )
-            });
+            ResourcesModel.updateResources( req, doc, -1, function(){} );
             req.db.collection(this.modelName)
                 .remove( { userId : req.params.userId, _id : req.params.assetId }, res );
 

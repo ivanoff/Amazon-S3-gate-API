@@ -69,7 +69,7 @@ exports.removeUser = function( req, res, next ) {
     UsersModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, ERROR.USER_NOT_FOUND ); return next() } // User not found
-        assetController.removeAllUsersAssets( req, function( req, res ){
+        assetController.removeAllUsersAssets( req, res, function( req, res ){
             if ( err ) { req.error( 500, err ); return next(err) }
         } );
         res.json( { ok : 1, _id: req.params.userId } );
