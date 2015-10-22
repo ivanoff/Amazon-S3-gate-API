@@ -1,11 +1,13 @@
 "use strict"
+var fs    = require( 'fs'    );
+var async = require( 'async' );
 
 var AssetsModel = require('../models/assets');
 
 var ERROR = require('config').get('ERRORS');
 
 exports.getRootAssets = function( req, res, next ){
-    AssetsModel.getRoot( req, function( err, docs ){
+    AssetsModel.getFolderContent( req, '', function( err, docs ){
         if ( err   ) { req.error( 500, err ); return next(err) }
         if ( !docs ) { req.error( 404, ERROR.NO_ASSETS ); return next() }
         res.json( docs );
@@ -17,7 +19,15 @@ exports.getAssetById = function( req, res, next ) {
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
         if ( doc.type != 'folder' ) {
-            res.json( doc );
+            if( req.query.download == '' ) {
+                req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+                    res.download('/tmp/'+doc['_id'], doc['name'], function(){ 
+                        fs.unlink('/tmp/'+doc['_id']);
+                    });
+                } );
+            } else {
+                res.json( doc );
+            }
         } else {
             AssetsModel.getFolderContent( req, doc.path + '/' + doc.name, function( err, doc ){
                 if ( err  ) { req.error( 500, err ); return next(err) }
@@ -32,50 +42,50 @@ exports.addAsset = function( req, res, next ) {
     var doc    = req.body;
     doc['_id'] = req.uuid.v4();
     doc['userId'] = req.params.userId;
-    if( !req.params.path ) { doc['path'] = '' };
+    if( req.files ) {
+        doc['type'] = req.files.file.type;
+        doc['name'] = req.files.file.originalFilename;
+        doc['size'] = req.files.file.size;
+    }
+    if( !doc['type'] ) doc['type'] = 'folder';
+    if( !doc['path'] ) doc['path'] = '';
 
-    AssetsModel.validate( doc, function( err ) {
-        if ( err ) { req.error( 400, err ); return next(err) }
-
-        AssetsModel.add( req, doc, function( err, result, next ){
-            if ( err ) { req.error( 500, err ); return next(err) }
-            res.location( '/users/'+doc['userId']+'/assets/'+doc['_id'] );
-            res.status( 201 );
-            res.json( doc );
-        });
-    });
-};
-
-exports.addAssetToFolder = function( req, res, next ) {
-    var doc    = req.body;
-    doc['_id'] = req.uuid.v4();
-    doc['userId'] = req.params.userId;
-    if( !req.params.path ) { doc['path'] = '' };
-
-//Promisesis?
-    if( req.params.assetId ) {
-        AssetsModel.get( req, function( err, docFolder ){
-            if ( err ) { req.error( 500, err ); return next(err) }
-            if ( !docFolder ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
-            if ( docFolder.type != 'folder' ) 
-                        { req.error( 404, ERROR.NOT_A_FOLDER ); return next() }
-            doc['path'] = docFolder.path + '/' + docFolder.name
-
-            AssetsModel.validate( doc, function( err ) {
-                if ( err ) { req.error( 400, err ); return next(err) }
-        
-                AssetsModel.add( req, doc, function( err, result, next ){
+    async.waterfall([
+        function( next ){
+            if( req.params.assetId ) {
+                AssetsModel.get( req, function( err, docFolder ){
                     if ( err ) { req.error( 500, err ); return next(err) }
+                    if ( !docFolder ) 
+                            { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
+                    if ( docFolder.type != 'folder' ) 
+                            { req.error( 404, ERROR.NOT_A_FOLDER ); return next() }
+                    doc['path'] = docFolder.path + '/' + docFolder.name;
+                    next();
+                });
+            } else {
+                next();
+            }
+        },
+        function( next ){ 
+            AssetsModel.validate( doc, function( err ) {
+                if( err ) { req.error( 400, err ); return next(err) }
 
-                    doc['_usefulLink']      = '/users/'+doc['userId']+'/assets/'+doc['_id'];
-
+                AssetsModel.add( req, doc, function( err, result, next ){
+                    if( err ) { req.error( 500, err ); return next(err) }
+                    if( req.files ) {
+                        req.aws.upload( { filePath: req.files.file.path,
+                            fileId: doc['_id'], userId: doc['userId'] }, function(){
+                                fs.unlink( req.files.file.path );
+                            } );
+                    }
                     res.location( '/users/'+doc['userId']+'/assets/'+doc['_id'] );
                     res.status( 201 );
                     res.json( doc );
                 });
             });
-        })
-    }
+            next();
+        },
+    ]);
 
 };
 
@@ -110,11 +120,13 @@ exports.download = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
-        if ( doc.type != 'folder' ) {
-            req.aws.download( { fileId: doc['_id'] }, function(){} );
-            res.json( doc );
-        } else {
+        if ( doc.type == 'folder' ) {
             next( 'Folder type is not downloadable. But we can zip it. Later. If you want.' );
+        } else {
+            req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+                res.download('/tmp/'+doc['_id'], doc['name'] );
+                fs.unlink('/tmp/'+doc['_id']);
+            } );
         }
     });
 };
@@ -123,12 +135,14 @@ exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) { req.error( 500, err ); return next(err) }
         if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
+        req.aws.remove( { fileId: req.params.assetId, userId: req.params.userId }, function(){} );
         res.json( { ok : 1, _id: req.params.assetId } );
     });
 };
 
 exports.removeAllUsersAssets = function( req, res, next ) {
     AssetsModel.removeAll( req, function( err, doc ){
+        req.aws.remove( { fileId: req.params.userId }, function(){} );
         if ( err  ) { req.error( 500, err ); return next(err) }
     });
 };

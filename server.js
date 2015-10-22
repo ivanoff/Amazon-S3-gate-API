@@ -6,18 +6,17 @@ var uuid = require( 'node-uuid' );
 var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var _ = require('underscore');
-require('mongodb');
-require('s3');
 
 var DB_URL     = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
     PORT       = process.env.SERVER_PORT || 3000,
     LOG_PATH   = process.env.LOG_PATH || './log',
+    AWS        = config.get( 'AWS' ),
     ERRORS     = config.get( 'ERRORS' );
 
 var app = new express();
 
-var db  = require('./controllers/db');
-var aws = require('./controllers/aws');
+var db  = require('./lib/db');
+var aws = require('./lib/aws');
 
 var log = bunyan.createLogger( { 
   name: "server",
@@ -46,14 +45,33 @@ app.use( function( req, res, next ){
     next() 
 });
 app.use( bodyParser.json() );
+app.use( bodyParser.urlencoded({ extended: true }) );
 
+/*
+admin.on('mount', function (parent) {
+  console.log('Admin Mounted');
+  console.log(parent); // refers to the parent app
+});
+admin.get('/', function (req, res) {
+  res.send('Admin Homepage');
+});
+app.use('/admin', admin);
+
+users=express();
+users.on('mount', function (parent) {
+  console.log('Users Mounted');
+  console.log(parent); // refers to the parent app
+});
+app.use('/users/'+userId, users);
+*/
+  
 var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./routes/" + file)(app);
 });
 
 exports.start = function( done ) {
-    aws.connect( DB_URL, function( err, next ){  });
+    aws.connect( AWS, function( err, next ){  });
     db.connect( DB_URL, function( err, next ) {
         if ( err ) { return next( err ) }
         this.server = app.listen( PORT, function() {
