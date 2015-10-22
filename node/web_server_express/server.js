@@ -57,14 +57,14 @@ admin.get('/', function (req, res) {
 });
 app.use('/admin', admin);
 
-users=express();
+var users=express();
 users.on('mount', function (parent) {
   console.log('Users Mounted');
   console.log(parent); // refers to the parent app
 });
 app.use('/users/'+userId, users);
 */
-  
+
 var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./routes/" + file)(app);
