@@ -1,0 +1,1 @@
+{"name":"server","port":"3000","hostname":"ivanoff-work","pid":25393,"level":50,"error":1,"msg":"{\"\":\"Field \\\"name\\\" is requied, but not found\"}","time":"2015-10-22T19:30:59.283Z","v":0}
