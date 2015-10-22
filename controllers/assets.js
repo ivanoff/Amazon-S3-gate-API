@@ -43,7 +43,7 @@ exports.addAsset = function( req, res, next ) {
     doc['_id'] = req.uuid.v4();
     doc['userId'] = req.params.userId;
     if( req.files ) {
-        doc['type'] = req.files.file.type;
+        doc['type'] = req.files.file.type.replace(/(\/.*)/,'');
         doc['name'] = req.files.file.originalFilename;
         doc['size'] = req.files.file.size;
     }
