@@ -6,13 +6,12 @@ var modelName = 'users';
 
 var model = {
         '_id':   { type: "uuid", required: true },
-        masterRegion: { type: "string" },
-//        login    : { type: "string", required: true },
-//        password : { type: "md5",    required: true },
-//        root     : { type: "integer" },
+        login    : { type: "string", required: true },
+        password : { type: "md5",    required: true },
+        type  : { type: "string" },
         name: {
-            first: { type: "string", max: 128, match : /^[\w\ _`\-]+$/i, required: true },
-            last : { type: "string", max: 128, match : /^[\w\ _`\-]+$/i },
+            first: { type: "string", max: 128, match : /^[\w\ _`\-]*$/i, required: true },
+            last : { type: "string", max: 128, match : /^[\w\ _`\-]*$/i },
         },
         email:    { type: "email"  },
         metadata: { type: "object" },
@@ -30,13 +29,12 @@ module.exports = {
         return next( false );
     },
 
-    get : function( req, res ){
+    getById : function( req, userId, res ){
         req.db.collection(this.modelName)
-            .findOne( { _id : req.params.userId }, res );
+            .findOne( { _id : userId }, res );
     },
 
     search : function( req, res ){
-console.log(req.body);
         req.db.collection(this.modelName)
             .findOne( req.body, res );
     },

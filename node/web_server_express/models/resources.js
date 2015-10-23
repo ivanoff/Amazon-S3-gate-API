@@ -4,7 +4,6 @@ var modelName = 'resources';
 
 var model = {
         '_id': { type: "uuid", required: true },
-        masterRegion: { type: "string" },
         userId: { type: "uuid", required: true },
         assetType: { type: "string", required: true },
         count: { type: "integer" },
@@ -21,7 +20,7 @@ module.exports = {
     },
 
     getResources : function( req, res ){
-        var query = { userId : req.params.userId };
+        var query = { userId : req.currentUser._id };
         if( req.params.type ) query.assetType = req.params.type;
         req.db.collection(this.modelName).find( query ).toArray( res );
     },
@@ -33,7 +32,7 @@ module.exports = {
         if( count < 0  ) data.size = -data.size;
 
         req.db.collection(this.modelName)
-            .findOne( { userId : data.userId, assetType : data.type },
+            .findOne( { userId : req.currentUser._id, assetType : data.type },
             function( err, doc ){
                 if ( !doc ) {
                     req.db.collection(this.modelName)
@@ -47,7 +46,7 @@ module.exports = {
             }.bind(this) );
 
         req.db.collection(this.modelName)
-            .updateOne( { userId : data.userId, assetType : '_total'}, 
+            .updateOne( { userId : req.currentUser._id, assetType : '_total'}, 
                 { $inc : { count : count, totalSize : data.size } }, res );
     },
 
