@@ -6,6 +6,7 @@ var uuid = require( 'node-uuid' );
 var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var _ = require('underscore');
+var jwt = require('jsonwebtoken');
 
 var DB_URL     = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
     PORT       = process.env.SERVER_PORT || 3000,
@@ -44,6 +45,39 @@ app.use( function( req, res, next ){
                 }; 
     next() 
 });
+
+var loginController = require('./controllers/login')
+app.post( '/login', loginController.login );
+app.use( function( req, res, next ){ 
+	// check header or url parameters or post parameters for token
+	var token = ( req.body && req.body.token ) || req.params.token || req.headers['x-access-token'];
+	// decode token
+	if (token) {
+		// verifies secret and checks exp
+		jwt.verify(token, 'secret', function(err, decoded) {			
+			if (err) {
+				return res.json({ success: false, message: 'Failed to authenticate token.' });		
+			} else {
+				// if everything is good, save to request for use in other routes
+				req.decoded = decoded;	
+    req.userId = decoded['_id'];
+console.log(decoded);
+				next();
+			}
+		});
+	} else {
+		// if there is no token
+		// return an error
+		return res.status(403).send({ 
+			success: false, 
+			message: 'No token provided.'
+		});
+	}
+});
+
+	
+
+
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: true }) );
 
@@ -69,6 +103,12 @@ var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./routes/" + file)(app);
 });
+
+//app.use( function( req, res, next ){ 
+//    req.userId = 'da7470a5-0867-4bc6-98a0-139e11084b88';
+//    next() 
+//});
+
 
 exports.start = function( done ) {
     aws.connect( AWS, function( err, next ){  });

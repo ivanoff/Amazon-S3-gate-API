@@ -10,13 +10,13 @@ var assetController  = require('../controllers/assets')
 
 module.exports = function (app) {
 
-    app.get    ( '/users/:userId/assets',          assetController.getRootAssets );
-    app.get    ( '/users/:userId/assets/:assetId', assetController.getAssetById  );
-    app.post   ( '/users/:userId/assets',          multipartMiddleware, assetController.addAsset );
-    app.post   ( '/users/:userId/assets/:assetId', multipartMiddleware, assetController.addAsset );
-    app.put    ( '/users/:userId/assets/:assetId', assetController.updateAsset   );
-    app.delete ( '/users/:userId/assets/:assetId', assetController.removeAsset   );
-    app.get    ( '/users/:userId/assets/:assetId/download', assetController.download );
+    app.get    ( '/assets',          assetController.getRootAssets );
+    app.get    ( '/assets/:assetId', assetController.getAssetById  );
+    app.post   ( '/assets',          multipartMiddleware, assetController.addAsset );
+    app.post   ( '/assets/:assetId', multipartMiddleware, assetController.addAsset );
+    app.put    ( '/assets/:assetId', assetController.updateAsset   );
+    app.delete ( '/assets/:assetId', assetController.removeAsset   );
+    app.get    ( '/assets/:assetId/download', assetController.download );
 
 }
 

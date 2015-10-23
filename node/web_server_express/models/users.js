@@ -35,6 +35,12 @@ module.exports = {
             .findOne( { _id : req.params.userId }, res );
     },
 
+    search : function( req, res ){
+console.log(req.body);
+        req.db.collection(this.modelName)
+            .findOne( req.body, res );
+    },
+
     getAll : function( req, res ){
         req.db.collection(this.modelName)
             .find( { } ).toArray( res );
