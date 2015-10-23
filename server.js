@@ -6,13 +6,13 @@ var uuid = require( 'node-uuid' );
 var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var _ = require('underscore');
-var jwt = require('jsonwebtoken');
 
-var DB_URL     = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
-    PORT       = process.env.SERVER_PORT || 3000,
-    LOG_PATH   = process.env.LOG_PATH || './log',
-    AWS        = config.get( 'AWS' ),
-    ERRORS     = config.get( 'ERRORS' );
+var DB_URL   = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
+    PORT     = process.env.SERVER_PORT || 3000,
+    LOG_PATH = process.env.LOG_PATH || './log',
+    AWS      = config.get( 'AWS' ),
+    ERROR    = config.get( 'ERRORS' ),
+    TOKEN_PARAMS = config.get( 'TOKEN' );
 
 var app = new express();
 
@@ -34,81 +34,30 @@ app.use( function( req, res, next ){
     req.aws   = aws;
     req.log   = log; 
     req.uuid  = uuid; 
+    req.TOKEN_PARAMS = TOKEN_PARAMS; 
     req.warn  = function(n,e){ 
                     req.log.warn( { warn : n } , e);
                 }; 
-    req.error = function(n,e){ 
-                    var text=ERRORS[e] || e; 
-                    if( text==e ) e=1; 
-                    req.log.error( { error : e } , text);
-                    res.status(n).json( {error:e, text:text} )
+    req.error = function( error ){ 
+                    if( !error ) error = ERROR.UNKNOWN_ERROR;
+                    req.log.error( error );
+                    if( error.status ) res.status( error.status );
+                    res.json( error );
+                    return error;
                 }; 
     next() 
 });
 
-var loginController = require('./controllers/login')
-app.post( '/login', loginController.login );
-app.use( function( req, res, next ){ 
-	// check header or url parameters or post parameters for token
-	var token = ( req.body && req.body.token ) || req.params.token || req.headers['x-access-token'];
-	// decode token
-	if (token) {
-		// verifies secret and checks exp
-		jwt.verify(token, 'secret', function(err, decoded) {			
-			if (err) {
-				return res.json({ success: false, message: 'Failed to authenticate token.' });		
-			} else {
-				// if everything is good, save to request for use in other routes
-				req.decoded = decoded;	
-    req.userId = decoded['_id'];
-console.log(decoded);
-				next();
-			}
-		});
-	} else {
-		// if there is no token
-		// return an error
-		return res.status(403).send({ 
-			success: false, 
-			message: 'No token provided.'
-		});
-	}
-});
-
-	
-
-
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: true }) );
 
-/*
-admin.on('mount', function (parent) {
-  console.log('Admin Mounted');
-  console.log(parent); // refers to the parent app
-});
-admin.get('/', function (req, res) {
-  res.send('Admin Homepage');
-});
-app.use('/admin', admin);
-
-var users=express();
-users.on('mount', function (parent) {
-  console.log('Users Mounted');
-  console.log(parent); // refers to the parent app
-});
-app.use('/users/'+userId, users);
-*/
+require("./routes/index")(app);
+require("./routes/login")(app);
 
 var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./routes/" + file)(app);
 });
-
-//app.use( function( req, res, next ){ 
-//    req.userId = 'da7470a5-0867-4bc6-98a0-139e11084b88';
-//    next() 
-//});
-
 
 exports.start = function( done ) {
     aws.connect( AWS, function( err, next ){  });
@@ -126,4 +75,3 @@ exports.stop = function( ) {
     this.server.close();
     console.log( 'Server stopped' );
 };
-

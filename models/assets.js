@@ -9,15 +9,12 @@ var modelName = 'assets';
 
 var model = {
         '_id': { type: "uuid", required: true },
-        masterRegion: { type: "string" },
         userId: { type: "uuid", required: true },
         path: { type: "string" },  // full path to document
         name: { type: "string", min:1, match: /[^\/]/, required: true },
         type: { type: "string", match: /^[^_]/, required: true },
         size: { type: "integer" }, // size in bytes
-        permissions: { type: "integer", min: 11, max: 33 },  
-            //first digit - owner's rights, last one - other user's
-            //1-can write, 2-can read, 3-can read and write
+        parentId: { type: "string" },
     };
 
 vm.registerModel( modelName, model );
@@ -34,12 +31,13 @@ module.exports = {
 
     get : function( req, res ){
         req.db.collection(this.modelName)
-            .findOne( { userId : req.userId || req.query.userId, _id : req.params.assetId }, res );
+            .findOne( { userId : req.currentUser._id, _id : req.params.assetId }, res );
     },
 
     getFolderContent : function( req, path, res ){
         req.db.collection(this.modelName)
-            .find( { userId : req.userId || req.query.userId, path : path } ).toArray( res );
+            .find( { userId : req.currentUser._id, 
+                     path : path } ).toArray( res );
     },
 
     add : function( req, data, res ){
@@ -50,12 +48,12 @@ module.exports = {
 
     update : function( req, data, res ){
         req.db.collection(this.modelName)
-            .update( { userId : req.userId || req.query.userId, _id : req.params.assetId }, data, res );
+            .update( { userId : req.currentUser._id, _id : req.params.assetId }, data, res );
     },
 
     search : function( req, res ){
         req.db.collection(this.modelName)
-            .find( { userId : req.userId || req.query.userId, name : new RegExp( req.params.name, 'i' ) } ).toArray( res );
+            .find( { userId : req.currentUser._id, name : new RegExp( req.params.name, 'i' ) } ).toArray( res );
     },
 
     remove : function( req, res ){
@@ -67,26 +65,26 @@ module.exports = {
                 //delete all nested assets in folder
                 var path = doc.path + '/' + doc.name;
                 var cursor = req.db.collection(this.modelName)
-                    .find( { userId : req.userId || req.query.userId, path : new RegExp('^'+path+'(/.*)?$') } );
+                    .find( { userId : req.currentUser._id, path : new RegExp('^'+path+'(/.*)?$') } );
                 cursor.each(function(err, item) {
                     if( item ) {
                         ResourcesModel.updateResources( req, item, -1, function(){} )
-                        req.aws.remove( { fileId: item['_id'], userId: req.userId || req.query.userId }, function(){} );
+                        req.aws.remove( { fileId: item['_id'], userId: req.currentUser._id }, function(){} );
                     }
                 });
                 req.db.collection(this.modelName)
-                    .remove( { userId : req.userId || req.query.userId, path : new RegExp('^'+path+'(/.*)?$') } );
+                    .remove( { userId : req.currentUser._id, path : new RegExp('^'+path+'(/.*)?$') } );
             }
             ResourcesModel.updateResources( req, doc, -1, function(){} );
             req.db.collection(this.modelName)
-                .remove( { userId : req.userId || req.query.userId, _id : req.params.assetId }, res );
+                .remove( { userId : req.currentUser._id, _id : req.params.assetId }, res );
 
         }.bind(this));
     },
 
     removeAll : function( req, res ){
         req.db.collection(this.modelName)
-            .remove( { userId : req.userId || req.query.userId }, res );
+            .remove( { userId : req.currentUser._id }, res );
     }
 
 }

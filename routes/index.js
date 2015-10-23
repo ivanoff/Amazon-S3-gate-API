@@ -1,7 +1,6 @@
 /****
  Index Routing
 ****/
-
 "use strict"
 
 var indexController = require('../controllers/index')

@@ -1,21 +1,60 @@
 {
 
-///// AWS S3 keys /////
+// AWS S3 keys //
   "AWS" : {
     "accessKeyId": "AKIAJT472G2WQ6HTQDPA", 
     "secretAccessKey": "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",
     "bucket": "ivanoff"
   },
 
-///// Errors codes /////
+// Token parameters //
+  "TOKEN" : {
+    "secret": "UzI1NiJ9.ZmQxODkNDI2.1Qk9HizDkuwnqAEKW",
+    "expire": 72000
+  },
+
+// Errors codes //
   "ERRORS" : {
 
-    "USER_NOT_FOUND"  : { "121" : "User not found" },
-    "NO_USERS"        : { "122" : "No users found. Please, use POST to add new user" },
+    "UNKNOWN_ERROR" : { "code" : "9", "message" : "Unknown error",
+            "developerMessage" : "The error is unknown. We already know about it and try to find why it happened.",
+            "url" : "https://doc.site.url/errors/9", "status" : "500" },
 
-    "ASSET_NOT_FOUND" : { "131" : "Asset not found" },
-    "NO_ASSETS"       : { "132" : "No assets found. Please, use POST to add new one" },
-    "NOT_A_FOLDER"    : { "133" : "Asset is not folder" }
+    "ACCESS_DENIED" : { "code" : "21", "message" : "Acess denied", 
+            "developerMessage" : "Acess to this resource is denied. You can contact administrator in case of mistake.",
+            "url" : "https://doc.site.url/errors/21", "status" : "403" },
+
+    "NO_TOKEN"  : { "code" : "91", "message" : "Unauthorized", 
+            "developerMessage" : "No token provided. Please POST login and password to /login to get token",
+            "url" : "https://doc.site.url/errors/91", "status" : "401" },
+
+    "BAD_TOKEN" : { "code" : "92", "message" : "Bad token", 
+            "developerMessage" : "Provided token not accesable. Please, POST login and password to /login to get actual token",
+            "url" : "https://doc.site.url/errors/92", "status" : "401" },
+
+    "OLD_TOKEN" : { "code" : "93", "message" : "Token to old", 
+            "developerMessage" : "Provided token is to old. Please, POST login and password to /login to get actual token",
+            "url" : "https://doc.site.url/errors/93", "status" : "403" },
+
+    "USER_NOT_FOUND"  : { "code" : "121", "message" : "User not found",
+            "developerMessage" : "Provided information not enough to find user",
+            "url" : "https://doc.site.url/errors/121", "status" : "404" },
+
+    "NO_USERS"        : { "code" : "122", "message" : "No users found",
+            "developerMessage" : "No users in the database at all",
+            "url" : "https://doc.site.url/errors/122", "status" : "404" },
+
+    "ASSET_NOT_FOUND" : { "code" : "131", "message" : "Asset not found",
+            "developerMessage" : "No asset with this parameters owned by this user was found",
+            "url" : "https://doc.site.url/errors/131", "status" : "404" },
+
+    "NO_ASSETS" : { "code" : "132", "message" : "No assets found",
+            "developerMessage" : "No assets owned by this user in the database. Please, use POST to add new one",
+            "url" : "https://doc.site.url/errors/132", "status" : "404" },
+
+    "NOT_A_FOLDER" : { "code" : "133", "message" : "Asset is not folder",
+            "developerMessage" : "Asset is not a folder type, so it cannot store additional files",
+            "url" : "https://doc.site.url/errors/133", "status" : "403" }
 
   }
 

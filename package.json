@@ -13,6 +13,7 @@
     "express": "^4.13.3",
     "install": "^0.1.8",
     "jsonwebtoken": "^5.4.0",
+    "md5": "^2.0.0",
     "mocha": "^2.3.3",
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3",

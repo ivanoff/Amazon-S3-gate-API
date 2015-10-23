@@ -1,7 +1,6 @@
 /****
  Resources Routing
 ****/
-
 "use strict"
 
 var resourceController  = require('../controllers/resources');
