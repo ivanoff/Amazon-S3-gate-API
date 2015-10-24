@@ -50,28 +50,106 @@ POST /users/{id}/asserts/{id}/search/{name}
 
 ### Admin user examples
 
-* Get token of admin user ( login/password: admin/admin )
+* Get token of admin user ( type: admin, login/password: admin/admin )
 ```
 curl -H "Content-Type: application/json" -d '{"login":"admin","password":"admin"}' http://localhost:3000/login
 {"token":"eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI"}
 ```
 
-* Add simple user ( login/password: user/user ) 
+* Add user
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" -H "Content-Type: application/json" -d '{"login":"user","password":"user","type":"user","email":"user@host.url","name":{"first":"User","last":""}}' http://localhost:3000/users
-{"login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""},"_id":"be542ea1-3236-4a5d-8fca-2bc72e91d70b","_usefulLink":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b","_usefulAssets":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b/assets","_usefulResources":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b/resources"}
+{"login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""},"_id":"5235125f-f45f-4306-b625-8bd4bbfb55ec","_usefulLink":"/users/5235125f-f45f-4306-b625-8bd4bbfb55ec","_usefulAssets":"/users/5235125f-f45f-4306-b625-8bd4bbfb55ec/assets","_usefulResources":"/users/5235125f-f45f-4306-b625-8bd4bbfb55ec/resources"}
 ```
 
 * Get list of users
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users
-[{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}},{"_id":"be542ea1-3236-4a5d-8fca-2bc72e91d70b","login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""}}]
+[{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}},{"_id":"5235125f-f45f-4306-b625-8bd4bbfb55ec","login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""}}]
 
 ```
 
 * Check options
 ```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/options
+[{"_id":"562b783ee63db5e165879707","name":"limit.files","userType":"user","value":100},{"_id":"562b783ee63db5e165879708","name":"limit.files","userType":"guest","value":3},{"_id":"562b783ee63db5e165879709","name":"limit.size","userType":"user","value":10000000},{"_id":"562b783ee63db5e16587970a","name":"limit.size","userType":"guest","value":100000}]
 ```
+
+### User examples
+
+* Get token of user ( type: admin, login/password: admin/admin )
+```
+curl -H "Content-Type: application/json" -d '{"login":"user","password":"user"}' http://localhost:3000/login
+{"token":"eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI"}
+```
+
+* Add folder to root folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" -H "Content-Type: application/json" -d '{"name":"video"}' http://localhost:3000/assets
+{"name":"video","_id":"098d07e8-9712-4499-be5f-f49145b937bc","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"folder","path":"","size":0}
+```
+
+* Add folder to another folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" -H "Content-Type: application/json" -d '{"name":"images"}' http://localhost:3000/assets/098d07e8-9712-4499-be5f-f49145b937bc
+{"name":"images","_id":"3577a338-4424-4fec-88ff-13a10b1b6303","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"folder","path":"/video","parentId":"098d07e8-9712-4499-be5f-f49145b937bc","size":0}
+```
+
+* Upload file to folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" -F "file=@/tmp/temp/images.jpeg" http://localhost:3000/assets/098d07e8-9712-4499-be5f-f49145b937bc
+{"_id":"60d7ab5b-d6ed-4c7e-905e-ac216bae85b1","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"image","name":"images.jpeg","size":9375,"path":"/video","parentId":"098d07e8-9712-4499-be5f-f49145b937bc"}
+```
+
+* List all files in root folder
+```
+curl -H "x-access-token: eyJhbGciOI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets
+[{"_id":"098d07e8-9712-4499-be5f-f49145b937bc","name":"video","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"folder","path":"","size":0}]
+```
+
+* List all files in folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/098d07e8-9712-4499-be5f-f49145b937bc
+[{"_id":"3577a338-4424-4fec-88ff-13a10b1b6303","name":"images","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"folder","path":"/video","parentId":"098d07e8-9712-4499-be5f-f49145b937bc","size":0},{"_id":"60d7ab5b-d6ed-4c7e-905e-ac216bae85b1","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"image","name":"images.jpeg","size":9375,"path":"/video","parentId":"098d07e8-9712-4499-be5f-f49145b937bc"}]
+```
+
+* Property of file
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/60d7ab5b-d6ed-4c7e-905e-ac216bae85b1
+{"_id":"60d7ab5b-d6ed-4c7e-905e-ac216bae85b1","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","type":"image","name":"images.jpeg","size":9375,"path":"/video","parentId":"098d07e8-9712-4499-be5f-f49145b937bc"}
+```
+
+* Download file
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/60d7ab5b-d6ed-4c7e-905e-ac216bae85b1?download
+<binary_data>
+```
+
+* Check user's resources
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/resources
+[{"_id":"562b7aa591b9cd0b3a17e77b","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"_total","count":3,"totalSize":9375},{"_id":"562b7d3991b9cd0b3a17e77c","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"folder","count":2,"totalSize":0},{"_id":"562b885f4d477fd040547cc6","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"image","count":1,"totalSize":9375}]
+```
+
+* Check user's image resources
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/resources/image
+[{"_id":"562b885f4d477fd040547cc6","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"image","count":1,"totalSize":9375}]
+```
+
+* Delete file
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/60d7ab5b-d6ed-4c7e-905e-ac216bae85b1 -X DELETE
+{"ok":1,"_id":"60d7ab5b-d6ed-4c7e-905e-ac216bae85b1"}
+```
+
+* Delete folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/098d07e8-9712-4499-be5f-f49145b937bc -X DELETE
+{"ok":1,"_id":"098d07e8-9712-4499-be5f-f49145b937bc"}
+```
+
+
 
 ### old examples
 

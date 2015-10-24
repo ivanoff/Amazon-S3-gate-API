@@ -53,6 +53,7 @@ exports.addAsset = function( req, res, next ) {
     async.waterfall([
         function( next ){
             if( req.params.assetId ) {
+                doc.parentId = req.params.assetId;
                 AssetsModel.get( req, function( err, docFolder ){
                     if ( err ) { req.status=500; return next(err) }
                     if ( !docFolder ) return req.error( ERROR.ASSET_NOT_FOUND );
@@ -69,7 +70,6 @@ exports.addAsset = function( req, res, next ) {
                 if( err ) { req.status=400; return next(err) }
 
                 AssetsModel.add( req, doc, function( err, result, next ){
-console.log(err);
                     if( err ) { req.status=500; return next(err) }
                     if( req.files ) {
                         req.aws.upload( { filePath: req.files.file.path,
