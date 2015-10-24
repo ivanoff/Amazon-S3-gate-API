@@ -20,9 +20,13 @@ module.exports = {
     },
 
     getResources : function( req, res ){
-        var query = { userId : req.currentUser._id };
-        if( req.params.type ) query.assetType = req.params.type;
-        req.db.collection(this.modelName).find( query ).toArray( res );
+        if( req.params.type ) return this.getResourcesByType( req, req.params.type, res);
+        req.db.collection(this.modelName).find( { userId : req.currentUser._id } ).toArray( res );
+
+    },
+
+    getResourcesByType : function( req, type, res ){
+        req.db.collection(this.modelName).findOne( { userId : req.currentUser._id, assetType : type }, res );
     },
 
     updateResources : function( req, data, count, res ){

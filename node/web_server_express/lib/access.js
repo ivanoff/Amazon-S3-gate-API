@@ -10,3 +10,10 @@ exports.onlyAdmin =
             return req.error( ERROR.ACCESS_DENIED )
         else next();
     };
+
+exports.onlyRegistered = 
+    function( req, res, next ){ 
+        if( !req.currentUser || !req.currentUser.type )
+            return req.error( ERROR.ACCESS_DENIED )
+        else next();
+    };

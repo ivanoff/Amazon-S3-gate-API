@@ -3,6 +3,8 @@ var fs    = require( 'fs'    );
 var async = require( 'async' );
 
 var AssetsModel = require('../models/assets');
+var OptionsModel = require('../models/options');
+var ResourcesModel = require('../models/resources');
 
 var ERROR = require('config').get('ERRORS');
 
@@ -50,7 +52,30 @@ exports.addAsset = function( req, res, next ) {
     if( !doc['type'] ) doc['type'] = 'folder';
     if( !doc['path'] ) doc['path'] = '';
 
+    var usersResources = { count:0, totalSize:0 };
+    
     async.waterfall([
+        function( next ){
+            ResourcesModel.getResourcesByType( req, '_total', function( err, resources ){
+                if ( resources ) usersResources = resources;
+console.log('TRYYYYY  !!!');
+                next();
+            })
+        },
+        function( next ){
+            OptionsModel.getOptionsByName( req, 'limit.size', function( err, usersLimit ){
+                if( usersLimit.value && usersLimit.value < usersResources.totalSize + doc.size )
+                    return req.error( ERROR.LIMIT_TOTAL_SIZE )
+                else next();
+            })
+        },
+        function( next ){
+            OptionsModel.getOptionsByName( req, 'limit.files', function( err, usersLimit ){
+                if( usersLimit.value && usersLimit.value < usersResources.count + 1 )
+                    return req.error( ERROR.LIMIT_COUNT_FILES )
+                else next();
+            })
+        },
         function( next ){
             if( req.params.assetId ) {
                 doc.parentId = req.params.assetId;
