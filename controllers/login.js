@@ -12,8 +12,8 @@ exports.login = function (req, res, next) {
     }
     req.body.password = md5( req.body.password );
     UsersModel.search( req, function( err, doc ){
-        if ( err  ) { req.status=500; return next(err) }
-        if ( !doc ) { return req.error( ERROR.USER_NOT_FOUND ); }
+        if ( err  ) return req.error(err);
+        if ( !doc ) return req.error( ERROR.USER_NOT_FOUND );
 
 	var token = jwt.sign( doc['_id'], req.TOKEN_PARAMS.secret , {
 	    expiresIn: req.TOKEN_PARAMS.expire
@@ -31,8 +31,8 @@ exports.middleWare = function( req, res, next ){
             if (err) { req.error( ERROR.BAD_TOKEN ) }
             else {
                 UsersModel.getById( req, decoded, function( err, doc ){
-                    if ( err  ) { req.status=500; return next(err) }
-                    if ( !doc ) { return req.error( ERROR.OLD_TOKEN ) }
+                    if ( err  ) return req.error(err);
+                    if ( !doc ) return req.error( ERROR.OLD_TOKEN );
                     req.currentUser = doc;
                     next();
                 })
