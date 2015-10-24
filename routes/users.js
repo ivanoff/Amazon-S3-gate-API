@@ -1,19 +1,13 @@
 /****
  Users Routing
 ****/
-
 "use strict"
-
 var userController  = require('../controllers/users')
-var ERROR = require('config').get('ERRORS');
+var access = require('../lib/access');
 
 module.exports = function (app) {
 
-    app.use('/users', function( req, res, next ){ 
-                    if( !req.currentUser || req.currentUser.type != 'admin' )
-                        return req.error( ERROR.ACCESS_DENIED )
-                    else next();
-            });
+    app.use( '/options', access.onlyAdmin );
 
     app.get    ( '/users',         userController.getAllUsers );
     app.get    ( '/users/:userId', userController.getUserById );
