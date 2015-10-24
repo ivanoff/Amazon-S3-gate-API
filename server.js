@@ -39,15 +39,19 @@ app.use( function( req, res, next ){
     req.log   = log; 
     req.uuid  = uuid; 
     req.TOKEN_PARAMS = TOKEN_PARAMS; 
-    req.warn  = function(n,e){ 
-                    req.log.warn( { warn : n } , e);
-                }; 
-    req.error = function( error ){ 
+    req.error = function( error ){
+                    var e; 
                     if( !error ) error = ERROR.UNKNOWN_ERROR;
-                    req.log.error( error );
-                    if( error.status ) res.status( error.status );
-                    res.json( error );
-                    return error;
+                    if( error.errmsg ) {
+                        e = ERROR.SERVER_ERROR;
+                        e.developerMessage = error;
+                    } else {
+                        e = error;
+                    }
+                    req.log.error( e );
+                    if( e.status ) res.status( e.status );
+                    res.json( e );
+                    return e;
                 }; 
     next() 
 });

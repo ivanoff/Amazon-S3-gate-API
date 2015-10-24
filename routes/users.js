@@ -7,7 +7,7 @@ var access = require('../lib/access');
 
 module.exports = function (app) {
 
-    app.use( '/options', access.onlyAdmin );
+    app.use( '/users', access.onlyAdmin );
 
     app.get    ( '/users',         userController.getAllUsers );
     app.get    ( '/users/:userId', userController.getUserById );

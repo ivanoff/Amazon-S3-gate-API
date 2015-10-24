@@ -16,6 +16,9 @@
 
   "ERRORS" : {
 
+    "SERVER_ERROR" : { "code" : "3", "message" : "Server error",
+            "url" : "https://doc.site.url/errors/3", "status" : "500" },
+
     "UNKNOWN_ERROR" : { "code" : "9", "message" : "Unknown error",
             "developerMessage" : "The error is unknown. We already know about it and try to find why it happened.",
             "url" : "https://doc.site.url/errors/9", "status" : "500" },
@@ -62,11 +65,11 @@
 
     "LIMIT_TOTAL_SIZE"  : { "code" : "212", "message" : "Total size limit reached",
             "developerMessage" : "There is no space to store user's file. You can delete some files to free some space or upgrade your account to incrase your storage limits",
-            "url" : "https://doc.site.url/errors/212", "status" : "409" },
+            "url" : "https://doc.site.url/errors/212", "status" : "507" },
 
     "LIMIT_COUNT_FILES" : { "code" : "213", "message" : "Total count files limit reached",
             "developerMessage" : "Count of all files is equal to count files limit. You can delete one file to store this file or upgrade your account to incrase your storage limits",
-            "url" : "https://doc.site.url/errors/213", "status" : "409" }
+            "url" : "https://doc.site.url/errors/213", "status" : "507" }
 
   }
 

@@ -32,7 +32,7 @@ exports.addUser = function( req, res, next ) {
         if ( err ) { req.status=400; return next(err) }
 
         UsersModel.add( req, doc, function( err, result ){
-            if ( err ) { req.status=500; return next(err) }
+            if ( err ) { req.status=500; return req.error(err) }
 
             doc['_usefulLink']      = '/users/'+doc['_id'];
             doc['_usefulAssets']    = '/users/'+doc['_id']+'/assets';
