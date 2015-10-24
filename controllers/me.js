@@ -4,7 +4,7 @@ var UsersModels = require('../models/users');
 var ResourcesModels = require('../models/resources');
 var OptionsModels = require('../models/options');
 
-exports.whoami = function( req, res ) {
+exports.me = function( req, res ) {
     async.parallel( {
         user : function( next ) {
             UsersModels.getById(req, req.currentUser._id, function(err,doc){next(null,doc)}) 
