@@ -56,6 +56,7 @@ app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: true }) );
 
 require("./routes/index")(app);
+require("./routes/register")(app);
 require("./routes/login")(app);
 
 var normalizedPath = require("path").join(__dirname, "routes");

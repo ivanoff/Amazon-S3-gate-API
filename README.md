@@ -149,143 +149,19 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOG
 {"ok":1,"_id":"098d07e8-9712-4499-be5f-f49145b937bc"}
 ```
 
-
-
-### old examples
-
-* Add user "John Richard the XIII"
-```bash
-curl -d '{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}' -H "Content-Type: application/json" http://localhost:3000/users
+* Register guest user
 ```
-```json
-{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo","_id":"d536ef67-4aea-450f-bd1f-209120d28679","_usefulLink":"/users/d536ef67-4aea-450f-bd1f-209120d28679","_usefulAssets":"/users/d536ef67-4aea-450f-bd1f-209120d28679/assets","_usefulResources":"/users/d536ef67-4aea-450f-bd1f-209120d28679/resources"}
+curl -H "Content-Type: application/json" -d '{"login":"guest","password":"guest","type":"admin","email":"guest@host.url","name":{"first":"Guest","last":""}}' http://localhost:3000/register
+{"login":"guest","password":"084e0343a0486ff05530df6c705c8bb4","type":"guest","email":"guest@host.url","name":{"first":"Guest","last":""},"_id":"e2a39a50-6898-469c-a596-80f200ee3fe6","_usefulLink":"/users/e2a39a50-6898-469c-a596-80f200ee3fe6","_usefulAssets":"/users/e2a39a50-6898-469c-a596-80f200ee3fe6/assets","_usefulResources":"/users/e2a39a50-6898-469c-a596-80f200ee3fe6/resources"}
 ```
 
-
-* Show just added user
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679
+* Get token for guest ( type: guest, login/password: guest/guest )
 ```
-```json
-{"_id":"d536ef67-4aea-450f-bd1f-209120d28679","name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}
+curl -H "Content-Type: application/json" -d '{"login":"guest","password":"guest"}' http://localhost:3000/login
+{"token":"eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64"}
 ```
 
 
-* Show his assets
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
-```
-```json
-[]
-```
-
-
-* Show user's used resources
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
-```
-```json
-[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":0,"totalSize":0}]
-```
-
-
-* Add folder 'video' to root of access
-```bash
-curl -H "Content-Type: application/json" -d '{"name":"video"}' http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
-```
-```json
-{"name":"video","type":"folder","_id":"fda404c5-330e-4ea7-8817-3b6d59f52432","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"","size":0}
-```
-
-
-* Show root folder
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
-```
-```json
-[{"_id":"fda404c5-330e-4ea7-8817-3b6d59f52432","name":"video","type":"folder","userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"","size":0}]
-```
-
-
-* Show user's used resources
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
-```
-```json
-[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":1,"totalSize":0},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":1,"totalSize":0}]
-```
-
-
-* Upload one image to root folder
-```bash
-curl -F "file=@/tmp/temp/index.jpeg" http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets
-```
-```json
-
-```
-
-
-* Show image parameters
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/d536ef67-4aea-450f-bd1f-209120d28679
-```
-```json
-
-```
-
-
-* Download image to root folder
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/d536ef67-4aea-450f-bd1f-209120d28679?download
-```
-```json
-
-```
-
-
-* Show content of the 'video' folder
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
-```
-```json
-[{"_id":"05e34208-7377-4bee-bbee-a9e395e9b315","name":"hotfuzz2.avi","type":"video","size":1300,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"},{"_id":"31b8770b-a857-44ac-9a13-f62cd1238c79","name":"hotfuzz.avi","type":"video","size":1000,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"},{"_id":"c88b71d8-3ca9-47bb-9bd4-0792ca28dc23","name":"nick.jpg","type":"image","size":10,"userId":"d536ef67-4aea-450f-bd1f-209120d28679","path":"/video"}]
-```
-
-
-* Show user's used resources
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
-```
-```json
-[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":4,"totalSize":2310},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":1,"totalSize":0},{"_id":"562614aafc03aa5758d62f3f","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"video","count":2,"totalSize":2300},{"_id":"56261500fc03aa5758d62f40","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"image","count":1,"totalSize":10}]
-```
-
-
-* Delete 'video' folder
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432 -X DELETE
-```
-```json
-{"ok":1,"_id":"fda404c5-330e-4ea7-8817-3b6d59f52432"}
-```
-
-
-* Try to list of content of removed folder
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/assets/fda404c5-330e-4ea7-8817-3b6d59f52432
-```
-```json
-{"error":1,"text":{"131":"Asset not found"}}
-```
-
-
-* Show user's used resources
-```bash
-curl http://localhost:3000/users/d536ef67-4aea-450f-bd1f-209120d28679/resources
-```
-```json
-[{"_id":"5626143efc03aa5758d62f3d","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"_total","count":0,"totalSize":0},{"_id":"56261478fc03aa5758d62f3e","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"folder","count":0,"totalSize":0},{"_id":"562614aafc03aa5758d62f3f","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"video","count":0,"totalSize":0},{"_id":"56261500fc03aa5758d62f40","userId":"d536ef67-4aea-450f-bd1f-209120d28679","assetType":"image","count":0,"totalSize":0}]
-```
 
 
 
