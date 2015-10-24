@@ -161,7 +161,23 @@ curl -H "Content-Type: application/json" -d '{"login":"guest","password":"guest"
 {"token":"eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64"}
 ```
 
+* Upload one small file by guest
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" -F "file=@/tmp/temp/images.jpeg" http://localhost:3000/assets
+{"_id":"048ff404-e56e-483d-b4c0-4ee67d6cf924","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":""}
+```
 
+* Check if it can be downloaded
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/048ff404-e56e-483d-b4c0-4ee67d6cf924?download
+<binary_data>
+```
+
+* Check if it can be downloaded by other user
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/048ff404-e56e-483d-b4c0-4ee67d6cf924?download
+<binary_data>
+```
 
 
 
