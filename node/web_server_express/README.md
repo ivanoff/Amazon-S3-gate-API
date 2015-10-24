@@ -48,6 +48,15 @@ POST /users/{id}/asserts/{id}/search/{name}
 
 ## Command line example
 
+* Get token of admin user
+
+```bash
+curl -H "Content-Type: application/json" -d '{"login":"admin","password":"admin"}' http://localhost:3000/login
+{"token":"eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI"}
+```
+
+### old examples
+
 * Add user "John Richard the XIII"
 ```bash
 curl -d '{"name":{"first":"John","last":"Richard XIII"},"email":"t@t2t.oo"}' -H "Content-Type: application/json" http://localhost:3000/users
@@ -224,7 +233,7 @@ Install
 Usage
 -------------
 To launch web server please use command below
-    node web_server_express.js
+DB_AUTH=dblogin:dbpassw AWS_SECRET=aws.secret node web_server_express.js
 
 Get list of all users
     curl 127.0.0.1:3000/users

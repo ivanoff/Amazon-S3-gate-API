@@ -69,6 +69,7 @@ exports.addAsset = function( req, res, next ) {
                 if( err ) { req.status=400; return next(err) }
 
                 AssetsModel.add( req, doc, function( err, result, next ){
+console.log(err);
                     if( err ) { req.status=500; return next(err) }
                     if( req.files ) {
                         req.aws.upload( { filePath: req.files.file.path,

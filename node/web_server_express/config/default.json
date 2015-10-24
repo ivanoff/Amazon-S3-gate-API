@@ -1,18 +1,19 @@
 {
 
-// AWS S3 keys //
+  "DB_URL" : "ds051933.mongolab.com:51933/gl",
+  "SERVER_PORT" : "3000",
+  "LOG_PATH" : "./log",
+
   "AWS" : {
-    "accessKeyId": "AKIAJT472G2WQ6HTQDPA", 
+    "accessKeyId": "AKIAI4LAYM6DZIVK3DDQ", 
     "bucket": "ivanoff"
   },
 
-// Token parameters //
   "TOKEN" : {
     "secret": "UzI1NiJ9.ZmQxODkNDI2.1Qk9HizDkuwnqAEKW",
     "expire": 72000
   },
 
-// Errors codes //
   "ERRORS" : {
 
     "UNKNOWN_ERROR" : { "code" : "9", "message" : "Unknown error",

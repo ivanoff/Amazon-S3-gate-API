@@ -7,12 +7,16 @@ var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var _ = require('underscore');
 
-var DB_URL   = process.env.DB_URL || 'mongodb://gl:gl@ds051933.mongolab.com:51933/gl',
-    PORT     = process.env.SERVER_PORT || 3000,
-    LOG_PATH = process.env.LOG_PATH || './log',
+var DB_URL   = config.get( 'DB_URL' ) || process.env.DB_URL;
+if( process.env.DB_AUTH ) DB_URL = 'mongodb://'+process.env.DB_AUTH+'@'+DB_URL;
+
+var PORT     = process.env.SERVER_PORT || config.get( 'SERVER_PORT' ) || 3000,
+    LOG_PATH = process.env.LOG_PATH    || config.get( 'LOG_PATH' )    || './log',
     AWS      = config.get( 'AWS' ),
     ERROR    = config.get( 'ERRORS' ),
     TOKEN_PARAMS = config.get( 'TOKEN' );
+
+AWS.secretAccessKey = process.env.AWS_SECRET;
 
 var app = new express();
 
