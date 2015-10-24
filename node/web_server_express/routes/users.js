@@ -13,6 +13,7 @@ module.exports = function (app) {
     app.get    ( '/users/:userId', userController.getUserById );
     app.post   ( '/users',         userController.addUser     );
     app.put    ( '/users/:userId', userController.updateUser  );
+    app.patch  ( '/users/:userId', userController.updateUser  );
     app.delete ( '/users/:userId', userController.removeUser  );
 
 }

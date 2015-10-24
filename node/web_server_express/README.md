@@ -22,6 +22,28 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOT
 [{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}},{"_id":"5235125f-f45f-4306-b625-8bd4bbfb55ec","login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""}}]
 ```
 
+* Update user
+# check under admin if we have user e2a39a50-6898-469c-a596-80f200ee3fe6
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users/e2a39a50-6898-469c-a596-80f200ee3fe6
+{"_id":"e2a39a50-6898-469c-a596-80f200ee3fe6","login":"guest","password":"084e0343a0486ff05530df6c705c8bb4","type":"guest","email":"guest@host.url","name":{"first":"Guest","last":""}}
+
+# replace the whole user e2a39a50-6898-469c-a596-80f200ee3fe6 ( PUT )
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" -H "Content-Type: application/json" -d '{"login":"anatoly","password":"jo","type":"guest","email":"anatol@host.url","name":{"first":"Anatoly","last":"Jovanny"}}' http://localhost:3000/users/e2a39a50-6898-469c-a596-80f200ee3fe6 -X PUT
+{"_id":"e2a39a50-6898-469c-a596-80f200ee3fe6","login":"anatoly","password":"674f33841e2309ffdd24c85dc3b999de","type":"guest","email":"anatol@host.url","name":{"first":"Anatoly","last":"Jovanny"}}
+
+# replace only one field 'type' of user e2a39a50-6898-469c-a596-80f200ee3fe6 ( PATCH )
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" -H "Content-Type: application/json" -d '{"type":"admin"}' http://localhost:3000/users/e2a39a50-6898-469c-a596-80f200ee3fe6 -X PATCH
+{"_id":"e2a39a50-6898-469c-a596-80f200ee3fe6","login":"anatoly","password":"674f33841e2309ffdd24c85dc3b999de","type":"admin","email":"anatol@host.url","name":{"first":"Anatoly","last":"Jovanny"}}
+
+# get token of this user
+curl -H "Content-Type: application/json" -d '{"login":"anatoly","password":"jo"}' http://localhost:3000/login
+{"token":"eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64"}
+
+# right not user e2a39a50-6898-469c-a596-80f200ee3fe6 can view what admin can view, 'cause of 'admin' type
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/users/2a0722fd-88b4-430f-928f-94f512676e4b
+{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}}
+
+
 * Delete user
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b -X DELETE

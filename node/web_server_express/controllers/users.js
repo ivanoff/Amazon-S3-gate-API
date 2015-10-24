@@ -47,19 +47,19 @@ exports.addUser = function( req, res, next ) {
 };
 
 exports.updateUser = function( req, res, next ) {
-    UsersModel.get( req, function( err, doc ){
+    UsersModel.getById( req, req.params.userId, function( err, doc ){
         if ( err  ) return req.error(err);
         if ( !doc ) return req.error( ERROR.USER_NOT_FOUND );
 
-        //luck of nested
         doc = req._.extend( doc, req.body );
+        if( req.body.password ) doc.password = md5( doc.password );
 
         UsersModel.validate( doc, function( err ) {
             if ( err ) { req.status=400; return next(err) }
 
             UsersModel.update( req, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
-                res.json( { ok : 1, _id: doc._id } );
+                res.json( doc );
             });
         });
 
