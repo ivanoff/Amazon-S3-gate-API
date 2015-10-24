@@ -46,7 +46,7 @@ POST /users/{id}/asserts/{id}/search/{name}
 поиск папок/файлов по имени, размеру в папке {id}
 
 
-## Command line example
+## Command line examples
 
 ### Admin user examples
 
@@ -134,7 +134,7 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOG
 * Check user's image resources
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/resources/image
-[{"_id":"562b885f4d477fd040547cc6","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"image","count":1,"totalSize":9375}]
+{"_id":"562b885f4d477fd040547cc6","userId":"5235125f-f45f-4306-b625-8bd4bbfb55ec","assetType":"image","count":1,"totalSize":9375}
 ```
 
 * Delete file
@@ -179,6 +179,24 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtOD
 <binary_data>
 ```
 
+* Check guest's options/limits
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/options
+[{"_id":"562b783ee63db5e165879708","name":"limit.files","userType":"guest","value":3},{"_id":"562b783ee63db5e16587970a","name":"limit.size","userType":"guest","value":100000}]
+```
+
+* Check guest's used space
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/resources/_total
+{"_id":"562b90fd612ebc04469b1201","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","assetType":"_total","count":1,"totalSize":9375}
+```
+
+
+## Warnings and errors examples
+
+### Uploads overlimits
+
+*
 
 
 MongoDB schemas

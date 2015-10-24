@@ -56,9 +56,17 @@
             "developerMessage" : "Asset is not a folder type, so it cannot store additional files",
             "url" : "https://doc.site.url/errors/133", "status" : "403" },
 
-    "NO_OPTIONS"   : { "code" : "212", "message" : "No options found",
+    "NO_OPTIONS"   : { "code" : "142", "message" : "No options found",
             "developerMessage" : "No options in the database at all",
-            "url" : "https://doc.site.url/errors/212", "status" : "404" }
+            "url" : "https://doc.site.url/errors/142", "status" : "404" },
+
+    "LIMIT_TOTAL_SIZE"  : { "code" : "212", "message" : "Total size limit reached",
+            "developerMessage" : "There is no space to store user's file. You can delete some files to free some space or upgrade your account to incrase your storage limits",
+            "url" : "https://doc.site.url/errors/212", "status" : "409" },
+
+    "LIMIT_COUNT_FILES" : { "code" : "213", "message" : "Total count files limit reached",
+            "developerMessage" : "Count of all files is equal to count files limit. You can delete one file to store this file or upgrade your account to incrase your storage limits",
+            "url" : "https://doc.site.url/errors/213", "status" : "409" }
 
   }
 

@@ -3,11 +3,9 @@
 var modelName = 'options';
 
 var model = {
-        '_id': { type: "uuid", required: true },
-        userId: { type: "uuid", required: true },
-        assetType: { type: "string", required: true },
-        count: { type: "integer" },
-        totalSize: { type: "integer" },
+        name: { type: "string", required: true },
+        userType: { type: "string" },
+        value: { type: "string" },
     };
 
 module.exports = {
@@ -15,11 +13,19 @@ module.exports = {
     modelName : modelName,
 
     getOptions : function( req, res ){
-        req.db.collection(this.modelName).find( {} ).toArray( res );
+        var query = {};
+        if( req.currentUser ) { query.userType = req.currentUser.type };
+        req.db.collection(this.modelName).find( query ).toArray( res );
     },
 
-    getOptionsLimitByUser : function( req, data, res ){
-        req.db.collection(this.modelName).find( {} ).toArray( res );
+    getOptionsByName : function( req, name, res ){
+        var query = { name : name };
+        if( req.currentUser ) { 
+            query.userType = req.currentUser.type 
+            req.db.collection(this.modelName).findOne( query, res );
+        } else {
+            req.db.collection(this.modelName).find( query ).toArray( res );
+        }
     },
 
 }
