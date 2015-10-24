@@ -1,51 +1,5 @@
 
 
-GET /users
-список пользователей
-GET /users/{id}
-информация о пользователе
-POST /users
-добавить пользователя
-PUT /users/{id}
-изменить пользователя
-DELETE /users/{id}
-удалить пользователя
-
-_id, masterRegion, name.first, name.last, email, metadata
-
-
-GET /users/{id}/assets
-список папок/файлов, лежащих в корне
-GET /users/{id}/assets/{id}
-список папок/файлов, лежащих в папке {id}
-POST /users/{id}/asserts
-добавить папку/файл в корневой узел
-POST /users/{id}/asserts/{id}
-добавить папку/файл в папку {id}
-PUT /users/{id}/assets/{id}
-изменить документ {id}
-DELETE /users/{id}/assets/{id}
-удалить документ {id}
-
-_id, masterRegion, userId, path, name, type, size, permissions
-
-
-GET /users/{id}/assets/resources
-получить информацию об использовании всех ресурсов
-// GET /users/{id}/assets/resources/{type}
-// получить информацию об использовании ресурсов типа type
-// GET /users/{id}/assets/{id}/resources
-// получить информацию об использовании всех ресурсов, лежащих в папке {id}
-
-_id, masterRegion, userId, assetType, count, totalSize
-
-
-POST /users/{id}/asserts/search/{name}
-поиск папок/файлов по имени, размеру
-POST /users/{id}/asserts/{id}/search/{name}
-поиск папок/файлов по имени, размеру в папке {id}
-
-
 ## Command line examples
 
 ### Admin user examples
@@ -66,7 +20,12 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOT
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users
 [{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}},{"_id":"5235125f-f45f-4306-b625-8bd4bbfb55ec","login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""}}]
+```
 
+* Delete user
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b -X DELETE
+{"ok":1,"_id":"353e6dbf-9a03-4a07-813d-b6fee5b9411b"}
 ```
 
 * Check options
@@ -194,27 +153,127 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtOD
 
 ## Warnings and errors examples
 
+### Access / Authorization / Tokens
+
+* 21 - Acess denied
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/users
+{"code":"21","message":"Acess denied","developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.","url":"https://doc.site.url/errors/21","status":"403"}
+```
+
+* 91 - Unauthorized
+```
+curl http://localhost:3000/users
+{"code":"91","message":"Unauthorized","developerMessage":"No token provided. Please POST login and password to /login to get token","url":"https://doc.site.url/errors/91","status":"401"}
+```
+
+* 92 - Bad token
+```
+curl -H "x-access-token: eyJhbG" http://localhost:3000/users
+{"code":"92","message":"Bad token","developerMessage":"Provided token not accesable. Please, POST login and password to /login to get actual token","url":"https://doc.site.url/errors/92","status":"401"}
+```
+
+* 93 - Token to old
+```
+curl -H "Content-Type: application/json" -d '{"login":"superuser","password":"123","type":"root","email":"guest@host2.url","name":{"first":"ADMIN","last":""}}' http://localhost:3000/register
+{"login":"superuser","password":"202cb962ac59075b964b07152d234b70","type":"guest","email":"guest@host2.url","name":{"first":"ADMIN","last":""},"_id":"353e6dbf-9a03-4a07-813d-b6fee5b9411b","_usefulLink":"/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b","_usefulAssets":"/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b/assets","_usefulResources":"/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b/resources"}
+curl -H "Content-Type: application/json" -d '{"login":"superuser","password":"123"}' http://localhost:3000/login
+{"token":"eyJhbGciOiJIUzI1NiJ9.MzUzZTZkYmYtOWEwMy00YTA3LTgxM2QtYjZmZWU1Yjk0MTFi.BqF8Rvd16_CPGxOXPrpV_DOaIWBCQOhkcBRaJk7DoQc"}
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MzUzZTZkYmYtOWEwMy00YTA3LTgxM2QtYjZmZWU1Yjk0MTFi.BqF8Rvd16_CPGxOXPrpV_DOaIWBCQOhkcBRaJk7DoQc" http://localhost:3000/options
+[{"_id":"562b783ee63db5e165879708","name":"limit.files","userType":"guest","value":3},{"_id":"562b783ee63db5e16587970a","name":"limit.size","userType":"guest","value":100000}]
+
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users/353e6dbf-9a03-4a07-813d-b6fee5b9411b -X DELETE
+{"ok":1,"_id":"353e6dbf-9a03-4a07-813d-b6fee5b9411b"}
+
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MzUzZTZkYmYtOWEwMy00YTA3LTgxM2QtYjZmZWU1Yjk0MTFi.BqF8Rvd16_CPGxOXPrpV_DOaIWBCQOhkcBRaJk7DoQc" http://localhost:3000/options
+{"code":"93","message":"Token to old","developerMessage":"Provided token is to old. Please, POST login and password to /login to get actual token","url":"https://doc.site.url/errors/93","status":"403"}
+```
+
+### Duplicate key error index
+
+* 3 - Server error
+```
+curl -H "Content-Type: application/json" -d '{"login":"superuser","password":"123","type":"root","email":"guest@host.url","name":{"first":"ADMIN","last":""}}' http://localhost:3000/register
+{"code":"3","message":"Server error","url":"https://doc.site.url/errors/3","status":"500","developerMessage":{"code":11000,"index":0,"errmsg":"E11000 duplicate key error index: gl.users.$email_1 dup key: { : \"guest@host.url\" }","op":{"login":"superuser","password":"202cb962ac59075b964b07152d234b70","type":"guest","email":"guest@host.url","name":{"first":"ADMIN","last":""},"_id":"bde72fb5-e2e9-4703-916c-8121d9140d68"}}}
+```
+
+
 ### Uploads overlimits
 
-*
+* 212 - Total size limit
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" -F "file=@/tmp/temp/gv_0402_newspicofday_0011.jpg" http://localhost:3000/assets
+{"code":"212","message":"Total size limit reached","developerMessage":"There is no space to store user's file. You can delete some files to free some space or upgrade your account to incrase your storage limits","url":"https://doc.site.url/errors/212","status":"409"}
+```
+
+* 213 - Total count files limit
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" -F "file=@/tmp/temp/images3.jpeg" http://localhost:3000/assets
+{"code":"213","message":"Total count files limit reached","developerMessage":"Count of all files is equal to count files limit. You can delete one file to store this file or upgrade your account to incrase your storage limits","url":"https://doc.site.url/errors/213","status":"409"}
+```
+
+
+
+
+
+
+
+
+
+
+
+Routers
+-----------
+GET /users
+список пользователей
+GET /users/{id}
+информация о пользователе
+POST /users
+добавить пользователя
+PUT /users/{id}
+изменить пользователя
+DELETE /users/{id}
+удалить пользователя
+
+_id, masterRegion, name.first, name.last, email, metadata
+
+
+GET /users/{id}/assets
+список папок/файлов, лежащих в корне
+GET /users/{id}/assets/{id}
+список папок/файлов, лежащих в папке {id}
+POST /users/{id}/asserts
+добавить папку/файл в корневой узел
+POST /users/{id}/asserts/{id}
+добавить папку/файл в папку {id}
+PUT /users/{id}/assets/{id}
+изменить документ {id}
+DELETE /users/{id}/assets/{id}
+удалить документ {id}
+
+_id, masterRegion, userId, path, name, type, size, permissions
+
+
+GET /users/{id}/assets/resources
+получить информацию об использовании всех ресурсов
+// GET /users/{id}/assets/resources/{type}
+// получить информацию об использовании ресурсов типа type
+// GET /users/{id}/assets/{id}/resources
+// получить информацию об использовании всех ресурсов, лежащих в папке {id}
+
+_id, masterRegion, userId, assetType, count, totalSize
+
+
+POST /users/{id}/asserts/search/{name}
+поиск папок/файлов по имени, размеру
+POST /users/{id}/asserts/{id}/search/{name}
+поиск папок/файлов по имени, размеру в папке {id}
+
+
 
 
 MongoDB schemas
 -------------
-users
-_id, masterRegion, name.first, name.last, email, metadata
-mongos> use ivanoffdb
-mongos> sh.enableSharding("ivanoffdb")
-mongos> db.users2.createIndex( { "masterRegion": 1, "_id": 1 } )
-mongos> sh.shardCollection( "ivanoffdb.users2", { "masterRegion": 1, "_id": 1 } )
-mongos> sh.addTagRange( "ivanoffdb.users2", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
-mongos> sh.addTagRange( "ivanoffdb.users2", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
-mongos> db.userFiles.createIndex( { email: 1 }, { unique: true } )
-
-assets
-_id, masterRegion, userId, path, name, type, size, permissions
-mongos> db.users2.createIndex( { "masterRegion": 1, "_id": 1 } )
-mongos> db.userFiles.createIndex( { email: 1 }, { unique: true } )
 
 
 Users manager

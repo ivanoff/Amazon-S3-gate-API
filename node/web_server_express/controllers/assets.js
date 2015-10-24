@@ -58,7 +58,6 @@ exports.addAsset = function( req, res, next ) {
         function( next ){
             ResourcesModel.getResourcesByType( req, '_total', function( err, resources ){
                 if ( resources ) usersResources = resources;
-console.log('TRYYYYY  !!!');
                 next();
             })
         },
