@@ -10,7 +10,7 @@ var ERROR = require('config').get('ERRORS');
 
 exports.getRootAssets = function( req, res, next ){
     AssetsModel.getFolderContent( req, '', function( err, docs ){
-        if ( err   ) { req.status=500; return next(err) }
+        if ( err   ) return req.error(err);
         if ( !docs ) docs = [];
         res.json( docs );
     });
@@ -18,7 +18,7 @@ exports.getRootAssets = function( req, res, next ){
 
 exports.getAssetById = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
-        if ( err  ) { req.status=500; return next(err) }
+        if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
         if ( doc.type != 'folder' ) {
             if( req.query.download == '' ) {
@@ -32,7 +32,7 @@ exports.getAssetById = function( req, res, next ) {
             }
         } else {
             AssetsModel.getFolderContent( req, doc.path + '/' + doc.name, function( err, doc ){
-                if ( err  ) { req.status=500; return next(err) }
+                if ( err  ) return req.error(err);
                 if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
                 res.json( doc );
             });
@@ -79,7 +79,7 @@ exports.addAsset = function( req, res, next ) {
             if( req.params.assetId ) {
                 doc.parentId = req.params.assetId;
                 AssetsModel.get( req, function( err, docFolder ){
-                    if ( err ) { req.status=500; return next(err) }
+                    if ( err ) return req.error(err);
                     if ( !docFolder ) return req.error( ERROR.ASSET_NOT_FOUND );
                     if ( docFolder.type != 'folder' ) return req.error( ERROR.NOT_A_FOLDER );
                     doc['path'] = docFolder.path + '/' + docFolder.name;
@@ -94,7 +94,7 @@ exports.addAsset = function( req, res, next ) {
                 if( err ) { req.status=400; return next(err) }
 
                 AssetsModel.add( req, doc, function( err, result, next ){
-                    if( err ) { req.status=500; return next(err) }
+                    if( err ) return req.error(err);
                     if( req.files ) {
                         req.aws.upload( { filePath: req.files.file.path,
                             fileId: doc['_id'], userId: doc['userId'] }, function(){
@@ -114,7 +114,7 @@ exports.addAsset = function( req, res, next ) {
 
 exports.updateAsset = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
-        if ( err  ) { req.status=500; return next(err) }
+        if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
 
         doc = req._.extend( doc, req.body );
@@ -123,7 +123,7 @@ exports.updateAsset = function( req, res, next ) {
             if ( err ) { req.status=400; return next(err) }
 
             AssetsModel.update( req, doc, function( err, result, next ){
-                if ( err ) { req.status=500; return next(err) }
+                if ( err ) return req.error(err);
                 res.json( { ok : 1, _id: doc._id } );
             });
         });
@@ -133,7 +133,7 @@ exports.updateAsset = function( req, res, next ) {
 
 exports.search = function( req, res, next ){
     AssetsModel.search( req, function( err, docs ){
-        if ( err   ) { req.status=500; return next(err) }
+        if ( err   ) return req.error(err);
         if ( !docs ) { return req.error( ERROR.NO_ASSETS ) }
         res.json( docs );
     });
@@ -141,7 +141,7 @@ exports.search = function( req, res, next ){
 
 exports.download = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
-        if ( err  ) { req.status=500; return next(err) }
+        if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
         if ( doc.type == 'folder' ) {
             next( 'Folder type is not downloadable. But we can zip it. Later. If you want.' );
@@ -156,7 +156,7 @@ exports.download = function( req, res, next ) {
 
 exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
-        if ( err  ) { req.status=500; return next(err) }
+        if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
         req.aws.remove( { fileId: req.params.assetId, userId: req.currentUser._id }, function(){} );
         res.json( { ok : 1, _id: req.params.assetId } );
@@ -166,6 +166,6 @@ exports.removeAsset = function( req, res, next ) {
 exports.removeAllUsersAssets = function( req, res, next ) {
     AssetsModel.removeAll( req, function( err, doc ){
         req.aws.remove( { fileId: req.currentUser._id }, function(){} );
-        if ( err  ) { req.status=500; return next(err) }
+        if ( err ) return req.error(err);
     });
 };
