@@ -1,0 +1,17 @@
+#!/bin/bash
+# ./publish validate-me 0.2.8 "add integer, float and password types"
+
+cd $1
+
+git status
+read
+
+git commit -a -m "$3"
+read
+git tag $2
+git push origin master --tags
+
+sudo npm install . -g
+sudo npm publish
+
+cd ..     
