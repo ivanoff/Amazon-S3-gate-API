@@ -41,7 +41,7 @@ module.exports = {
     },
 
     add : function( req, data, res ){
-        ResourcesModel.updateResources( req, data, +1, function(){} );
+        ResourcesModel.updateResources( req, data, +1, function( ){ } );
         req.db.collection(this.modelName)
             .insert( data, res );
     },
