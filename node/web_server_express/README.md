@@ -48,11 +48,29 @@ POST /users/{id}/asserts/{id}/search/{name}
 
 ## Command line example
 
-* Get token of admin user
+### Admin user examples
 
-```bash
+* Get token of admin user ( login/password: admin/admin )
+```
 curl -H "Content-Type: application/json" -d '{"login":"admin","password":"admin"}' http://localhost:3000/login
 {"token":"eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI"}
+```
+
+* Add simple user ( login/password: user/user ) 
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" -H "Content-Type: application/json" -d '{"login":"user","password":"user","type":"user","email":"user@host.url","name":{"first":"User","last":""}}' http://localhost:3000/users
+{"login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""},"_id":"be542ea1-3236-4a5d-8fca-2bc72e91d70b","_usefulLink":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b","_usefulAssets":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b/assets","_usefulResources":"/users/be542ea1-3236-4a5d-8fca-2bc72e91d70b/resources"}
+```
+
+* Get list of users
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users
+[{"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}},{"_id":"be542ea1-3236-4a5d-8fca-2bc72e91d70b","login":"user","password":"ee11cbb19052e40b07aac0ca060c23ee","type":"user","email":"user@host.url","name":{"first":"User","last":""}}]
+
+```
+
+* Check options
+```
 ```
 
 ### old examples
