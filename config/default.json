@@ -3,7 +3,6 @@
 // AWS S3 keys //
   "AWS" : {
     "accessKeyId": "AKIAJT472G2WQ6HTQDPA", 
-    "secretAccessKey": "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",
     "bucket": "ivanoff"
   },
 
