@@ -115,6 +115,18 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOG
 <binary_data>
 ```
 
+* Global searching file
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/search/jpeg
+[{"_id":"048ff404-e56e-483d-b4c0-4ee67d6cf924","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":""},{"_id":"c5019590-ee4d-4655-9d17-e4aa8ff3dfe1","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images2.jpeg","size":9375,"path":""},{"_id":"13474ecc-15fc-4dc6-b51c-14812138a3d2","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"index.jpeg","size":13128,"path":""},{"_id":"deb441bb-20fb-451d-b21d-8958eb35de0b","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":"/test","parentId":"7cd02b1d-e76c-4343-802c-bccb94ff6473"}]
+```
+
+* Search file in a folder recursively
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/7cd02b1d-e76c-4343-802c-bccb94ff6473/search/jpeg
+[{"_id":"deb441bb-20fb-451d-b21d-8958eb35de0b","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":"/test","parentId":"7cd02b1d-e76c-4343-802c-bccb94ff6473"}]
+```
+
 * Check user's resources
 ```
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/resources

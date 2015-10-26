@@ -137,11 +137,32 @@ exports.updateAsset = function( req, res, next ) {
 };
 
 exports.search = function( req, res, next ){
-    AssetsModel.search( req, function( err, docs ){
-        if ( err   ) return req.error(err);
-        if ( !docs ) { return req.error( ERROR.NO_ASSETS ) }
-        res.json( docs );
-    });
+
+    var query = { userId : req.currentUser._id, name : new RegExp( req.params.name, 'i' ) };
+
+    async.waterfall([
+        function( next ){
+            if( !req.params.assetId ) next()
+            else {
+                AssetsModel.get( req, function( err, doc ){
+                    if ( err  ) return req.error(err);
+                    if ( !doc ) return req.error( ERROR.ASSET_NOT_FOUND );
+                    if ( doc.type != 'folder' ) return req.error( ERROR.NOT_A_FOLDER );
+                    query.path = new RegExp( '^'+doc.path+'/'+doc.name );
+                    next();
+                })
+            }
+        },
+        function( next ){
+            AssetsModel.search( req, query, function( err, docs ){
+                if ( err   ) return req.error(err);
+                if ( !docs ) { return req.error( ERROR.NO_ASSETS ) }
+                res.json( docs );
+            });
+            next();
+        }
+    ]);
+
 };
 
 exports.download = function( req, res, next ) {
@@ -156,6 +177,14 @@ exports.download = function( req, res, next ) {
                 fs.unlink('/tmp/'+doc['_id']);
             } );
         }
+    });
+};
+
+exports.moveAssetToFolder = function( req, res, next ) {
+    AssetsModel.get( req, function( err, doc ){
+        if ( err  ) return req.error(err);
+        if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
+        console.log( doc );
     });
 };
 
