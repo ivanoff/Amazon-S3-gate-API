@@ -127,7 +127,7 @@ exports.updateAsset = function( req, res, next ) {
         AssetsModel.validate( doc, function( err ) {
             if ( err ) { req.status=400; return next(err) }
 
-            AssetsModel.update( req, doc, function( err, result, next ){
+            AssetsModel.update( req, req.params.assetId, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
                 res.json( { ok : 1, _id: doc._id } );
             });
@@ -181,10 +181,36 @@ exports.download = function( req, res, next ) {
 };
 
 exports.moveAssetToFolder = function( req, res, next ) {
-    AssetsModel.get( req, function( err, doc ){
-        if ( err  ) return req.error(err);
-        if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
-        console.log( doc );
+    async.parallel( {
+        file : function( callback ) {
+            AssetsModel.search( req, { _id : req.params.assetId }, function( err, doc ){
+                if ( err  ) callback( err );
+                if ( !doc ) callback( ERROR.ASSET_NOT_FOUND );
+                callback( null, doc.shift() );
+            });
+        },
+        folder : function( callback ) {
+            AssetsModel.search( req, { _id : req.params.folderId }, function( err, doc ){
+                doc = doc.shift();
+                if ( err  ) callback( err );
+                if ( !doc ) callback( ERROR.ASSET_NOT_FOUND );
+                if ( doc.type != 'folder' ) callback( ERROR.NOT_A_FOLDER );
+                callback( null, doc );
+            });
+        },
+    }, function( err, doc ) {  
+        if( !doc.file || !doc.folder ) return req.error( err );
+        AssetsModel.search( req, { name : doc.file.name, parentId : doc.folder._id }, function( err, doc_exist ){
+            doc_exist = doc_exist.shift();
+            if ( err ) return req.error( err );
+            if ( doc_exist ) return req.error( ERROR.ASSET_EXISTS );
+            AssetsModel.updatePath( req, doc.file.path, doc.folder.path+'/'+doc.folder.name, function(){
+                doc.file.parentId = doc.folder._id;
+                doc.file.path = doc.folder.path+'/'+doc.folder.name;
+                AssetsModel.update( req, doc.file._id, doc.file, function( err, updated_doc ){});
+            });
+            res.json( doc.file );
+        });
     });
 };
 
