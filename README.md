@@ -23,6 +23,7 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOT
 ```
 
 * Update user
+```
 # check under admin if we have user e2a39a50-6898-469c-a596-80f200ee3fe6
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GRHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI" http://localhost:3000/users/e2a39a50-6898-469c-a596-80f200ee3fe6
 {"_id":"e2a39a50-6898-469c-a596-80f200ee3fe6","login":"guest","password":"084e0343a0486ff05530df6c705c8bb4","type":"guest","email":"guest@host.url","name":{"first":"Guest","last":""}}
@@ -42,6 +43,7 @@ curl -H "Content-Type: application/json" -d '{"login":"anatoly","password":"jo"}
 # right not user e2a39a50-6898-469c-a596-80f200ee3fe6 can view what admin can view, 'cause of 'admin' type
 curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/users/2a0722fd-88b4-430f-928f-94f512676e4b
 {"_id":"2a0722fd-88b4-430f-928f-94f512676e4b","login":"admin","password":"21232f297a57a5a743894a0e4a801fc3","type":"admin","email":"admin@localhost","name":{"first":"Admin","last":""}}
+```
 
 
 * Delete user
