@@ -18,7 +18,6 @@ module.exports = function (app) {
     app.put    ( '/assets/:assetId', assetController.updateAsset   );
     app.patch  ( '/assets/:assetId/:folderId', assetController.moveAssetToFolder);
     app.delete ( '/assets/:assetId', assetController.removeAsset   );
-    app.get    ( '/assets/:assetId/download', assetController.download );
 
 }
 
