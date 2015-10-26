@@ -59,7 +59,7 @@ exports.updateUser = function( req, res, next ) {
 
             UsersModel.update( req, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
-                res.json( doc );
+                res.status( 201 ).json( doc );
             });
         });
 

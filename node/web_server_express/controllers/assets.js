@@ -129,7 +129,7 @@ exports.updateAsset = function( req, res, next ) {
 
             AssetsModel.update( req, req.params.assetId, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
-                res.json( { ok : 1, _id: doc._id } );
+                res.status( 201 ).json( doc );
             });
         });
 
@@ -156,7 +156,7 @@ exports.search = function( req, res, next ){
         function( next ){
             AssetsModel.search( req, query, function( err, docs ){
                 if ( err   ) return req.error(err);
-                if ( !docs ) { return req.error( ERROR.NO_ASSETS ) }
+                if ( !docs ) docs = [];
                 res.json( docs );
             });
             next();
