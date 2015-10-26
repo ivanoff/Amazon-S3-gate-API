@@ -20,23 +20,28 @@ exports.getAssetById = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
-        if ( doc.type != 'folder' ) {
-            if( req.query.download == '' ) {
-                req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
-                    res.download('/tmp/'+doc['_id'], doc['name'], function(){ 
-                        fs.unlink('/tmp/'+doc['_id']);
-                    });
-                } );
-            } else {
-                res.json( doc );
-            }
-        } else {
+        if ( doc.type != 'folder' ) res.json( doc )
+        else {
             AssetsModel.getFolderContent( req, doc.path + '/' + doc.name, function( err, doc ){
                 if ( err  ) return req.error(err);
                 if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
                 res.json( doc );
             });
         }
+    });
+};
+
+exports.getAssetContentById = function( req, res, next ) {
+    AssetsModel.get( req, function( err, doc ){
+        if ( err  ) return req.error(err);
+        if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
+        if ( doc.type == 'folder' ) return req.error( ERROR.ASSET_NOT_FOUND );
+
+        req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+            res.download('/tmp/'+doc['_id'], doc['name'], function(){ 
+                fs.unlink('/tmp/'+doc['_id']);
+            });
+        });
     });
 };
 
@@ -63,14 +68,14 @@ exports.addAsset = function( req, res, next ) {
         },
         function( next ){
             OptionsModel.getOptionsByName( req, 'limit.size', function( err, usersLimit ){
-                if( usersLimit.value && usersLimit.value < usersResources.totalSize + doc.size )
+                if( usersLimit && usersLimit.value < usersResources.totalSize + doc.size )
                     return req.error( ERROR.LIMIT_TOTAL_SIZE )
                 else next();
             })
         },
         function( next ){
             OptionsModel.getOptionsByName( req, 'limit.files', function( err, usersLimit ){
-                if( usersLimit.value && usersLimit.value < usersResources.count + 1 )
+                if( usersLimit && usersLimit.value < usersResources.count + 1 )
                     return req.error( ERROR.LIMIT_COUNT_FILES )
                 else next();
             })

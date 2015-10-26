@@ -12,6 +12,7 @@ module.exports = function (app) {
 
     app.get    ( '/assets',          assetController.getRootAssets );
     app.get    ( '/assets/:assetId', assetController.getAssetById  );
+    app.get    ( '/assets/:assetId/content', assetController.getAssetContentById  );
     app.post   ( '/assets',          multipartMiddleware, assetController.addAsset );
     app.post   ( '/assets/:assetId', multipartMiddleware, assetController.addAsset );
     app.put    ( '/assets/:assetId', assetController.updateAsset   );
