@@ -165,21 +165,6 @@ exports.search = function( req, res, next ){
 
 };
 
-exports.download = function( req, res, next ) {
-    AssetsModel.get( req, function( err, doc ){
-        if ( err  ) return req.error(err);
-        if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
-        if ( doc.type == 'folder' ) {
-            next( 'Folder type is not downloadable. But we can zip it. Later. If you want.' );
-        } else {
-            req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
-                res.download('/tmp/'+doc['_id'], doc['name'] );
-                fs.unlink('/tmp/'+doc['_id']);
-            } );
-        }
-    });
-};
-
 exports.moveAssetToFolder = function( req, res, next ) {
     async.parallel( {
         file : function( callback ) {
