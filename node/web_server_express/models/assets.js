@@ -46,14 +46,24 @@ module.exports = {
             .insert( data, res );
     },
 
-    update : function( req, data, res ){
+    update : function( req, id, data, res ){
         req.db.collection(this.modelName)
-            .update( { userId : req.currentUser._id, _id : req.params.assetId }, data, res );
+            .update( { userId : req.currentUser._id, _id : id }, data, res );
+    },
+
+    updatePath : function( req, from, to, res ){
+        req.db.collection(this.modelName)
+            .find( { userId : req.currentUser._id, path : new RegExp( '^'+from+'/(.*)?$' ) } )
+            .forEach( function(doc) {
+                doc.path = doc.path.replace( new RegExp( '^'+from+'/(.*)' ), to+"/$1" );
+                req.db.collection(this.modelName)
+                    .update( { _id : doc._id }, { $set : { "path" : doc.path } }, res );
+            }.bind(this));
     },
 
     search : function( req, query, res ){
         req.db.collection(this.modelName)
-            .find( query ).toArray( res );
+            .find( query ).toArray(res);
     },
 
     remove : function( req, res ){

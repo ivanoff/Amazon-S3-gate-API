@@ -59,6 +59,10 @@
             "developerMessage" : "Asset is not a folder type, so it cannot store additional files",
             "url" : "https://doc.site.url/errors/133", "status" : "405" },
 
+    "ASSET_EXISTS" : { "code" : "134", "message" : "Asset exists",
+            "developerMessage" : "Asset with provided name already exists in provided folder",
+            "url" : "https://doc.site.url/errors/134", "status" : "409" },
+
     "NO_OPTIONS"   : { "code" : "142", "message" : "No options found",
             "developerMessage" : "No options in the database at all",
             "url" : "https://doc.site.url/errors/142", "status" : "404" },
