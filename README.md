@@ -115,6 +115,12 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOG
 <binary_data>
 ```
 
+* Download folder
+```
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.NTIzNTEyNWYtZjQ1Zi00MzA2LWI2MjUtOGJkNGJiZmI1NWVj.mN6i5OJuZfjiDcc5OMIIGitqR7iyldPMyZDt8BzdKHI" http://localhost:3000/assets/098d07e8-9712-4499-be5f-f49145b937bc/content
+<binary_data>
+```
+
 * Move file/folder
 ```
 # there is 2 assets in a folder: 1 file and 1 folder
@@ -529,6 +535,7 @@ Dimitry, 2@ivanoff.org.ua .$ curl -A cv ivanoff.org.ua
 Все файлы и папки, загруженные одним пользователем не могут быть прочитанны другим пользователем.
 Получать информацию о файле.
 Возможность скачивать файл.
+Возможность скачивать папку в формате zip со вложенными документами.
 Возможность переносить файл или папку в другую папку.
 Искать рекурсивно файлы по имени в определенной папке либо глобально.
 Возможность удалять файл. Файл так же удаляется с S3.
