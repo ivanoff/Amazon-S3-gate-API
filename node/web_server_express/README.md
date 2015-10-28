@@ -128,7 +128,7 @@ curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtOD
 [{"_id":"4a2140f8-a710-4bbc-a07b-c971f92b8665","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":"/test3/test4","parentId":"715490af-2e04-4595-b58e-b4a399daf49c"},{"_id":"a45f1e72-a543-461f-86a0-2e0e53a56406","name":"test5","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"folder","path":"/test3/test4","parentId":"715490af-2e04-4595-b58e-b4a399daf49c","size":0}]
 
 # move file 4a2140f8-a710-4bbc-a07b-c971f92b8665 to folder a45f1e72-a543-461f-86a0-2e0e53a56406
-curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/4a2140f8-a710-4bbc-a07b-c971f92b8665/a45f1e72-a543-461f-86a0-2e0e53a56406 -X PATCH
+curl -H "x-access-token: eyJhbGciOiJIUzI1NiJ9.ZTJhMzlhNTAtNjg5OC00NjljLWE1OTYtODBmMjAwZWUzZmU2.GsZzkpcTlNdS3sCeaiiGvtEcfS4nPIy77QmZVXWxO64" http://localhost:3000/assets/4a2140f8-a710-4bbc-a07b-c971f92b8665 -H "Content-Type: application/json" -d '{"moveTo":"a45f1e72-a543-461f-86a0-2e0e53a56406"}' -X PATCH
 {"_id":"4a2140f8-a710-4bbc-a07b-c971f92b8665","userId":"e2a39a50-6898-469c-a596-80f200ee3fe6","type":"image","name":"images.jpeg","size":9375,"path":"/test3/test4","parentId":"715490af-2e04-4595-b58e-b4a399daf49c"}
 
 # check again: 1 file gone
