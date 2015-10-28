@@ -16,6 +16,11 @@ exports.me = function( req, res ) {
             OptionsModels.getOptions(req, function(err,doc){next(null,doc)}) 
         },
     }, function( err, doc ) {  
+        doc._links = {
+            self      : { href : '/me' },
+            assets    : { href : '/assets' },
+            resources : { href : '/resources' },
+        };
         res.json( doc );
     } );
 };

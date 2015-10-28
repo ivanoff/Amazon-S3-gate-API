@@ -34,9 +34,9 @@ exports.addUser = function( req, res, next ) {
         UsersModel.add( req, doc, function( err, result ){
             if ( err ) return req.error(err);
 
-            doc['_usefulLink']      = '/users/'+doc['_id'];
-            doc['_usefulAssets']    = '/users/'+doc['_id']+'/assets';
-            doc['_usefulResources'] = '/users/'+doc['_id']+'/resources';
+            doc['_links'] = {
+                self      : { href : '/users/'+doc['_id'] },
+            };
 
             ResourcesModel.initResources( req, doc, function(){} );
 
