@@ -18,10 +18,15 @@ exports.login = function (req, res, next) {
 	var token = jwt.sign( doc['_id'], req.TOKEN_PARAMS.secret , {
 	    expiresIn: req.TOKEN_PARAMS.expire
 	});
-	res.json( { token: token } );
+	res.json( { token: token,
+            _links : {
+                self      : { href : '/me' },
+                assets    : { href : '/assets' },
+                resources : { href : '/resources' },
+            }
+        });
     })
 };
-
 
 exports.middleWare = function( req, res, next ){ 
     var token = req.body.token || req.params.token || req.headers['x-access-token'];

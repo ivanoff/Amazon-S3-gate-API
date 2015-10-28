@@ -27,6 +27,10 @@ exports.getAssetById = function( req, res, next ) {
             AssetsModel.getFolderContent( req, doc.path + '/' + doc.name, function( err, doc ){
                 if ( err  ) return req.error(err);
                 if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
+                doc._links = {
+                    self      : { href : '/assets/' + doc._id },
+                    resources : { href : '/resources' },
+                };
                 res.json( doc );
             });
         }
@@ -136,6 +140,10 @@ exports.addAsset = function( req, res, next ) {
                                 fs.unlink( req.files.file.path );
                             } );
                     }
+                    doc._links = {
+                        self      : { href : '/assets/'+doc._id },
+                        resources : { href : '/resources' },
+                    };
                     res.location( '/users/'+doc['userId']+'/assets/'+doc['_id'] );
                     res.status( 201 );
                     res.json( doc );
@@ -159,6 +167,10 @@ exports.updateAsset = function( req, res, next ) {
 
             AssetsModel.update( req, req.params.assetId, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
+                doc._links = {
+                    self      : { href : '/assets/'+doc._id },
+                    resources : { href : '/resources' },
+                };
                 res.status( 201 ).json( doc );
             });
         });
