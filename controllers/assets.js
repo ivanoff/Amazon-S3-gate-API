@@ -217,7 +217,7 @@ exports.moveAssetToFolder = function( req, res, next ) {
             });
         },
         folder : function( callback ) {
-            AssetsModel.search( req, { _id : req.params.folderId }, function( err, doc ){
+            AssetsModel.search( req, { _id : req.body.moveTo }, function( err, doc ){
                 doc = doc.shift();
                 if ( err  ) callback( err );
                 if ( !doc ) callback( ERROR.ASSET_NOT_FOUND );
