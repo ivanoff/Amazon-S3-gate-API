@@ -8,36 +8,147 @@ version: v1
 scemas:
   - user: |
     {
-      _id      : { type: "uuid", required: true },
-      login    : { type: "string", required: true },
-      password : { type: "md5",    required: true },
-      type     : { type: "string" },
-      name: {
-          first: { type: "string", max: 128, match : /^[\w\ _`\-]*$/i, required: true },
-          last : { type: "string", max: 128, match : /^[\w\ _`\-]*$/i },
-      },
-      email:    { type: "email"  },
-      metadata: { type: "object" },
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "login": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "md5",
+          "required": true
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "first": {
+              "type": "string",
+              "maxLength": 128,
+              "required": true
+            },
+            "last": {
+              "type": "string",
+              "maxLength": 128,
+            }
+          }
+        },
+        "email": {
+          "type": "email"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    }
+  - asset: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "userId": {
+          "type": "uuid",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "required": true
+        },
+        "size": {
+          "type": "integer"
+        },
+        "parentId": {
+          "type": "string"
+        }
+      }
+    }
+  - resources: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "userId": {
+          "type": "uuid",
+          "required": true
+        },
+        "assetType": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer"
+        },
+        "totalSize": {
+          "type": "integer"
+        }
+      }
+    }
+  - options: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "userType": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
     }
 
-
   /login:
-    description:
+    description: Get token by user's login and password
     post:
-      description:
-      bodyParameters:
-        login:
-          displayName: Login
-          type: string
-          description: User's login
-          example: admin
-          required: true
-        password:
-          displayName: Password
-          type: string
-          description: User's password
-          example: bassMolp
-          required: true
+      body:
+        application/json:
+          scema : |
+          {
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "id": "http://jsonschema.net",
+            "required": true,
+            "properties": {
+              "login": {
+                "type": "string",
+                "required": true
+              },
+              "password": {
+                "type": "string",
+                "required": true
+              }
+            }
+          }
+          example : |
+            {
+              "login":"user21",
+              "password":"userSeCr3f"
+            }
       responses:
         200:
           body:
@@ -84,41 +195,23 @@ scemas:
                   "status":"401"
                 }
   /register:
-    description:
     post:
-      description:
-      bodyParameters:
-        login:
-          displayName: Login
-          type: string
-          description: User's login
-          example: admin
-          required: true
-        password:
-          displayName: Password
-          type: string
-          description: User's password
-          example: bassMolp
-          required: true
-        email:
-          displayName: e-mail
-          type: string
-          description: User's e-mail
-          example: user@host.url
-          required: false
-        name:
-          first:
-            displayName: First name
-            type: string
-            description: User's first name
-            example: Ivan
-            required: true
-          last:
-            displayName: Last name
-            type: string
-            description: User's last name
-            example: Ivanov
-            required: false
+      description: Register new guest user
+      body:
+        application/json:
+          scema : user
+          example : |
+            {
+              "login":"user21",
+              "password":"userSeCr3f",
+              "type":"user",
+              "email":"user@host.url",
+              "name":
+              {
+                "first":"Alexander",
+                "last":"Muchilton"
+              }
+            }
       responses:
         201:
           body:
@@ -196,9 +289,8 @@ scemas:
                   }
                 }
   /me:
-    description:
     get:
-      description:
+      description: Get information about user - owner of the provided token
       headerParameters:
         x-access-token:
           displayName: Token
@@ -265,9 +357,8 @@ scemas:
                   }
                 }
   /options:
-    description:
     get:
-      description:
+      description: Get options of the user's group - owner of provided token
       headerParameters:
         x-access-token:
           displayName: Token
@@ -295,9 +386,9 @@ scemas:
                   }
                 ]
   /assets:
-    description:
+    description: Work with assets ( files and folders )
     get:
-      description:
+      description: Get list of assets in root directory
       headerParameters:
         x-access-token:
           displayName: Token
@@ -345,7 +436,7 @@ scemas:
                   }
                 ]
     post:
-      description:
+      description: add asset to root folder
       headerParameters:
         x-access-token:
           displayName: Token
@@ -354,7 +445,7 @@ scemas:
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
           required: true
       application/json:
-        description:
+        description: add folder to root folder
         bodyParameters:
           name:
             displayName: Folder name
@@ -387,7 +478,7 @@ scemas:
                     }
                   }
       multipart/form-data:
-        description:
+        description: Upload file to root folder
         formParameters:
           file:
             displayName: File
@@ -420,10 +511,10 @@ scemas:
                     }
                   }
     /search:
-      description:
+      description: Search file and folder in whole storage
       /{name}:
         get:
-          description:
+          description: Search file and folder in whole storage by {name} name
           headerParameters:
             x-access-token:
               displayName: Token
@@ -456,7 +547,7 @@ scemas:
                     ]
     /{assetId}:
       get:
-        description:
+        description: Get list of file and folder in {assetId} folder
         headerParameters:
           x-access-token:
             displayName: Token
@@ -490,7 +581,7 @@ scemas:
                     }
                   ]
       post:
-        description:
+        description: Add folder or upload file to {assetId} folder
         headerParameters:
           x-access-token:
             displayName: Token
@@ -499,7 +590,7 @@ scemas:
             example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
             required: true
         application/json:
-          description:
+          description: Add folder to {assetId} folder
           bodyParameters:
             name:
               displayName: Folder name
@@ -555,7 +646,7 @@ scemas:
                       "status":"400"
                     }
         multipart/form-data:
-          description:
+          description: Upload file to {assetId} folder
           formParameters:
             file:
               displayName: File
@@ -610,7 +701,7 @@ scemas:
                       "status":"400"
                     }
       put:
-        description:
+        description: Change whole information about file/folder in {assetId} folder
         headerParameters:
           x-access-token:
             displayName: Token
@@ -662,7 +753,7 @@ scemas:
                     "status":"409"
                   }
       patch:
-        description:
+        description: Move {assetId} file/folder into {moveTo} folder
         headerParameters:
           x-access-token:
             displayName: Token
@@ -725,7 +816,7 @@ scemas:
                     "status":"400"
                   }
       delete:
-        description:
+        description: Delete {assetId} file or folder recursively
         headerParameters:
           x-access-token:
             displayName: Token
@@ -751,7 +842,7 @@ scemas:
                   }
       /content:
         get:
-          description:
+          description: Download file or folder
           headerParameters:
             x-access-token:
               displayName: Token
@@ -775,10 +866,10 @@ scemas:
                       "status":"404"
                     }
       /search:
-        description:
+        description: Search file and folder in {assetId} folder
         /{name}:
           get:
-            description:
+            description: Search file and folder in {assetId} folder by name {name}
             headerParameters:
               x-access-token:
                 displayName: Token
@@ -804,7 +895,7 @@ scemas:
                       ]
   /resources:
     get:
-      description:
+      description: Get information about used resources
       headerParameters:
         x-access-token:
           displayName: Token
@@ -842,7 +933,7 @@ scemas:
                 ]
     /{type}
       get:
-        description:
+        description: Get information about used resources by type {type}
         headerParameters:
           x-access-token:
             displayName: Token
@@ -875,7 +966,7 @@ scemas:
                   }
   /users:
     get:
-      description:
+      description: Get list of all users
       headerParameters:
         x-access-token:
           displayName: Token
@@ -949,7 +1040,7 @@ scemas:
                   "status":"403"
                 }
     post:
-      description:
+      description: Add user
       headerParameters:
         x-access-token:
           displayName: Token
@@ -1084,7 +1175,7 @@ scemas:
                 }
     /{userId}:
       get:
-        description:
+        description: Show information about {userId} user
         headerParameters:
           x-access-token:
             displayName: Token
@@ -1121,7 +1212,7 @@ scemas:
                     "status":"404"
                   }
       put:
-        description:
+        description: Change all information about {userId} user
         headerParameters:
           x-access-token:
             displayName: Token
@@ -1259,7 +1350,7 @@ scemas:
                     "status":"403"
                   }
       patch:
-        description:
+        description: Change part of information about {userId} user
         headerParameters:
           x-access-token:
             displayName: Token
@@ -1397,7 +1488,7 @@ scemas:
                     "status":"403"
                   }
       delete:
-        description:
+        description: Delete {userId} user
         headerParameters:
           x-access-token:
             displayName: Token
