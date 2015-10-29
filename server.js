@@ -49,7 +49,8 @@ app.use( function( req, res, next ){
                         e = error;
                     }
                     req.log.error( e );
-                    if( e.status ) res.status( e.status );
+                    if( e.status ) res.status( e.status )
+                    else res.status(400);
                     res.json( e );
                     return e;
                 }; 

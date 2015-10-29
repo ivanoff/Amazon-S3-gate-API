@@ -25,22 +25,22 @@ exports.getUserById = function( req, res, next ) {
 
 exports.addUser = function( req, res, next ) {
     var doc    = req.body;
-    doc['_id'] = req.uuid.v4();
-    doc['password'] = md5( doc['password'] );
+    doc._id = req.uuid.v4();
+    doc.password = md5( doc['password'] );
 
     UsersModel.validate( doc, function( err ) {
-        if ( err ) { req.status=400; return next(err) }
+        if ( err ) return req.error(err);
 
         UsersModel.add( req, doc, function( err, result ){
             if ( err ) return req.error(err);
 
-            doc['_links'] = {
-                self      : { href : '/users/'+doc['_id'] },
+            doc._links = {
+                self      : { href : '/users/'+doc._id },
             };
 
             ResourcesModel.initResources( req, doc, function(){} );
 
-            res.location( '/users/'+doc['_id'] );
+            res.location( '/users/'+doc._id );
             res.status( 201 ).json( doc );
         });
     });

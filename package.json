@@ -20,8 +20,6 @@
     "mongodb": "^2.0.43",
     "node-uuid": "^1.4.3",
     "npm": "^3.3.8",
-    "rimraf": "^2.4.3",
-    "rmdir": "^1.1.0",
     "should": "^7.1.0",
     "supertest": "^1.1.0",
     "underscore": "^1.8.3",

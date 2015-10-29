@@ -6,7 +6,7 @@ version: v1
 
   /login:
     post:
-      queryParameters:
+      bodyParameters:
         login:
           displayName: Login
           type: string
@@ -43,18 +43,393 @@ version: v1
                       }
                     }
                   }
+          404:
+            body:
+              application/json:
+                example: | 
+                  {
+                    "code":"121",
+                    "message":"User not found",
+                    "developerMessage":"Provided information not enough to find user",
+                    "url":"https://doc.site.url/errors/121",
+                    "status":"404"
+                  }
+          401:
+            body:
+              application/json:
+                example: | 
+                  {
+                    "code":"91",
+                    "message":"Unauthorized",
+                    "developerMessage":"No token provided. Please POST login and password to /login to get token",
+                    "url":"https://doc.site.url/errors/91",
+                    "status":"401"
+                  }
   /register:
     post:
+      bodyParameters:
+        login:
+          displayName: Login
+          type: string
+          description: User's login
+          example: admin
+          required: true
+        password:
+          displayName: Password
+          type: string
+          description: User's password
+          example: bassMolp
+          required: true
+        email:
+          displayName: e-mail
+          type: string
+          description: User's e-mail
+          example: user@host.url
+          required: false
+        name:
+          first:
+            displayName: First name
+            type: string
+            description: User's first name
+            example: Ivan
+            required: true
+          last:
+            displayName: Last name
+            type: string
+            description: User's last name
+            example: Ivanov
+            required: false
+      description:
+        responses:
+          201:
+            body:
+              application/json:
+                example: | 
+                  {
+                    "login":"guest5",
+                    "password":"1ba562cc025376a90f12a9ec337cf67a",
+                    "email":"guest5@mail.ru",
+                    "name":
+                    {
+                      "first":"Ivan",
+                      "last":"Ivanov"
+                    },
+                    "type":"guest",
+                    "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+                    "_links":
+                    {
+                      "self":
+                      { 
+                        "href":"/users/eeec7b34-1157-4167-919f-ed9370bdc27c"
+                      }
+                    }
+                  }
+          201:
+            body:
+              application/json:
+                example: | 
+                  {
+                    ",name":"Field 'first' not matched with type 'string'"
+                  }
+                example: | 
+                  {
+                    ",name":"Field 'email' not matched with type 'email'"
+                  }
+                example: | 
+                  {
+                    "":"Field 'password' is requied, but not found"
+                  }
+                example: | 
+                  {
+                    "":"Field 'login' is requied, but not found"
+                  }
+                example: | 
+                  {
+                    "":"Field 'name.first' is requied, but not found"
+                  }
+          500:
+            body:
+              application/json:
+                example: | 
+                  {
+                    "code":"3",
+                    "message":"Server error",
+                    "url":"https://doc.site.url/errors/3",
+                    "status":"500",
+                    "developerMessage":
+                    {
+                      "code":11000,
+                      "index":0,
+                      "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"guest5\" }",
+                      "op":
+                      {
+                        "login":"guest5",
+                        "password":"1ba562cc025376a90f12a9ec337cf67a",
+                        "email":"guest5@mail.ru",
+                        "name":
+                        {
+                          "first":"Ivan",
+                          "last":"Ivanov"
+                        },
+                        "type":"guest",
+                        "_id":"ee26af1e-b907-4e37-8b99-a8ec1302c4b6"
+                      }
+                    }
+                  }
   /me:
     get:
+      headerParameters:
+        x-access-token:
+          displayName: Token
+          type: string
+          description: User's token
+          example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+          required: true
+      description:
+        responses:
+          200:
+            body:
+              application/json:
+                example: | 
+                  {
+                    "options":
+                    [
+                      {
+                        "_id":"562b783ee63db5e165879708",
+                        "name":"limit.files",
+                        "userType":"guest",
+                        "value":3
+                      },
+                      {
+                        "_id":"562b783ee63db5e16587970a",
+                        "name":"limit.size",
+                        "userType":"guest",
+                        "value":100000
+                      }
+                    ],
+                    "user":
+                    {
+                      "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+                      "login":"guest5",
+                      "password":"1ba562cc025376a90f12a9ec337cf67a",
+                      "email":"guest5@mail.ru",
+                      "name":
+                      {
+                        "first":"Ivan",
+                        "last":"Ivanov"
+                      },
+                      "type":"guest"
+                    },
+                    "resources":
+                    {
+                      "_id":"5631cf04388e48e208eb8818",
+                      "userId":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+                      "assetType":"_total",
+                      "count":0,
+                      "totalSize":0
+                    },
+                    "_links":
+                    {
+                      "self":
+                      {
+                        "href":"/me"
+                      },
+                      "assets":
+                      {
+                        "href":"/assets"
+                      },
+                      "resources":
+                      {
+                        "href":"/resources"
+                      }
+                    }
+                  }
   /options:
     get:
+      headerParameters:
+        x-access-token:
+          displayName: Token
+          type: string
+          description: User's token
+          example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+          required: true
+      description:
+        responses:
+          200:
+            body:
+              application/json:
+                example: | 
+                  [
+                    {
+                      "_id":"562b783ee63db5e165879708",
+                      "name":"limit.files",
+                      "userType":"guest",
+                      "value":3
+                    },
+                    {
+                      "_id":"562b783ee63db5e16587970a",
+                      "name":"limit.size",
+                      "userType":"guest",
+                      "value":100000
+                    }
+                  ]
   /assets:
     get:
+      headerParameters:
+        x-access-token:
+          displayName: Token
+          type: string
+          description: User's token
+          example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+          required: true
+      description:
+        responses:
+          200:
+            body:
+              application/json:
+                example: | 
+                  [
+                    {
+                      "_id":"1588cd60-bbf5-46aa-90ea-db56aeffdb06",
+                      "name":"new",
+                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                      "type":"folder",
+                      "path":"",
+                      "size":0
+                    },
+                    {
+                      "_id":"7cd02b1d-e76c-4343-802c-bccb94ff6473",
+                      "name":"test",
+                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                      "type":"folder",
+                      "path":"",
+                      "size":0
+                    },
+                    {
+                      "_id":"bf238476-eec6-4e3b-97f8-d22d72d998f8",
+                      "name":"test2",
+                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                      "type":"folder",
+                      "path":"",
+                      "size":0
+                    },
+                    {
+                      "_id":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed",
+                      "name":"test3",
+                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                      "type":"folder",
+                      "path":"",
+                      "size":0
+                    }
+                  ]
     post:
-  /search:
-    /{name}:
-      get:
+      headerParameters:
+        x-access-token:
+          displayName: Token
+          type: string
+          description: User's token
+          example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+          required: true
+      application/json:
+        bodyParameters:
+          name:
+            displayName: Folder name
+            type: string
+            description: New folder name
+            example: video
+            required: true
+          description:
+            responses:
+              201:
+                body:
+                  application/json:
+                    example: | 
+                      {
+                        "name":"newfolder",
+                        "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
+                        "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                        "type":"folder",
+                        "path":"",
+                        "size":0,
+                        "_links":
+                        {
+                          "self":
+                          {
+                            "href":"/assets/df570ef4-fdb8-4d01-b185-52957feb5a67"
+                          },
+                          "resources":
+                          {
+                            "href":"/resources"
+                          }
+                        }
+                      }
+      multipart/form-data:
+        formParameters:
+          file:
+            displayName: File
+            type: binary
+            description: New file content
+            example: @images/me.jpeg
+            required: true
+          description:
+            responses:
+              201:
+                body:
+                  application/json:
+                    example: | 
+                      {
+                        "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
+                        "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                        "type":"image",
+                        "name":"index.jpeg",
+                        "size":13128,
+                        "path":"",
+                        "_links":
+                        {
+                          "self":
+                          {
+                            "href":"/assets/413809a0-276f-4f0a-95ca-04d3f6dbdf1d"
+                          },
+                          "resources":
+                          {
+                            "href":"/resources"
+                          }
+                        }
+                      }
+    /search:
+      /{name}:
+        get:
+          headerParameters:
+            x-access-token:
+              displayName: Token
+              type: string
+              description: User's token
+              example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+              required: true
+          description:
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: | 
+                      [
+                        {
+                          "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
+                          "name":"newfolder",
+                          "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                          "type":"folder",
+                          "path":"",
+                          "size":0
+                        },
+                        {
+                          "_id":"36e6cc2f-3a48-41b8-a741-f6e13dc68e75",
+                          "name":"newfolder2",
+                          "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                          "type":"folder",
+                          "path":"",
+                          "size":0
+                        }
+                      ]
     /{assetId}:
       get:
       post:
@@ -73,6 +448,50 @@ version: v1
   /users:
     get:
     post:
+      bodyParameters:
+        login:
+          displayName: Login
+          type: string
+          description: User's login
+          example: admin
+          required: true
+        password:
+          displayName: Password
+          type: string
+          description: User's password
+          example: bassMolp
+          required: true
+        type:
+          displayName: Type
+          type: string
+          description: User's type ( admin, user, guest )
+          example: admin
+          required: false
+        email:
+          displayName: e-mail
+          type: string
+          description: User's e-mail
+          example: user@host.url
+          required: false
+        name:
+          first:
+            displayName: First name
+            type: string
+            description: User's first name
+            example: Ivan
+            required: true
+          last:
+            displayName: Last name
+            type: string
+            description: User's last name
+            example: Ivanov
+            required: false
+      description:
+        responses:
+          200:
+            body:
+              application/json:
+                example: | 
     /{userId}:
       post:
       put:
