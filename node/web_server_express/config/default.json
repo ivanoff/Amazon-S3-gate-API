@@ -57,7 +57,7 @@
 
     "NOT_A_FOLDER" : { "code" : "133", "message" : "Asset is not folder",
             "developerMessage" : "Asset is not a folder type, so it cannot store additional files",
-            "url" : "https://doc.site.url/errors/133", "status" : "405" },
+            "url" : "https://doc.site.url/errors/133", "status" : "400" },
 
     "ASSET_EXISTS" : { "code" : "134", "message" : "Asset exists",
             "developerMessage" : "Asset with provided name already exists in provided folder",
