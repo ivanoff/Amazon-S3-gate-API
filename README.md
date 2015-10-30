@@ -449,7 +449,9 @@ curl -F "file=@/tmp/temp/images3.jpeg" http://localhost:3000/assets -H "x-access
 }
 ```
 unique index: **login**
+
 unique index: **email**
+
 
 ### assets collection
 ```
