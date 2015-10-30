@@ -1,0 +1,907 @@
+<!DOCTYPE HTML><html><head><title>S3 API API documentation</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="https://github.com/kevinrenskers/raml2html 2.1.0"><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css"><script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script><script type="text/javascript">
+      $(document).ready(function() {
+        $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
+
+        $('[data-toggle]').click(function() {
+          var selector = $(this).data('target') + ' pre code';
+          $(selector).each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        });
+
+        // open modal on hashes like #_action_get
+        $(window).bind('hashchange', function(e) {
+          var anchor_id = document.location.hash.substr(1); //strip #
+          var element = $('#' + anchor_id);
+
+          // do we have such element + is it a modal?  --> show it
+          if (element.length && element.hasClass('modal')) {
+            element.modal('show');
+          }
+        });
+
+        // execute hashchange on first page load
+        $(window).trigger('hashchange');
+
+        // remove url fragment on modal hide
+        $('.modal').on('hidden.bs.modal', function() {
+          if(history && history.replaceState) {
+            history.replaceState({}, '', '#');
+          }
+        });
+      });
+    </script><style>
+      .hljs {
+        background: transparent;
+      }
+      .parent {
+        color: #999;
+      }
+      .list-group-item > .badge {
+        float: none;
+        margin-right: 6px;
+      }
+      .panel-title > .methods {
+        float: right;
+      }
+      .badge {
+        border-radius: 0;
+        text-transform: uppercase;
+        width: 70px;
+        font-weight: normal;
+        color: #f3f3f6;
+        line-height: normal;
+      }
+      .badge_get {
+        background-color: #63a8e2;
+      }
+      .badge_post {
+        background-color: #6cbd7d;
+      }
+      .badge_put {
+        background-color: #22bac4;
+      }
+      .badge_delete {
+        background-color: #d26460;
+      }
+      .badge_patch {
+        background-color: #ccc444;
+      }
+      .list-group, .panel-group {
+        margin-bottom: 0;
+      }
+      .panel-group .panel+.panel-white {
+        margin-top: 0;
+      }
+      .panel-group .panel-white {
+        border-bottom: 1px solid #F5F5F5;
+        border-radius: 0;
+      }
+      .panel-white:last-child {
+        border-bottom-color: white;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
+      .panel-white .panel-heading {
+        background: white;
+      }
+      .tab-pane ul {
+        padding-left: 2em;
+      }
+      .tab-pane h2 {
+        font-size: 1.2em;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #ddd;
+      }
+      .tab-pane h3 {
+        font-size: 1.1em;
+      }
+      .tab-content {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+      }
+      #sidebar {
+        margin-top: 30px;
+        padding-right: 5px;
+        overflow: auto;
+        height: 90%;
+      }
+      .top-resource-description {
+        border-bottom: 1px solid #ddd;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description {
+        border-bottom: 1px solid #fcfcfc;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description p:last-child {
+        margin: 0;
+      }
+      .list-group .badge {
+        float: left;
+      }
+      .method_description {
+        margin-left: 85px;
+      }
+      .method_description p:last-child {
+        margin: 0;
+      }
+      .list-group-item {
+        cursor: pointer;
+      }
+      .list-group-item:hover {
+        background-color: #f5f5f5;
+      }
+    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>S3 API API documentation <small>version v1</small></h1><p>http://localhost</p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="login" class="panel-title">/login</h3></div><div class="panel-body"><div class="top-resource-description"><p>Get token by user&#39;s login and password</p></div><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_login"><span class="parent"></span>/login</a> <span class="methods"><a href="#login_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_login" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#login_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="login_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/login</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#login_post_request" data-toggle="tab">Request</a></li><li><a href="#login_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="login_post_request"><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "http://jsonschema.net",
+  "required": true,
+  "properties": {
+    "login": {
+      "type": "string",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
+</code></pre><p><strong>Example</strong>:</p><pre><code>{
+  "login":"user21",
+  "password":"userSeCr3f"
+}
+</code></pre></div><div class="tab-pane" id="login_post_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "token":"eyJhbGciOiJIUzI1NiJ9.MmEwNzIyZmQtODhiNC00MzBmLTkyOGYtOTRmNTEyNjc2ZTRi.SbA9GrHGxuQY_mIsqlP7t4ZTll_Zq_4-4l088tP0qxI"
+  "_links": 
+  {
+    "self":
+    {
+      "href":"/me"
+    },
+    "assets":
+    {
+      "href":"/assets"
+    },
+    "resources":
+    {
+      "href":"/resources"
+    }
+  }
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/401" target="_blank">401</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"91",
+  "message":"Unauthorized",
+  "developerMessage":"No token provided. Please POST login and password to /login to get token",
+  "url":"https://doc.site.url/errors/91",
+  "status":"401"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"121",
+  "message":"User not found",
+  "developerMessage":"Provided information not enough to find user",
+  "url":"https://doc.site.url/errors/121",
+  "status":"404"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="register" class="panel-title">/register</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_register"><span class="parent"></span>/register</a> <span class="methods"><a href="#register_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_register" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#register_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Register new guest user</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="register_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/register</h4></div><div class="modal-body"><div class="alert alert-info"><p>Register new guest user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#register_post_request" data-toggle="tab">Request</a></li><li><a href="#register_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="register_post_request"><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "http://jsonschema.net",
+  "required": true,
+  "properties": {
+    "login": {
+      "type": "string",
+      "required": true
+    },
+    "password": {
+      "type": "md5",
+      "required": true
+    },
+    "type": {
+      "type": "string"
+    },
+    "name": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "first": {
+          "type": "string",
+          "maxLength": 128,
+          "required": true
+        },
+        "last": {
+          "type": "string",
+          "maxLength": 128
+        }
+      }
+    },
+    "email": {
+      "type": "email"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}
+</code></pre><p><strong>Example</strong>:</p><pre><code>{
+  "login":"user21",
+  "password":"userSeCr3f",
+  "type":"user",
+  "email":"user@host.url",
+  "name":
+  {
+    "first":"Alexander",
+    "last":"Muchilton"
+  }
+}
+</code></pre></div><div class="tab-pane" id="register_post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "login":"guest5",
+  "password":"1ba562cc025376a90f12a9ec337cf67a",
+  "email":"guest5@mail.ru",
+  "name":
+  {
+    "first":"Ivan",
+    "last":"Ivanov"
+  },
+  "type":"guest",
+  "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+  "_links":
+  {
+    "self":
+    { 
+      "href":"/users/eeec7b34-1157-4167-919f-ed9370bdc27c"
+    }
+  }
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    ",name":"Field &#39;first&#39; not matched with type &#39;string&#39;"
+  },
+  {
+    ",name":"Field &#39;email&#39; not matched with type &#39;email&#39;"
+  },
+  {
+    "":"Field &#39;password&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;login&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;name.first&#39; is requied, but not found"
+  }
+]
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/500" target="_blank">500</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"3",
+  "message":"Server error",
+  "url":"https://doc.site.url/errors/3",
+  "status":"500",
+  "developerMessage":
+  {
+    "code":11000,
+    "index":0,
+    "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"guest5\" }",
+    "op":
+    {
+      "login":"guest5",
+      "password":"1ba562cc025376a90f12a9ec337cf67a",
+      "email":"guest5@mail.ru",
+      "name":
+      {
+        "first":"Ivan",
+        "last":"Ivanov"
+      },
+      "type":"guest",
+      "_id":"ee26af1e-b907-4e37-8b99-a8ec1302c4b6"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="me" class="panel-title">/me</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_me"><span class="parent"></span>/me</a> <span class="methods"><a href="#me_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_me" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#me_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get information about user - owner of the provided token</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="me_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/me</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get information about user - owner of the provided token</p></div><ul class="nav nav-tabs"><li class="active"><a href="#me_get_request" data-toggle="tab">Request</a></li><li><a href="#me_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="me_get_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="me_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "options":
+  [
+    {
+      "_id":"562b783ee63db5e165879708",
+      "name":"limit.files",
+      "userType":"guest",
+      "value":3
+    },
+    {
+      "_id":"562b783ee63db5e16587970a",
+      "name":"limit.size",
+      "userType":"guest",
+      "value":100000
+    }
+  ],
+  "user":
+  {
+    "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+    "login":"guest5",
+    "password":"1ba562cc025376a90f12a9ec337cf67a",
+    "email":"guest5@mail.ru",
+    "name":
+    {
+      "first":"Ivan",
+      "last":"Ivanov"
+    },
+    "type":"guest"
+  },
+  "resources":
+  {
+    "_id":"5631cf04388e48e208eb8818",
+    "userId":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+    "assetType":"_total",
+    "count":0,
+    "totalSize":0
+  },
+  "_links":
+  {
+    "self":
+    {
+      "href":"/me"
+    },
+    "assets":
+    {
+      "href":"/assets"
+    },
+    "resources":
+    {
+      "href":"/resources"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="options" class="panel-title">/options</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_options"><span class="parent"></span>/options</a> <span class="methods"><a href="#options_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_options" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#options_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get options of the user&#39;s group - owner of provided token</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="options_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/options</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get options of the user&#39;s group - owner of provided token</p></div><ul class="nav nav-tabs"><li class="active"><a href="#options_get_request" data-toggle="tab">Request</a></li><li><a href="#options_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="options_get_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="options_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"562b783ee63db5e165879708",
+    "name":"limit.files",
+    "userType":"guest",
+    "value":3
+  },
+  {
+    "_id":"562b783ee63db5e16587970a",
+    "name":"limit.size",
+    "userType":"guest",
+    "value":100000
+  }
+]
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="assets" class="panel-title">/assets</h3></div><div class="panel-body"><div class="top-resource-description"><p>Work with assets ( files and folders )</p></div><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets"><span class="parent"></span>/assets</a> <span class="methods"><a href="#assets_get"><span class="badge badge_get">get</span></a> <a href="#assets_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_assets" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#assets_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get list of assets in root directory</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#assets_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>add asset to root folder</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/assets</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get list of assets in root directory</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets_get_request" data-toggle="tab">Request</a></li><li><a href="#assets_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets_get_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="assets_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"1588cd60-bbf5-46aa-90ea-db56aeffdb06",
+    "name":"new",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  },
+  {
+    "_id":"7cd02b1d-e76c-4343-802c-bccb94ff6473",
+    "name":"test",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  },
+  {
+    "_id":"bf238476-eec6-4e3b-97f8-d22d72d998f8",
+    "name":"test2",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  },
+  {
+    "_id":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed",
+    "name":"test3",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  }
+]
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/assets</h4></div><div class="modal-body"><div class="alert alert-info"><p>add asset to root folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets_post_request" data-toggle="tab">Request</a></li><li><a href="#assets_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets_post_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><strong>Form Parameters</strong><ul><li><strong>Folder name</strong>: <em>required (string)</em><p>New folder name</p><p><strong>Example</strong>:</p><pre>video</pre></li></ul><p><strong>Type: multipart/form-data</strong></p><strong>Form Parameters</strong><ul><li><strong>File</strong>: <em>required (file)</em><p>The file to be uploaded</p></li></ul></div><div class="tab-pane" id="assets_post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
+  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+  "type":"image",
+  "name":"index.jpeg",
+  "size":13128,
+  "path":"",
+  "_links":
+  {
+    "self":
+    {
+      "href":"/assets/413809a0-276f-4f0a-95ca-04d3f6dbdf1d"
+    },
+    "resources":
+    {
+      "href":"/resources"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets_search"><span class="parent">/assets</span>/search</a> <span class="methods"></span></h4></div><div id="panel_assets_search" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Search file and folder in whole storage</p></div><div class="list-group"></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets_search__name_"><span class="parent">/assets/search</span>/{name}</a> <span class="methods"><a href="#assets_search__name__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_assets_search__name_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#assets_search__name__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Search file and folder in whole storage by {name} name</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets_search__name__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/assets/search</span>/{name}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Search file and folder in whole storage by {name} name</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets_search__name__get_request" data-toggle="tab">Request</a></li><li><a href="#assets_search__name__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets_search__name__get_request"><h3>URI Parameters</h3><ul><li><strong>name</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="assets_search__name__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
+    "name":"newfolder",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  },
+  {
+    "_id":"36e6cc2f-3a48-41b8-a741-f6e13dc68e75",
+    "name":"newfolder2",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"",
+    "size":0
+  }
+]
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets__assetId_"><span class="parent">/assets</span>/{assetId}</a> <span class="methods"><a href="#assets__assetId__get"><span class="badge badge_get">get</span></a> <a href="#assets__assetId__post"><span class="badge badge_post">post</span></a> <a href="#assets__assetId__put"><span class="badge badge_put">put</span></a> <a href="#assets__assetId__patch"><span class="badge badge_patch">patch</span></a> <a href="#assets__assetId__delete"><span class="badge badge_delete">delete</span></a></span></h4></div><div id="panel_assets__assetId_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#assets__assetId__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get list of file and folder in {assetId} folder</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#assets__assetId__post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Add folder or upload file to {assetId} folder</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#assets__assetId__put'" class="list-group-item"><span class="badge badge_put">put</span><div class="method_description"><p>Change whole information about file/folder in {assetId} folder</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#assets__assetId__patch'" class="list-group-item"><span class="badge badge_patch">patch</span><div class="method_description"><p>Move {assetId} file/folder into {moveTo} folder</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#assets__assetId__delete'" class="list-group-item"><span class="badge badge_delete">delete</span><div class="method_description"><p>Delete {assetId} file or folder recursively</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/assets</span>/{assetId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get list of file and folder in {assetId} folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__get_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__get_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="assets__assetId__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"016c5bf9-0916-4106-9e56-56a656177a50",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"image",
+    "name":"images.jpeg",
+    "size":9375,
+    "path":"/test3/test4",
+    "parentId":"715490af-2e04-4595-b58e-b4a399daf49c"
+  },
+  {
+    "_id":"a45f1e72-a543-461f-86a0-2e0e53a56406",
+    "name":"test5",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"folder",
+    "path":"/test3/test4",
+    "parentId":"715490af-2e04-4595-b58e-b4a399daf49c",
+    "size":0
+  }
+]
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent">/assets</span>/{assetId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Add folder or upload file to {assetId} folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__post_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__post_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><strong>Form Parameters</strong><ul><li><strong>Folder name</strong>: <em>required (string)</em><p>New folder name</p><p><strong>Example</strong>:</p><pre>video2</pre></li></ul><p><strong>Type: multipart/form-data</strong></p><strong>Form Parameters</strong><ul><li><strong>File</strong>: <em>required (file)</em><p>New file content</p></li></ul></div><div class="tab-pane" id="assets__assetId__post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
+  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+  "type":"image",
+  "name":"index.jpeg",
+  "size":13128,
+  "path":"",
+  "_links":
+  {
+    "self":
+    {
+      "href":"/assets/413809a0-276f-4f0a-95ca-04d3f6dbdf1d"
+    },
+    "resources":
+    {
+      "href":"/resources"
+    }
+  }
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"133",
+  "message":"Asset is not folder",
+  "developerMessage":"Asset is not a folder type, so it cannot store additional files",
+  "url":"https://doc.site.url/errors/133",
+  "status":"400"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/409" target="_blank">409</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"134",
+  "message":"Asset exists",
+  "developerMessage":"Asset with provided name already exists in provided folder",
+  "url":"https://doc.site.url/errors/134",
+  "status":"409"
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__put"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_put">put</span> <span class="parent">/assets</span>/{assetId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Change whole information about file/folder in {assetId} folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__put_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__put_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__put_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Folder name</strong>: <em>(string)</em><p>New folder name</p><p><strong>Example</strong>:</p><pre>video2</pre></li></ul></div><div class="tab-pane" id="assets__assetId__put_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"715490af-2e04-4595-b58e-b4a399daf49c",
+  "name":"newfolder4",
+  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+  "type":"folder",
+  "path":"/test3",
+  "parentId":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed",
+  "size":0,
+  "_links":
+  {
+    "self":
+    {
+      "href":"/assets/715490af-2e04-4595-b58e-b4a399daf49c"
+    },
+    "resources":
+    {
+      "href":"/resources"
+    }
+  }
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/409" target="_blank">409</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"134",
+  "message":"Asset exists",
+  "developerMessage":"Asset with provided name already exists in provided folder",
+  "url":"https://doc.site.url/errors/134",
+  "status":"409"
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__patch"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_patch">patch</span> <span class="parent">/assets</span>/{assetId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Move {assetId} file/folder into {moveTo} folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__patch_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__patch_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__patch_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Folder Id</strong>: <em>required (string)</em><p>Move-to folder Id</p><p><strong>Example</strong>:</p><pre>f06dc4b7-ab0a-4388-9c96-2e1bc17138ed</pre></li></ul></div><div class="tab-pane" id="assets__assetId__patch_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
+  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+  "type":"image",
+  "name":"index.jpeg",
+  "size":13128,
+  "path":"/test3",
+  "parentId":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"133",
+  "message":"Asset is not folder",
+  "developerMessage":"Asset is not a folder type, so it cannot store additional files",
+  "url":"https://doc.site.url/errors/133",
+  "status":"400"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"131",
+  "message":"Asset not found",
+  "developerMessage":"No asset with this parameters owned by this user was found",
+  "url":"https://doc.site.url/errors/131",
+  "status":"404"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/409" target="_blank">409</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"134",
+  "message":"Asset exists",
+  "developerMessage":"Asset with provided name already exists in provided folder",
+  "url":"https://doc.site.url/errors/134",
+  "status":"409"
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__delete"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_delete">delete</span> <span class="parent">/assets</span>/{assetId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Delete {assetId} file or folder recursively</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__delete_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__delete_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__delete_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Asset Id</strong>: <em>required (string)</em><p>Asset Id to delete</p><p><strong>Example</strong>:</p><pre>f06dc4b7-ab0a-4388-9c96-2e1bc17138ed</pre></li></ul></div><div class="tab-pane" id="assets__assetId__delete_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "ok":1,
+  "_id":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed"
+}
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets__assetId__content"><span class="parent">/assets/{assetId}</span>/content</a> <span class="methods"><a href="#assets__assetId__content_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_assets__assetId__content" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#assets__assetId__content_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Download file or folder</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__content_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/assets/{assetId}</span>/content</h4></div><div class="modal-body"><div class="alert alert-info"><p>Download file or folder</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__content_get_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__content_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__content_get_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="assets__assetId__content_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/octet-stream</strong></p><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"131",
+  "message":"Asset not found",
+  "developerMessage":"No asset with this parameters owned by this user was found",
+  "url":"https://doc.site.url/errors/131",
+  "status":"404"
+}
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets__assetId__search"><span class="parent">/assets/{assetId}</span>/search</a> <span class="methods"></span></h4></div><div id="panel_assets__assetId__search" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Search file and folder in {assetId} folder</p></div><div class="list-group"></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_assets__assetId__search__name_"><span class="parent">/assets/{assetId}/search</span>/{name}</a> <span class="methods"><a href="#assets__assetId__search__name__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_assets__assetId__search__name_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#assets__assetId__search__name__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Search file and folder in {assetId} folder by name {name}</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="assets__assetId__search__name__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/assets/{assetId}/search</span>/{name}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Search file and folder in {assetId} folder by name {name}</p></div><ul class="nav nav-tabs"><li class="active"><a href="#assets__assetId__search__name__get_request" data-toggle="tab">Request</a></li><li><a href="#assets__assetId__search__name__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="assets__assetId__search__name__get_request"><h3>URI Parameters</h3><ul><li><strong>assetId</strong>: <em>required (string)</em></li><li><strong>name</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="assets__assetId__search__name__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"60170500-70e4-494d-9447-5b6b1cfa599c",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "type":"image",
+    "name":"index.jpeg",
+    "size":13128,
+    "path":"/test2",
+    "parentId":"bf238476-eec6-4e3b-97f8-d22d72d998f8"
+  }
+]
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="resources" class="panel-title">/resources</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_resources"><span class="parent"></span>/resources</a> <span class="methods"><a href="#resources_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_resources" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#resources_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get information about used resources</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="resources_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/resources</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get information about used resources</p></div><ul class="nav nav-tabs"><li class="active"><a href="#resources_get_request" data-toggle="tab">Request</a></li><li><a href="#resources_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="resources_get_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="resources_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"562b90fd612ebc04469b1201",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "assetType":"_total",
+    "count":12,
+    "totalSize":63756
+  },
+  {
+    "_id":"562e056147044236446babbd",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "assetType":"folder",
+    "count":6,
+    "totalSize":0
+  },
+  {
+    "_id":"562b9306612ebc04469b1202",
+    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "assetType":"image",
+    "count":6,
+    "totalSize":63756
+  }
+]
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_resources__type_"><span class="parent">/resources</span>/{type}</a> <span class="methods"><a href="#resources__type__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_resources__type_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#resources__type__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get information about used resources by type {type}</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="resources__type__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/resources</span>/{type}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get information about used resources by type {type}</p></div><ul class="nav nav-tabs"><li class="active"><a href="#resources__type__get_request" data-toggle="tab">Request</a></li><li><a href="#resources__type__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="resources__type__get_request"><h3>URI Parameters</h3><ul><li><strong>type</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>User&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="resources__type__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"562b9306612ebc04469b1202",
+  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+  "assetType":"image",
+  "count":6,
+  "totalSize":63756
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"132",
+  "message":"No assets found",
+  "developerMessage":"No assets owned by this user in the database. Please, use POST to add new one",
+  "url":"https://doc.site.url/errors/132",
+  "status":"404"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="users" class="panel-title">/users</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_users"><span class="parent"></span>/users</a> <span class="methods"><a href="#users_get"><span class="badge badge_get">get</span></a> <a href="#users_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_users" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#users_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get list of all users</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#users_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>Add user</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="users_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/users</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get list of all users</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users_get_request" data-toggle="tab">Request</a></li><li><a href="#users_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users_get_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="users_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    "_id":"2a0722fd-88b4-430f-928f-94f512676e4b",
+    "login":"admin",
+    "password":"21232f297a57a5a743894a0e4a801fc3",
+    "type":"admin",
+    "email":"admin@localhost",
+    "name":
+    {
+      "first":"Admin",
+      "last":""
+    }
+  },
+  {
+    "_id":"5235125f-f45f-4306-b625-8bd4bbfb55ec",
+    "login":"user",
+    "password":"ee11cbb19052e40b07aac0ca060c23ee",
+    "type":"user",
+    "email":"user@host.url",
+    "name":
+    {
+      "first":"User",
+      "last":""
+    }
+  },
+  {
+    "_id":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+    "login":"anatoly"
+    ,"password":"674f33841e2309ffdd24c85dc3b999de",
+    "type":"guest",
+    "email":"anatol@host.url",
+    "name":
+    {
+      "first":"Anatoly",
+      "last":"Jovanny"
+    }
+  }
+]
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/403" target="_blank">403</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"21",
+  "message":"Acess denied",
+  "developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.",
+  "url":"https://doc.site.url/errors/21",
+  "status":"403"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{ 
+  "code" : "122", 
+  "message" : "No users found",
+  "developerMessage" : "No users in the database at all",
+  "url" : "https://doc.site.url/errors/122", 
+  "status" : "404" 
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="users_post"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/users</h4></div><div class="modal-body"><div class="alert alert-info"><p>Add user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users_post_request" data-toggle="tab">Request</a></li><li><a href="#users_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users_post_request"><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Login</strong>: <em>required (string)</em><p>User&#39;s login</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>Password</strong>: <em>required (string)</em><p>User&#39;s password</p><p><strong>Example</strong>:</p><pre>bassMolp</pre></li><li><strong>Type</strong>: <em>(string)</em><p>User&#39;s type ( admin, user, guest )</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>e-mail</strong>: <em>(string)</em><p>User&#39;s e-mail</p><p><strong>Example</strong>:</p><pre>user@host.url</pre></li><li><strong>First name</strong>: <em>required (string)</em><p>User&#39;s first name</p><p><strong>Example</strong>:</p><pre>Ivan</pre></li><li><strong>Last name</strong>: <em>(string)</em><p>User&#39;s last name</p><p><strong>Example</strong>:</p><pre>Ivanov</pre></li></ul></div><div class="tab-pane" id="users_post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "login":"nikolay",
+  "password":"137f62cc025376a90f12a9ec337cf67a",
+  "email":"nikolay@mail.ru",
+  "name":
+  {
+    "first":"Nikolay",
+    "last":"Nikolayev"
+  },
+  "type":"user",
+  "_id":"1fec7b34-1157-4167-919f-ed9370bdc27c",
+  "_links":
+  {
+    "self":
+    { 
+      "href":"/users/1fec7b34-1157-4167-919f-ed9370bdc27c"
+    }
+  }
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    ",name":"Field &#39;first&#39; not matched with type &#39;string&#39;"
+  },
+  {
+    ",name":"Field &#39;email&#39; not matched with type &#39;email&#39;"
+  },
+  {
+    "":"Field &#39;password&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;login&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;name.first&#39; is requied, but not found"
+  }
+]
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/403" target="_blank">403</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"21",
+  "message":"Acess denied",
+  "developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.",
+  "url":"https://doc.site.url/errors/21",
+  "status":"403"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/500" target="_blank">500</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"3",
+  "message":"Server error",
+  "url":"https://doc.site.url/errors/3",
+  "status":"500",
+  "developerMessage":
+  {
+    "code":11000,
+    "index":0,
+    "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"user\" }",
+    "op":
+    {
+      "login":"user",
+      "password":"1ba562cc025376a90f12a9ec337cf67a",
+      "email":"user@mail.ru",
+      "name":
+      {
+        "first":"Ivan",
+        "last":"Ivanov"
+      },
+      "type":"user",
+      "_id":"4f26af1e-b907-4e37-8b99-a8ec1302c4b6"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_users__userId_"><span class="parent">/users</span>/{userId}</a> <span class="methods"><a href="#users__userId__get"><span class="badge badge_get">get</span></a> <a href="#users__userId__put"><span class="badge badge_put">put</span></a> <a href="#users__userId__patch"><span class="badge badge_patch">patch</span></a> <a href="#users__userId__delete"><span class="badge badge_delete">delete</span></a></span></h4></div><div id="panel_users__userId_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#users__userId__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Show information about {userId} user</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#users__userId__put'" class="list-group-item"><span class="badge badge_put">put</span><div class="method_description"><p>Change all information about {userId} user</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#users__userId__patch'" class="list-group-item"><span class="badge badge_patch">patch</span><div class="method_description"><p>Change part of information about {userId} user</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#users__userId__delete'" class="list-group-item"><span class="badge badge_delete">delete</span><div class="method_description"><p>Delete {userId} user</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="users__userId__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/users</span>/{userId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Show information about {userId} user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users__userId__get_request" data-toggle="tab">Request</a></li><li><a href="#users__userId__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users__userId__get_request"><h3>URI Parameters</h3><ul><li><strong>userId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="users__userId__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+  "login":"guest5",
+  "password":"1ba562cc025376a90f12a9ec337cf67a",
+  "email":"guest5@mail.ru",
+  "name":
+  {
+    "first":"Ivan",
+    "last":"Ivanov"
+  },
+  "type":"guest"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"121",
+  "message":"User not found",
+  "developerMessage":"Provided information not enough to find user",
+  "url":"https://doc.site.url/errors/121",
+  "status":"404"
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="users__userId__put"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_put">put</span> <span class="parent">/users</span>/{userId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Change all information about {userId} user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users__userId__put_request" data-toggle="tab">Request</a></li><li><a href="#users__userId__put_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users__userId__put_request"><h3>URI Parameters</h3><ul><li><strong>userId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Login</strong>: <em>required (string)</em><p>User&#39;s login</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>Password</strong>: <em>required (string)</em><p>User&#39;s password</p><p><strong>Example</strong>:</p><pre>bassMolp</pre></li><li><strong>Type</strong>: <em>(string)</em><p>User&#39;s type ( admin, user, guest )</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>e-mail</strong>: <em>(string)</em><p>User&#39;s e-mail</p><p><strong>Example</strong>:</p><pre>user@host.url</pre></li><li><strong>First name</strong>: <em>required (string)</em><p>User&#39;s first name</p><p><strong>Example</strong>:</p><pre>Ivan</pre></li><li><strong>Last name</strong>: <em>(string)</em><p>User&#39;s last name</p><p><strong>Example</strong>:</p><pre>Ivanov</pre></li></ul></div><div class="tab-pane" id="users__userId__put_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+  "login":"guest5",
+  "password":"1ba562cc025376a90f12a9ec337cf67a",
+  "email":"zzz@mail.ru",
+  "name":
+  {
+    "first":"Ivan",
+    "last":"Ivanov"
+  },
+  "type":"guest"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    ",name":"Field &#39;first&#39; not matched with type &#39;string&#39;"
+  },
+  {
+    ",name":"Field &#39;email&#39; not matched with type &#39;email&#39;"
+  },
+  {
+    "":"Field &#39;password&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;login&#39; is requied, but not found"
+  },
+  {
+    "":"Field &#39;name.first&#39; is requied, but not found"
+  }
+]
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/403" target="_blank">403</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"21",
+  "message":"Acess denied",
+  "developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.",
+  "url":"https://doc.site.url/errors/21",
+  "status":"403"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"121",
+  "message":"User not found",
+  "developerMessage":"Provided information not enough to find user",
+  "url":"https://doc.site.url/errors/121",
+  "status":"404"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/500" target="_blank">500</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"3",
+  "message":"Server error",
+  "url":"https://doc.site.url/errors/3",
+  "status":"500",
+  "developerMessage":
+  {
+    "code":11000,
+    "index":0,
+    "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"user\" }",
+    "op":
+    {
+      "login":"user",
+      "password":"1ba562cc025376a90f12a9ec337cf67a",
+      "email":"zzz@mail.ru",
+      "name":
+      {
+        "first":"Ivan",
+        "last":"Ivanov"
+      },
+      "type":"guest"
+      "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="users__userId__patch"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_patch">patch</span> <span class="parent">/users</span>/{userId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Change part of information about {userId} user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users__userId__patch_request" data-toggle="tab">Request</a></li><li><a href="#users__userId__patch_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users__userId__patch_request"><h3>URI Parameters</h3><ul><li><strong>userId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul><h3>Query Parameters</h3><ul><li><strong>Login</strong>: <em>(string)</em><p>User&#39;s login</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>Password</strong>: <em>(string)</em><p>User&#39;s password</p><p><strong>Example</strong>:</p><pre>bassMolp</pre></li><li><strong>Type</strong>: <em>(string)</em><p>User&#39;s type ( admin, user, guest )</p><p><strong>Example</strong>:</p><pre>admin</pre></li><li><strong>e-mail</strong>: <em>(string)</em><p>User&#39;s e-mail</p><p><strong>Example</strong>:</p><pre>user@host.url</pre></li><li><strong>First name</strong>: <em>(string)</em><p>User&#39;s first name</p><p><strong>Example</strong>:</p><pre>Ivan</pre></li><li><strong>Last name</strong>: <em>(string)</em><p>User&#39;s last name</p><p><strong>Example</strong>:</p><pre>Ivanov</pre></li></ul></div><div class="tab-pane" id="users__userId__patch_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
+  "login":"zzz",
+  "password":"f3abb86bd34cf4d52698f14c0da1dc60",
+  "email":"guest5@mail.ru",
+  "name":
+  {
+    "first":"Ivan",
+    "last":"Ivanov"
+  },
+  "type":"guest"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+  {
+    ",name":"Field &#39;first&#39; not matched with type &#39;string&#39;"
+  }
+  {
+    ",name":"Field &#39;email&#39; not matched with type &#39;email&#39;"
+  }
+  {
+    "":"Field &#39;password&#39; is requied, but not found"
+  }
+  {
+    "":"Field &#39;login&#39; is requied, but not found"
+  }
+  {
+    "":"Field &#39;name.first&#39; is requied, but not found"
+  }
+]
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/403" target="_blank">403</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"21",
+  "message":"Acess denied",
+  "developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.",
+  "url":"https://doc.site.url/errors/21",
+  "status":"403"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"121",
+  "message":"User not found",
+  "developerMessage":"Provided information not enough to find user",
+  "url":"https://doc.site.url/errors/121",
+  "status":"404"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/500" target="_blank">500</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"3",
+  "message":"Server error",
+  "url":"https://doc.site.url/errors/3",
+  "status":"500",
+  "developerMessage":
+  {
+    "code":11000,
+    "index":0,
+    "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"user\" }",
+    "op":
+    {
+      "login":"user",
+      "password":"1ba562cc025376a90f12a9ec337cf67a",
+      "email":"zzz@mail.ru",
+      "name":
+      {
+        "first":"Ivan",
+        "last":"Ivanov"
+      },
+      "type":"guest"
+      "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c"
+    }
+  }
+}
+</code></pre></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="users__userId__delete"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_delete">delete</span> <span class="parent">/users</span>/{userId}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Delete {userId} user</p></div><ul class="nav nav-tabs"><li class="active"><a href="#users__userId__delete_request" data-toggle="tab">Request</a></li><li><a href="#users__userId__delete_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="users__userId__delete_request"><h3>URI Parameters</h3><ul><li><strong>userId</strong>: <em>required (string)</em></li></ul><h3>Headers</h3><ul><li><strong>Token</strong>: <em>required (string)</em><p>Admin&#39;s token</p><p><strong>Example</strong>:</p><pre>eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0</pre></li></ul></div><div class="tab-pane" id="users__userId__delete_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "ok":1,
+  "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/403" target="_blank">403</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"21",
+  "message":"Acess denied",
+  "developerMessage":"Acess to this resource is denied. You can contact administrator in case of mistake.",
+  "url":"https://doc.site.url/errors/21",
+  "status":"403"
+}
+</code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "code":"121",
+  "message":"User not found",
+  "developerMessage":"Provided information not enough to find user",
+  "url":"https://doc.site.url/errors/121",
+  "status":"404"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class="col-md-3"><div id="sidebar" class="hidden-print affix" role="complementary"><ul class="nav nav-pills nav-stacked"><li><a href="#login">/login</a></li><li><a href="#register">/register</a></li><li><a href="#me">/me</a></li><li><a href="#options">/options</a></li><li><a href="#assets">/assets</a></li><li><a href="#resources">/resources</a></li><li><a href="#users">/users</a></li></ul></div></div></div></div></body></html>
