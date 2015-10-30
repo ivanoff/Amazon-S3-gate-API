@@ -16,6 +16,7 @@ var PORT     = process.env.SERVER_PORT || config.get( 'SERVER_PORT' ) || 3000,
     ERROR    = config.get( 'ERRORS' ),
     TOKEN_PARAMS = config.get( 'TOKEN' );
 
+if( process.env.AWS_KEY ) AWS.accessKeyId = process.env.AWS_KEY;
 AWS.secretAccessKey = process.env.AWS_SECRET;
 
 var app = new express();
@@ -39,6 +40,7 @@ app.use( function( req, res, next ){
     req.log   = log; 
     req.uuid  = uuid; 
     req.TOKEN_PARAMS = TOKEN_PARAMS; 
+    // error module: check error, store to log file, set status
     req.error = function( error ){
                     var e; 
                     if( !error ) error = ERROR.UNKNOWN_ERROR;
@@ -60,10 +62,13 @@ app.use( function( req, res, next ){
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: true }) );
 
+// Only 3 routes are garanted w/o token: 
+// index page, login and register user pages
 require("./routes/index")(app);
 require("./routes/register")(app);
 require("./routes/login")(app);
 
+// Get the rest routes
 var normalizedPath = require("path").join(__dirname, "routes");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./routes/" + file)(app);
