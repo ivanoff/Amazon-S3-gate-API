@@ -1,6 +1,6 @@
 
-# S3 API API documentation version v1
-http://localhost
+# S3 gate API documentation version v1
+http://localhost:3000
 
 ---
 
@@ -9,21 +9,24 @@ Get token by user's login and password
 
 ### /login
 
-* **post**: 
+* **post**: Get token by user's login and password
 
 ## /register
+Register new guest user
 
 ### /register
 
 * **post**: Register new guest user
 
 ## /me
+Get information about user - owner of the provided token
 
 ### /me
 
 * **get**: Get information about user - owner of the provided token
 
 ## /options
+Get options of the user's group - owner of provided token
 
 ### /options
 
@@ -37,10 +40,8 @@ Work with assets ( files and folders )
 * **get**: Get list of assets in root directory
 * **post**: add asset to root folder
 
-### /assets/search
-Search file and folder in whole storage
-
 ### /assets/search/{name}
+Search file and folder in whole storage
 
 * **get**: Search file and folder in whole storage by {name} name
 
@@ -56,24 +57,24 @@ Search file and folder in whole storage
 
 * **get**: Download file or folder
 
-### /assets/{assetId}/search
-Search file and folder in {assetId} folder
-
 ### /assets/{assetId}/search/{name}
+Search file and folder in {assetId} folder
 
 * **get**: Search file and folder in {assetId} folder by name {name}
 
 ## /resources
+Get information about used resources
 
 ### /resources
 
-* **get**: Get information about used resources
+* **get**: Get information about all used resources
 
 ### /resources/{type}
 
 * **get**: Get information about used resources by type {type}
 
 ## /users
+Work with users ( admin only )
 
 ### /users
 
@@ -89,7 +90,8 @@ Search file and folder in {assetId} folder
 
 
 
-## Command line examples
+
+# Command line examples
 
 ### Admin user examples
 
