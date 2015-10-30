@@ -1,145 +1,159 @@
 #%RAML 0.8
 ---
 title: S3 gate
-baseUri: http://localhost
+baseUri: http://localhost:3000
 version: v1
 
 schemas:
   - user: |
       {
-        "type": "object",
-        "$schema": "http://json-schema.org/draft-03/schema",
-        "id": "http://jsonschema.net",
-        "required": true,
-        "properties": {
-          "login": {
-            "type": "string",
-            "required": true
-          },
-          "password": {
-            "type": "md5",
-            "required": true
-          },
-          "type": {
-            "type": "string"
-          },
-          "name": {
-            "type": "object",
-            "required": true,
-            "properties": {
-              "first": {
-                "type": "string",
-                "maxLength": 128,
-                "required": true
-              },
-              "last": {
-                "type": "string",
-                "maxLength": 128
-              }
+        "login": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "md5",
+          "required": true
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "first": {
+              "type": "string",
+              "maxLength": 128,
+              "required": true
+            },
+            "last": {
+              "type": "string",
+              "maxLength": 128
             }
-          },
-          "email": {
-            "type": "email"
-          },
-          "metadata": {
-            "type": "object"
           }
+        },
+        "email": {
+          "type": "email"
+        },
+        "metadata": {
+          "type": "object"
         }
       }
-  - asset: |
+  - userPatch: |
       {
-        "type": "object",
-        "$schema": "http://json-schema.org/draft-03/schema",
-        "id": "http://jsonschema.net",
-        "required": true,
-        "properties": {
-          "userId": {
-            "type": "uuid",
-            "required": true
-          },
-          "path": {
-            "type": "string",
-            "required": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "required": true
-          },
-          "type": {
-            "type": "string",
-            "required": true
-          },
-          "size": {
-            "type": "integer"
-          },
-          "parentId": {
-            "type": "string"
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "md5"
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "first": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "last": {
+              "type": "string",
+              "maxLength": 128
+            }
           }
+        },
+        "email": {
+          "type": "email"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+  - assetAdd: |
+      {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "required": true
+        }
+      }
+  - assetMove: |
+      {
+        "moveTo": {
+          "type": "uuid",
+          "required": true
+        }
+      }
+  - assetEdit: |
+      {
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "required": true
+        },
+        "size": {
+          "type": "integer"
+        },
+        "parentId": {
+          "type": "string"
         }
       }
   - resources: |
       {
-        "type": "object",
-        "$schema": "http://json-schema.org/draft-03/schema",
-        "id": "http://jsonschema.net",
-        "required": true,
-        "properties": {
-          "userId": {
-            "type": "uuid",
-            "required": true
-          },
-          "assetType": {
-            "type": "string",
-            "required": true
-          },
-          "count": {
-            "type": "integer"
-          },
-          "totalSize": {
-            "type": "integer"
-          }
+        "userId": {
+          "type": "uuid",
+          "required": true
+        },
+        "assetType": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer"
+        },
+        "totalSize": {
+          "type": "integer"
         }
       }
   - options: |
       {
-        "type": "object",
-        "$schema": "http://json-schema.org/draft-03/schema",
-        "id": "http://jsonschema.net",
-        "required": true,
-        "properties": {
-          "name": {
-            "type": "string",
-            "required": true
-          },
-          "userType": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "userType": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
         }
       }
+
 /login:
   description: Get token by user's login and password
   post:
+    description: Get token by user's login and password
     body:
       application/json:
         schema: |
           {
-            "type": "object",
-            "$schema": "http://json-schema.org/draft-03/schema",
-            "id": "http://jsonschema.net",
-            "required": true,
-            "properties": {
-              "login": {
-                "type": "string",
-                "required": true
-              },
-              "password": {
-                "type": "string",
-                "required": true
-              }
+            "login": {
+              "type": "string",
+              "required": true
+            },
+            "password": {
+              "type": "string",
+              "required": true
             }
           }
         example: |
@@ -192,7 +206,9 @@ schemas:
                 "url":"https://doc.site.url/errors/91",
                 "status":"401"
               }
+
 /register:
+  description: Register new guest user
   post:
     description: Register new guest user
     body:
@@ -216,13 +232,13 @@ schemas:
           application/json:
             example: | 
               {
-                "login":"guest5",
+                "login":"user21",
                 "password":"1ba562cc025376a90f12a9ec337cf67a",
-                "email":"guest5@mail.ru",
+                "email":"user@host.url",
                 "name":
                 {
-                  "first":"Ivan",
-                  "last":"Ivanov"
+                  "first":"Alexander",
+                  "last":"Muchilton"
                 },
                 "type":"guest",
                 "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
@@ -271,25 +287,27 @@ schemas:
                   "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"guest5\" }",
                   "op":
                   {
-                    "login":"guest5",
+                    "login":"user21",
                     "password":"1ba562cc025376a90f12a9ec337cf67a",
-                    "email":"guest5@mail.ru",
+                    "email":"user@host.url",
                     "name":
                     {
-                      "first":"Ivan",
-                      "last":"Ivanov"
+                      "first":"Alexandr",
+                      "last":"Muchilton"
                     },
                     "type":"guest",
                     "_id":"ee26af1e-b907-4e37-8b99-a8ec1302c4b6"
                   }
                 }
               }
+
 /me:
+  description: Get information about user - owner of the provided token
   get:
     description: Get information about user - owner of the provided token
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: User's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -352,12 +370,14 @@ schemas:
                   }
                 }
               }
+
 /options:
+  description: Get options of the user's group - owner of provided token
   get:
     description: Get options of the user's group - owner of provided token
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: User's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -381,13 +401,14 @@ schemas:
                   "value":100000
                 }
               ]
+
 /assets:
   description: Work with assets ( files and folders )
   get:
     description: Get list of assets in root directory
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: User's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -435,7 +456,7 @@ schemas:
     description: add asset to root folder
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: User's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -443,18 +464,16 @@ schemas:
     body:
       application/json:
         description: add folder to root folder
-        formParameters:
-          name:
-            displayName: Folder name
-            type: string
-            description: New folder name
-            example: video
-            required: true
+        schema: assetAdd
+        example: |
+          {
+            "name":"newfolder"
+          }
       multipart/form-data:
         description: Upload file to root folder
         formParameters:
           file:
-            displayName: File
+            displayName: file
             type: file
             description: The file to be uploaded
             required: true
@@ -462,67 +481,87 @@ schemas:
       201:
         body:
           application/json:
-            example: | 
-              {
-                "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
-                "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
-                "type":"image",
-                "name":"index.jpeg",
-                "size":13128,
-                "path":"",
-                "_links":
+            example: |
+              new folder:
                 {
-                  "self":
+                  "name":"newfolder",
+                  "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
+                  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                  "type":"folder",
+                  "path":"",
+                  "size":0,
+                  "_links":
                   {
-                    "href":"/assets/413809a0-276f-4f0a-95ca-04d3f6dbdf1d"
-                  },
-                  "resources":
+                    "self":
+                    {
+                      "href":"/assets/df570ef4-fdb8-4d01-b185-52957feb5a67"
+                    },
+                    "resources":
+                    {
+                      "href":"/resources"
+                    }
+                  }
+                },
+              new file:
+                {
+                  "_id":"413809a0-276f-4f0a-95ca-04d3f6dbdf1d",
+                  "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                  "type":"image",
+                  "name":"index.jpeg",
+                  "size":13128,
+                  "path":"",
+                  "_links":
                   {
-                    "href":"/resources"
+                    "self":
+                    {
+                      "href":"/assets/413809a0-276f-4f0a-95ca-04d3f6dbdf1d"
+                    },
+                    "resources":
+                    {
+                      "href":"/resources"
+                    }
                   }
                 }
-              }
-  /search:
+  /search/{name}:
     description: Search file and folder in whole storage
-    /{name}:
-      get:
-        description: Search file and folder in whole storage by {name} name
-        headers:
-          x-access-token:
-            displayName: Token
-            type: string
-            description: User's token
-            example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
-            required: true
-        responses:
-          200:
-            body:
-              application/json:
-                example: | 
-                  [
-                    {
-                      "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
-                      "name":"newfolder",
-                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
-                      "type":"folder",
-                      "path":"",
-                      "size":0
-                    },
-                    {
-                      "_id":"36e6cc2f-3a48-41b8-a741-f6e13dc68e75",
-                      "name":"newfolder2",
-                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
-                      "type":"folder",
-                      "path":"",
-                      "size":0
-                    }
-                  ]
+    get:
+      description: Search file and folder in whole storage by {name} name
+      headers:
+        x-access-token:
+          displayName: x-access-token
+          type: string
+          description: User's token
+          example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: | 
+                [
+                  {
+                    "_id":"df570ef4-fdb8-4d01-b185-52957feb5a67",
+                    "name":"newfolder",
+                    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                    "type":"folder",
+                    "path":"",
+                    "size":0
+                  },
+                  {
+                    "_id":"36e6cc2f-3a48-41b8-a741-f6e13dc68e75",
+                    "name":"newfolder2",
+                    "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                    "type":"folder",
+                    "path":"",
+                    "size":0
+                  }
+                ]
   /{assetId}:
     get:
       description: Get list of file and folder in {assetId} folder
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -556,7 +595,7 @@ schemas:
       description: Add folder or upload file to {assetId} folder
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -564,13 +603,11 @@ schemas:
       body:
         application/json:
           description: Add folder to {assetId} folder
-          formParameters:
-            name:
-              displayName: Folder name
-              type: string
-              description: New folder name
-              example: video2
-              required: true
+          schema: assetAdd
+          example: |
+            {
+              "name":"newfolder"
+            }
         multipart/form-data:
           description: Upload file to {assetId} folder
           formParameters:
@@ -629,18 +666,18 @@ schemas:
       description: Change whole information about file/folder in {assetId} folder
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
           required: true
-      queryParameters:
-        name:
-          displayName: Folder name
-          type: string
-          description: New folder name
-          example: video2
-          required: false
+      body:
+        application/json:
+          schema: assetAdd
+          example: |
+            {
+              "name":"newfolder"
+            }
       responses:
         201:
           body:
@@ -681,18 +718,19 @@ schemas:
       description: Move {assetId} file/folder into {moveTo} folder
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
           required: true
-      queryParameters:
-        moveTo:
-          displayName: Folder Id
-          type: string
+      body:
+        application/json:
           description: Move-to folder Id
-          example: f06dc4b7-ab0a-4388-9c96-2e1bc17138ed
-          required: true
+          schema: assetMove
+          example: |
+            {
+              "moveTo":"f06dc4b7-ab0a-4388-9c96-2e1bc17138ed"
+            }
       responses:
         201:
           body:
@@ -744,17 +782,10 @@ schemas:
       description: Delete {assetId} file or folder recursively
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
-          required: true
-      queryParameters:
-        moveTo:
-          displayName: Asset Id
-          type: string
-          description: Asset Id to delete
-          example: f06dc4b7-ab0a-4388-9c96-2e1bc17138ed
           required: true
       responses:
         200:
@@ -770,7 +801,7 @@ schemas:
         description: Download file or folder
         headers:
           x-access-token:
-            displayName: Token
+            displayName: x-access-token
             type: string
             description: User's token
             example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -790,40 +821,41 @@ schemas:
                     "url":"https://doc.site.url/errors/131",
                     "status":"404"
                   }
-    /search:
+    /search/{name}:
       description: Search file and folder in {assetId} folder
-      /{name}:
-        get:
-          description: Search file and folder in {assetId} folder by name {name}
-          headers:
-            x-access-token:
-              displayName: Token
-              type: string
-              description: User's token
-              example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
-              required: true
-          responses:
-            200:
-              body:
-                application/json:
-                  example: | 
-                    [
-                      {
-                        "_id":"60170500-70e4-494d-9447-5b6b1cfa599c",
-                        "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
-                        "type":"image",
-                        "name":"index.jpeg",
-                        "size":13128,
-                        "path":"/test2",
-                        "parentId":"bf238476-eec6-4e3b-97f8-d22d72d998f8"
-                      }
-                    ]
+      get:
+        description: Search file and folder in {assetId} folder by name {name}
+        headers:
+          x-access-token:
+            displayName: x-access-token
+            type: string
+            description: User's token
+            example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
+            required: true
+        responses:
+          200:
+            body:
+              application/json:
+                example: | 
+                  [
+                    {
+                      "_id":"60170500-70e4-494d-9447-5b6b1cfa599c",
+                      "userId":"e2a39a50-6898-469c-a596-80f200ee3fe6",
+                      "type":"image",
+                      "name":"index.jpeg",
+                      "size":13128,
+                      "path":"/test2",
+                      "parentId":"bf238476-eec6-4e3b-97f8-d22d72d998f8"
+                    }
+                  ]
+
 /resources:
+  description: Get information about used resources
   get:
-    description: Get information about used resources
+    description: Get information about all used resources
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: User's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -861,7 +893,7 @@ schemas:
       description: Get information about used resources by type {type}
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: User's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -889,12 +921,14 @@ schemas:
                   "url":"https://doc.site.url/errors/132",
                   "status":"404"
                 }
+
 /users:
+  description: Work with users ( admin only )
   get:
     description: Get list of all users
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: Admin's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -968,61 +1002,39 @@ schemas:
     description: Add user
     headers:
       x-access-token:
-        displayName: Token
+        displayName: x-access-token
         type: string
         description: Admin's token
         example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
         required: true
-    queryParameters:
-      login:
-        displayName: Login
-        type: string
-        description: User's login
-        example: admin
-        required: true
-      password:
-        displayName: Password
-        type: string
-        description: User's password
-        example: bassMolp
-        required: true
-      type:
-        displayName: Type
-        type: string
-        description: User's type ( admin, user, guest )
-        example: admin
-        required: false
-      email:
-        displayName: e-mail
-        type: string
-        description: User's e-mail
-        example: user@host.url
-        required: false
-      name.first:
-        displayName: First name
-        type: string
-        description: User's first name
-        example: Ivan
-        required: true
-      name.last:
-        displayName: Last name
-        type: string
-        description: User's last name
-        example: Ivanov
-        required: false
+    body:
+      application/json:
+        schema: user
+        example: |
+          {
+            "login":"user21",
+            "password":"userSeCr3f",
+            "type":"user",
+            "email":"user@host.url",
+            "name":
+            {
+              "first":"Alexander",
+              "last":"Muchilton"
+            }
+          }
     responses:
       201:
         body:
           application/json:
             example: | 
               {
-                "login":"nikolay",
+                "login":"user21",
                 "password":"137f62cc025376a90f12a9ec337cf67a",
-                "email":"nikolay@mail.ru",
+                "email":"user@host.url",
                 "name":
                 {
-                  "first":"Nikolay",
-                  "last":"Nikolayev"
+                  "first":"Alexander",
+                  "last":"Muchilton"
                 },
                 "type":"user",
                 "_id":"1fec7b34-1157-4167-919f-ed9370bdc27c",
@@ -1068,16 +1080,16 @@ schemas:
                 {
                   "code":11000,
                   "index":0,
-                  "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"user\" }",
+                  "errmsg":"E11000 duplicate key error index: gl.users.$login_1 dup key: { : \"user21\" }",
                   "op":
                   {
-                    "login":"user",
+                    "login":"user21",
                     "password":"1ba562cc025376a90f12a9ec337cf67a",
                     "email":"user@mail.ru",
                     "name":
                     {
-                      "first":"Ivan",
-                      "last":"Ivanov"
+                      "first":"Alexander",
+                      "last":"Muchilton"
                     },
                     "type":"user",
                     "_id":"4f26af1e-b907-4e37-8b99-a8ec1302c4b6"
@@ -1100,7 +1112,7 @@ schemas:
       description: Show information about {userId} user
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: Admin's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
@@ -1137,48 +1149,26 @@ schemas:
       description: Change all information about {userId} user
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: Admin's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
           required: true
-      queryParameters:
-        login:
-          displayName: Login
-          type: string
-          description: User's login
-          example: admin
-          required: true
-        password:
-          displayName: Password
-          type: string
-          description: User's password
-          example: bassMolp
-          required: true
-        type:
-          displayName: Type
-          type: string
-          description: User's type ( admin, user, guest )
-          example: admin
-          required: false
-        email:
-          displayName: e-mail
-          type: string
-          description: User's e-mail
-          example: user@host.url
-          required: false
-        name.first:
-          displayName: First name
-          type: string
-          description: User's first name
-          example: Ivan
-          required: true
-        name.last:
-          displayName: Last name
-          type: string
-          description: User's last name
-          example: Ivanov
-          required: false
+      body:
+        application/json:
+          schema: user
+          example: |
+            {
+              "login":"user21",
+              "password":"userSeCr3f",
+              "type":"user",
+              "email":"user@host.url",
+              "name":
+              {
+                "first":"Alexander",
+                "last":"Muchilton"
+              }
+            }
       responses:
         201:
           body:
@@ -1186,15 +1176,15 @@ schemas:
               example: | 
                 {
                   "_id":"eeec7b34-1157-4167-919f-ed9370bdc27c",
-                  "login":"guest5",
+                  "login":"user21",
                   "password":"1ba562cc025376a90f12a9ec337cf67a",
-                  "email":"zzz@mail.ru",
+                  "email":"user@host.url",
                   "name":
                   {
-                    "first":"Ivan",
-                    "last":"Ivanov"
+                    "first":"Alexander",
+                    "last":"Muchilton"
                   },
-                  "type":"guest"
+                  "type":"user"
                 }
         400:
           body:
@@ -1272,48 +1262,20 @@ schemas:
       description: Change part of information about {userId} user
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: Admin's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
           required: true
-      queryParameters:
-        login:
-          displayName: Login
-          type: string
-          description: User's login
-          example: admin
-          required: false
-        password:
-          displayName: Password
-          type: string
-          description: User's password
-          example: bassMolp
-          required: false
-        type:
-          displayName: Type
-          type: string
-          description: User's type ( admin, user, guest )
-          example: admin
-          required: false
-        email:
-          displayName: e-mail
-          type: string
-          description: User's e-mail
-          example: user@host.url
-          required: false
-        name.first:
-          displayName: First name
-          type: string
-          description: User's first name
-          example: Ivan
-          required: false
-        name.last:
-          displayName: Last name
-          type: string
-          description: User's last name
-          example: Ivanov
-          required: false
+      body:
+        application/json:
+          schema: userPatch
+          example: |
+            {
+              "login":"zzz",
+              "password":"guest5@mail.ru",
+              "type":"guest",
+            }
       responses:
         201:
           body:
@@ -1326,8 +1288,8 @@ schemas:
                   "email":"guest5@mail.ru",
                   "name":
                   {
-                    "first":"Ivan",
-                    "last":"Ivanov"
+                    "first":"Alexander",
+                    "last":"Muchilton"
                   },
                   "type":"guest"
                 }
@@ -1407,7 +1369,7 @@ schemas:
       description: Delete {userId} user
       headers:
         x-access-token:
-          displayName: Token
+          displayName: x-access-token
           type: string
           description: Admin's token
           example: eyJhbGciOiJIUzI1NiJ9.ZWVlYzdiMzQtMTE1Ny00MTY3LTkxOWYtZWQ5MzcwYmRjMjdj.a_k7hBg2mC3x4YUdTfeS6WuZlh2fMhQIlVSv8djCmw0
