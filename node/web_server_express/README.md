@@ -33,7 +33,7 @@ AWS_KEY={YOUR_AWS_KEY} AWS_SECRET={YOUR_AWS_SECRET} DB_URL=mongodb://{DB_LOGIN}:
 ```
 After start you can send requests to http://localhost:3000
 
-**Default admin user's password is 'admin'**
+**Default password for user 'admin' is 'admin'**
 
 
 
