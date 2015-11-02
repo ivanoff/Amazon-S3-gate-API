@@ -10,6 +10,9 @@ var ResourcesModel = require('../models/resources');
 
 var ERROR = require('config').get('ERRORS');
 
+/**
+ * Get all assets in root directory
+ */
 exports.getRootAssets = function( req, res, next ){
     AssetsModel.getFolderContent( req, '', function( err, docs ){
         if ( err   ) return req.error(err);
@@ -18,6 +21,10 @@ exports.getRootAssets = function( req, res, next ){
     });
 };
 
+/**
+ * Get information about asset ( list of assets for folder, file parameters for file )
+ * @param {string} req.params.assetId - Id of asset, required
+ */
 exports.getAssetById = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) return req.error(err);
@@ -37,18 +44,24 @@ exports.getAssetById = function( req, res, next ) {
     });
 };
 
+/**
+ * Get content of asset ( zip archive for folder, file content for file )
+ * @param {string} req.params.assetId - Id of asset, required
+ */
 exports.getAssetContentById = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
         var dir = '/tmp/'+doc._id;
         if ( doc.type != 'folder' ) {
+            // download and send file content with real filename
             req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
                 res.download(dir, doc['name'], function(){ 
                     fs.unlink(dir);
                 });
             });
         } else {
+            // download all directory and send it zipped with dirname.zip name
             if ( !fs.existsSync(dir) ) fs.mkdirSync(dir);
             AssetsModel.search( req, { path : new RegExp( '^'+doc.path+'/'+doc.name+'(/.*)?$' ) }, function( err, docs ){
                 docs.forEach( function( d ) {
@@ -79,6 +92,13 @@ exports.getAssetContentById = function( req, res, next ) {
     });
 };
 
+/**
+ * Add asset to root or other folder asset. For new folder name only required.
+ * If file req.files uploaded, then all parameters takes from req.files ( name, size and type )
+ * @param {string} req.params.assetId - Id of the asset folder, optional
+ * @param {string} req.body.name - Name of folder asset
+ * @param {string} req.files - Uploaded file
+ */
 exports.addAsset = function( req, res, next ) {
     var doc    = req.body;
     doc['_id'] = req.uuid.v4();
@@ -92,7 +112,8 @@ exports.addAsset = function( req, res, next ) {
     if( !doc['path'] ) doc['path'] = '';
 
     var usersResources = { count:0, totalSize:0 };
-    
+
+    // check resource limits for user
     async.waterfall([
         function( next ){
             ResourcesModel.getResourcesByType( req, '_total', function( err, resources ){
@@ -114,6 +135,7 @@ exports.addAsset = function( req, res, next ) {
                 else next();
             })
         },
+        //check if req.params.assetId and it is folder
         function( next ){
             if( req.params.assetId ) {
                 doc.parentId = req.params.assetId;
@@ -128,6 +150,7 @@ exports.addAsset = function( req, res, next ) {
                 next();
             }
         },
+        // add asset to database and upload to S3 if it's file type
         function( next ){ 
             AssetsModel.validate( doc, function( err ) {
                 if( err ) { req.status=400; return next(err) }
@@ -155,6 +178,11 @@ exports.addAsset = function( req, res, next ) {
 
 };
 
+/**
+ * Update asset's information
+ * @param {string} req.params.assetId - Id of the asset folder, required
+ * @param {string} req.body.name - Name of asset
+ */
 exports.updateAsset = function( req, res, next ) {
     AssetsModel.get( req, function( err, doc ){
         if ( err  ) return req.error(err);
@@ -178,6 +206,11 @@ exports.updateAsset = function( req, res, next ) {
     });
 };
 
+/**
+ * Search asset by name
+ * @param {string} req.params.assetId - Id of the asset folder, optional
+ * @param {string} req.params.name - Name of asset to find
+ */
 exports.search = function( req, res, next ){
 
     var query = { userId : req.currentUser._id, name : new RegExp( req.params.name, 'i' ) };
@@ -207,6 +240,11 @@ exports.search = function( req, res, next ){
 
 };
 
+/**
+ * Move asset ( file or folder ) to folder
+ * @param {string} req.params.assetId - Id of the asset, required
+ * @param {string} req.body.moveTo - Id of the folder asset, required
+ */
 exports.moveAssetToFolder = function( req, res, next ) {
     async.parallel( {
         file : function( callback ) {
@@ -241,6 +279,10 @@ exports.moveAssetToFolder = function( req, res, next ) {
     });
 };
 
+/**
+ * Remove asset
+ * @param {string} req.params.assetId - Id of the asset, required
+ */
 exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) return req.error(err);
@@ -250,6 +292,9 @@ exports.removeAsset = function( req, res, next ) {
     });
 };
 
+/**
+ * Remove all logged user's asset
+ */
 exports.removeAllUsersAssets = function( req, res, next ) {
     AssetsModel.removeAll( req, function( err, doc ){
         req.aws.remove( { fileId: req.currentUser._id }, function(){} );

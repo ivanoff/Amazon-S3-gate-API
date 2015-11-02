@@ -7,6 +7,7 @@ var ERROR = require('config').get('ERRORS');
 
 var modelName = 'assets';
 
+// model to validate
 var model = {
         '_id': { type: "uuid", required: true },
         userId: { type: "uuid", required: true },
@@ -66,6 +67,7 @@ module.exports = {
             .find( query ).toArray(res);
     },
 
+    // remove files from database/storage
     remove : function( req, res ){
         this.get( req, function( err, doc ){
             if ( err  ) { req.error( 500, err ); return next(err) }
