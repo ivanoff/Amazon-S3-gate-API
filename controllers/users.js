@@ -7,6 +7,9 @@ var ResourcesModel  = require('../models/resources');
 
 var ERROR = require('config').get('ERRORS');
 
+/**
+ * Get list of all users
+ */
 exports.getAllUsers = function( req, res, next ){
     UsersModel.getAll( req, function( err, docs ){
         if ( err   ) return req.error(err);
@@ -15,6 +18,10 @@ exports.getAllUsers = function( req, res, next ){
     });
 };
 
+/**
+ * Get user by userId
+ * @param {uuid} req.params.userId - Id of the user
+ */
 exports.getUserById = function( req, res, next ) {
     UsersModel.getById( req, req.params.userId, function( err, doc ){
         if ( err  ) return req.error(err);
@@ -23,6 +30,15 @@ exports.getUserById = function( req, res, next ) {
     });
 };
 
+/**
+ * Register new user
+ * @param {string} req.body.login - Login of the user, required
+ * @param {string} req.body.password - Password of the user, required
+ * @param {string} req.body.type - Type of the user
+ * @param {string} req.body.name.first - User's first name, required
+ * @param {string} req.body.name.last - User's last name
+ * @param {string} req.body.email - User's e-mail
+ */
 exports.addUser = function( req, res, next ) {
     var doc    = req.body;
     doc._id = req.uuid.v4();
@@ -46,6 +62,16 @@ exports.addUser = function( req, res, next ) {
     });
 };
 
+/**
+ * Update user's information
+ * @param {string} req.params.userId - Id of the user, required
+ * @param {string} req.body.login - Login of the user
+ * @param {string} req.body.password - Password of the user
+ * @param {string} req.body.type - Type of the user
+ * @param {string} req.body.name.first - User's first name
+ * @param {string} req.body.name.last - User's last name
+ * @param {string} req.body.email - User's e-mail
+ */
 exports.updateUser = function( req, res, next ) {
     UsersModel.getById( req, req.params.userId, function( err, doc ){
         if ( err  ) return req.error(err);
@@ -66,6 +92,10 @@ exports.updateUser = function( req, res, next ) {
     });
 };
 
+/**
+ * Remove user from database
+ * @param {string} req.params.userId - Id of the user, required
+ */
 exports.removeUser = function( req, res, next ) {
     UsersModel.remove( req, function( err, doc ){
         if ( err  ) return req.error(err);

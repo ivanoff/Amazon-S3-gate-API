@@ -4,6 +4,9 @@ var UsersModels = require('../models/users');
 var ResourcesModels = require('../models/resources');
 var OptionsModels = require('../models/options');
 
+/**
+ * Get information about logged user
+ */
 exports.me = function( req, res ) {
     async.parallel( {
         user : function( next ) {

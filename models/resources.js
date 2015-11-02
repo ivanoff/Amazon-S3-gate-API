@@ -2,6 +2,7 @@
 
 var modelName = 'resources';
 
+// model to validate
 var model = {
         '_id': { type: "uuid", required: true },
         userId: { type: "uuid", required: true },

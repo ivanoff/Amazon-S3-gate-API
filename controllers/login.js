@@ -6,6 +6,12 @@ var UsersModel = require('../models/users');
 
 var ERROR = require('config').get('ERRORS');
 
+/**
+ * Login and get Token
+ * @param {string} req.body.login - Login of the user
+ * @param {string} req.body.password - Password of the user
+ * @returns {token:string,_links:{object}} token need for authorized operations
+ */
 exports.login = function (req, res, next) { 
     if( !req.body.login || !req.body.password ){
         return req.error( ERROR.NO_TOKEN );
@@ -28,6 +34,10 @@ exports.login = function (req, res, next) {
     })
 };
 
+/**
+ * MiddleWare for check token and garant or deny access. Set req.currentUser to the owner of token
+ * @param {string} req.body.token - Token of the user
+ */
 exports.middleWare = function( req, res, next ){ 
     var token = req.body.token || req.params.token || req.headers['x-access-token'];
     if( !token ) req.error( ERROR.NO_TOKEN )

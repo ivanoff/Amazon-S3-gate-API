@@ -4,6 +4,7 @@ var vm = require('validate-me');
 
 var modelName = 'users';
 
+// model to validate
 var model = {
         '_id':   { type: "uuid", required: true },
         login    : { type: "string", required: true },

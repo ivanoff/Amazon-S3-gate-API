@@ -2,6 +2,7 @@
 
 var modelName = 'options';
 
+// model to validate
 var model = {
         name: { type: "string", required: true },
         userType: { type: "string" },
