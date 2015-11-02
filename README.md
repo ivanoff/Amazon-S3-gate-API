@@ -18,6 +18,14 @@ cd ../
 
 
 
+## Testing
+
+```
+AWS_KEY={YOUR_AWS_KEY} AWS_SECRET={YOUR_AWS_SECRET} DB_URL=mongodb://{DB_LOGIN}:{DB_PASSWORD}@{DB_URL}/{DB_DATABASE} make test
+```
+
+
+
 ## Usage
 
 ```
