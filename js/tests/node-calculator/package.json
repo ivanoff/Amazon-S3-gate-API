@@ -1,0 +1,27 @@
+{
+  "name": "rest-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/bin/mocha",
+    "start": "node ./bin/calculator",
+    "service": "node ./bin/calculator --service"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:aaand1/node-calculator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "minimist": "*",
+    "lodash": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "sinon": "*"
+  }
+}

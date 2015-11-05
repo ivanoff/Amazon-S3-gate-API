@@ -1,0 +1,292 @@
+Task 2 : Sharding
+
+
+mongos> use ivanoffdb_sharding
+switched to db ivanoffdb_sharding
+
+
+mongos> sh.enableSharding("ivanoffdb_sharding")
+{ "ok" : 1 }
+
+mongos> db.users2.insert({ "_id" : ObjectId("560a72ddc0ca684c0c51d4eb"), "name" : "Shaun", "masterRegion" : "us-east-1" })
+WriteResult({ "nInserted" : 1 })
+
+
+mongos> db.users2.find()
+{ "_id" : ObjectId("560a72ddc0ca684c0c51d4eb"), "name" : "Shaun", "masterRegion" : "us-east-1" }
+
+
+mongos> db.files2.insert({ "_id" : ObjectId("560cdeb327d551bde4da2767"), "masterRegion" : "us-east-1", "ownerId" : "560a72ddc0ca684c0c51d4eb", "name" : "zombe_processes.how_to" })
+WriteResult({ "nInserted" : 1 })
+
+
+mongos> db.files2.find()
+{ "_id" : ObjectId("560cdeb327d551bde4da2767"), "masterRegion" : "us-east-1", "ownerId" : "560a72ddc0ca684c0c51d4eb", "name" : "zombe_processes.how_to" }
+
+
+mongos> db.users2.createIndex( { "masterRegion": 1, "_id": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443699926, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.users2", { "masterRegion": 1, "_id": 1 } )
+{ "collectionsharded" : "ivanoffdb_sharding.users2", "ok" : 1 }
+
+
+mongos> db.files2.createIndex( { "masterRegion": 1, "ownerId": 1, "name": 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443699960, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+mongos> sh.shardCollection( "ivanoffdb_sharding.files2", { "masterRegion": 1, "ownerId": 1, "name": 1 } )
+{ "collectionsharded" : "ivanoffdb_sharding.files2", "ok" : 1 }
+
+
+mongos> sh.addTagRange( "ivanoffdb_sharding.users2", { masterRegion: "us-east-1", _id : MinKey }, { masterRegion: "us-east-1", _id : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.users2", { masterRegion: "eu-west-1", _id : MinKey }, { masterRegion: "eu-west-1", _id : MaxKey }, "eu-west-1" )
+
+mongos> sh.addTagRange( "ivanoffdb_sharding.files2", { masterRegion: "us-east-1", ownerId : MinKey, name : MinKey }, { masterRegion: "us-east-1", ownerId : MaxKey, name : MaxKey }, "us-east-1" )
+mongos> sh.addTagRange( "ivanoffdb_sharding.files2", { masterRegion: "eu-west-1", ownerId : MinKey, name : MinKey }, { masterRegion: "eu-west-1", ownerId : MaxKey, name : MaxKey }, "eu-west-1" )
+
+
+mongos> sh.status()
+...cut...
+
+mongos> db.users2.getShardDistribution()
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 112B docs : 1 chunks : 1
+ estimated data per chunk : 112B
+ estimated docs per chunk : 1
+
+Totals
+ data : 112B docs : 1 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 112B
+
+
+mongos> db.files2.getShardDistribution()
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 240B docs : 1 chunks : 1
+ estimated data per chunk : 240B
+ estimated docs per chunk : 1
+
+Totals
+ data : 240B docs : 1 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 240B
+
+
+mongos> db.getMongo().setReadPref('secondary')
+mongos> db.getMongo().getRead....
+mongos> db.this._mongo.getReadPrefMode()
+secondary
+
+
+mongos> db.users2.insert({ "_id" : ObjectId("560a72e1c0ca684c0c51d4ec"), "name" : "Nicholas Angel", "masterRegion" : "us-east-1" })
+WriteResult({ "nInserted" : 1 })
+
+
+mongos> db.users2.getShardDistribution()
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 224B docs : 2 chunks : 1
+ estimated data per chunk : 224B
+ estimated docs per chunk : 2
+
+Totals
+ data : 224B docs : 2 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 112B
+
+
+mongos> db.files2.insert({ "_id" : ObjectId("560cdeb327d551bde4da2768"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "wanted.txt" })
+WriteResult({ "nInserted" : 1 })
+
+
+mongos> db.files2.getShardDistribution()
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 352B docs : 2 chunks : 1
+ estimated data per chunk : 352B
+ estimated docs per chunk : 2
+
+Totals
+ data : 352B docs : 2 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 176B
+
+
+db.files2.insert({ "masterRegion" : "eu-west-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "Paul_Photo_002.jpg" })
+
+
+mongos> db.files2.insert({ "masterRegion" : "eu-west-1", "ownerId" : "560a72e7c0ca684c0c51d4ee", "name" : "map.pcx" })
+WriteResult({ "nInserted" : 1 })
+mongos> db.files2.getShardDistribution()
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 704B docs : 4 chunks : 1
+ estimated data per chunk : 704B
+ estimated docs per chunk : 4
+
+Totals
+ data : 704B docs : 4 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 176B
+
+
+mongos> db.files2.insert({ "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "note.txt" })
+WriteResult({ "nInserted" : 1 })
+
+mongos> db.files2.getShardDistribution()
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 816B docs : 5 chunks : 1
+ estimated data per chunk : 816B
+ estimated docs per chunk : 5
+
+Totals
+ data : 816B docs : 5 chunks : 1
+ Shard 2b contains 100% data, 100% docs in cluster, avg obj size on shard : 163B
+
+
+db.users2.insert({ "_id" : ObjectId("560a72e4c0ca684c0c51d4ed"), "name" : "Graeme Willy", "masterRegion" : "us-east-1" })
+db.users2.insert({ "_id" : ObjectId("560a72e7c0ca684c0c51d4ee"), "name" : "Gary King", "masterRegion" : "us-east-1" })
+
+
+For check online statistics
+mongostat --host mongod-1-a-0.training-gl.com:27001,mongod-1-a-1.training-gl.com:27001,mongod-1-a-2.training-gl.com:27001,mongod-1-b-0.training-gl.com:27001,mongod-1-b-1.training-gl.com:27001,mongod-1-b-2.training-gl.com:27001,mongod-2-a-0.training-gl.com:27001,mongod-2-a-1.training-gl.com:27001,mongod-2-a-2.training-gl.com:27001,mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+
+
+
+db.users2.insert( {"name" : "Shaun", "masterRegion" : "us-east-1"} )
+Loads mongod-1-a* 100% each
+
+db.users2.insert( {"name" : "Shaun", "masterRegion" : "eu-west-1"} )
+Loads mongod-2-b* 100% each
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users2.insert( {"name" : "Shaun", "masterRegion" : "us-east-1"} )'
+Loads mongod-2-b* 100% each
+
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users2.insert( {"name" : "Shaun", "masterRegion" : "eu-west-1"} )'
+Loads mongod-1-a* 100% each
+
+
+mongo ivanoffdb_sharding --eval 'db.getMongo().setReadPref("nearest"); db.users2.insert( {"name" : "Shaun", "masterRegion" : "2"} )'
+Loads mongod-1-a* 100% each
+
+mongo ivanoffdb_sharding --eval 'db.users2.insert( {"name" : "Shaun", "masterRegion" : "2"} )'
+Loads mongod-1-a* 100% each
+
+
+
+mongos> db.users2.getShardDistribution()
+
+Shard 1a at 1a/mongod-1-a-0.training-gl.com:27001,mongod-1-a-1.training-gl.com:27001,mongod-1-a-2.training-gl.com:27001
+ data : 65KiB docs : 601 chunks : 1
+ estimated data per chunk : 65KiB
+ estimated docs per chunk : 601
+
+Shard 2b at 2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001
+ data : 100KiB docs : 921 chunks : 2
+ estimated data per chunk : 50KiB
+ estimated docs per chunk : 460
+
+Totals
+ data : 166KiB docs : 1522 chunks : 3
+ Shard 1a contains 39.48% data, 39.48% docs in cluster, avg obj size on shard : 112B
+ Shard 2b contains 60.51% data, 60.51% docs in cluster, avg obj size on shard : 112B
+
+
+
+Request distribution, based on read preference modes:
+ 
+full sharedKey, primary/primaryPreferred -- 1-pr2: 50%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 50%, 2-pr1: 0%, 2-pr0: 0%
+ 
+full sharedKey, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
+ 
+full sharedKey, nearest -- 1-pr2: 25%, 1-pr1: 25%, 1-pr0: 0% // 2-pr2: 0%, 2-pr1: 0%, 2-pr0: 50%
+ 
+no full sharedKey, but tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+ 
+no full sharedKey, but tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 50%, 1-pr0: 50% // 2-pr2: 0%, 2-pr1: 50%, 2-pr0: 50%
+ 
+no full sharedKey, but tug, nearest -- 1-pr2: 50%, 1-pr1: 50%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+ 
+no full sharedKey, no tug, primary/primaryPreferred -- 1-pr2: 100%, 1-pr1: 0%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+ 
+no full sharedKey, no tug, secondary/secondaryPreferred -- 1-pr2: 0%, 1-pr1: 100%, 1-pr0: 100% // 2-pr2: 0%, 2-pr1: 100%, 2-pr0: 100%
+ 
+no full sharedKey, no tug, nearest -- 1-pr2: 100%, 1-pr1: 100%, 1-pr0: 0% // 2-pr2: 100%, 2-pr1: 0%, 2-pr0: 0%
+
+
+
+Trying on training-gl.com:
+
+us-east-1
+primary и primaryPreferred: 100% распределение на PRI подшарды 1-a-2 и 1-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-2.training-gl.com:27001     *0    10     *0     *0       0     5|0       0   3.0G  6.8G 701.0M      0   0|0   0|0    2k    24k   35  1a  PRI 09:45:09
+  mongod-1-b-2.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.3G  5.7G 526.0M      0   0|0   0|0    2k    25k   19  1b  PRI 09:45:09
+
+secondary и secondaryPreferred: 100% распределение на SEC подшарды 1-a-1 и 1-b-1
+db.getMongo().setReadPref("secondary");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-1.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   3.0G  6.8G 596.0M      0   0|0   0|0    2k    23k   40  1a  SEC 09:42:48
+  mongod-1-b-1.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    2k    24k   30  1b  SEC 09:42:48
+
+nearest: 100% запросов получают 1-a и 1-b, примерно 50% распределение внутри шардов. Подшарды 1-a-1 и 1-a-2 получают одинаковое кол-во запросов. Подшарды 1-b-1 и 1-b-2 соответственно так же как и на 1-a-1 и 1-a-2.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-1.training-gl.com:27001     *0     4     *0     *0       0     4|0       0   3.0G  6.8G 596.0M      0   0|0   0|0  922b    22k   41  1a  SEC 09:48:49
+  mongod-1-a-2.training-gl.com:27001     *0     6     *0     *0       0     4|0       0   3.0G  6.8G 701.0M      0   0|0   0|0    1k    23k   37  1a  PRI 09:48:49
+  mongod-1-b-1.training-gl.com:27001     *0     4     *0     *0       0     5|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    1k    23k   31  1b  SEC 09:48:49
+  mongod-1-b-2.training-gl.com:27001     *0     6     *0     *0       0     4|0       0   2.3G  5.8G 526.0M      0   0|0   0|0    1k    24k   24  1b  PRI 09:48:49
+
+
+eu-west-1:
+primary и primaryPreferred: 100% распределение на PRI подшард 2-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-2.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.1G  4.9G 271.0M      0   0|0   0|0    2k    23k   32  2b  PRI 09:54:44
+
+secondary и secondaryPreferred: 100% распределение на SEC подшард 2-b-0
+db.getMongo().setReadPref("secondary");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:55:59
+
+nearest: 100% распределение на SEC подшард 2-b-0.
+  db.getMongo().setReadPref("nearest");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:56:49
+
+
+noregion:
+primary и primaryPreferred: 100% распределение на PRI подшард 2-b-2
+  db.getMongo().setReadPref("primary");db.users2.findOne( { masterRegion: "noregion" } )
+  mongod-2-b-2.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.1G  4.9G 271.0M      0   0|0   0|0    2k    12k   43  2b  PRI 09:59:06
+
+secondary и secondaryPreferred: 100% распределение на SEC подшард 2-b-0
+  db.getMongo().setReadPref("secondary");db.users2.findOne( { masterRegion: "noregion" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     1|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    1k    11k   19  2b  SEC 09:59:48
+
+nearest: 100% распределение на SEC подшард 2-b-0.
+  db.getMongo().setReadPref("nearest");db.users2.findOne( { masterRegion: "noregion" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    11k   19  2b  SEC 10:00:57

@@ -1,0 +1,260 @@
+Task 3: Working with indexes
+
+
+Swith to ivanoffdb database
+mongos> use ivanoffdb
+
+
+For indexes I'll use userfiles collection
+mongos> db.userFiles.find()
+{ "_id" : ObjectId("560a746a38f8e23d297e01e0"), "masterRegion" : "us-east-1", "ownerId" : "560a72ddc0ca684c0c51d4eb", "name" : "readme.txt" }
+{ "_id" : ObjectId("560a746d38f8e23d297e01e1"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "readme.txt" }
+{ "_id" : ObjectId("560a747038f8e23d297e01e2"), "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "index.html" }
+{ "_id" : ObjectId("560a747838f8e23d297e01e3"), "masterRegion" : "us-east-1", "ownerId" : "560a72e7c0ca684c0c51d4ee", "name" : "resume.pdf" }
+{ "_id" : ObjectId("560a824cab39ba8e50fdce80"), "masterRegion" : "us-east-1", "ownerId" : "560a72e1c0ca684c0c51d4ec", "name" : "index.html" }
+{ "_id" : ObjectId("560a8265ab39ba8e50fdce81"), "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "virus.exe" }
+
+
+Create unique index on “files” = masterRegion + ownerId + name.
+mongos> db.userFiles.createIndex( { masterRegion: 1, ownerId: 1, name : 1 }, { unique: true } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443596873, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+Create search index “name” on “files” collection
+mongos> db.userFiles.createIndex( { name : 1 } )
+{
+	"raw" : {
+		"2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001" : {
+			"createdCollectionAutomatically" : false,
+			"numIndexesBefore" : 2,
+			"numIndexesAfter" : 3,
+			"ok" : 1,
+			"$gleStats" : {
+				"lastOpTime" : Timestamp(1443596963, 1),
+				"electionId" : ObjectId("55f17ecfada686a387e05b06")
+			}
+		}
+	},
+	"ok" : 1
+}
+
+
+List of indexes
+mongos> db.userFiles.getIndexes()
+[
+	{
+		"v" : 1,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "ivanoffdb.userFiles"
+	},
+	{
+		"v" : 1,
+		"unique" : true,
+		"key" : {
+			"masterRegion" : 1,
+			"ownerId" : 1,
+			"name" : 1
+		},
+		"name" : "masterRegion_1_ownerId_1_name_1",
+		"ns" : "ivanoffdb.userFiles"
+	},
+	{
+		"v" : 1,
+		"key" : {
+			"name" : 1
+		},
+		"name" : "name_1",
+		"ns" : "ivanoffdb.userFiles"
+	}
+]
+
+
+Try to insert new document with exists parameters of masterRegion, ownerId and name
+mongos> db.userFiles.insert( { "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed", "name" : "index.html" } )
+WriteResult({
+	"nInserted" : 0,
+	"writeError" : {
+		"code" : 11000,
+		"errmsg" : "E11000 duplicate key error index: ivanoffdb.userFiles.$masterRegion_1_ownerId_1_name_1 dup key: { : \"us-east-1\", : \"560a72e4c0ca684c0c51d4ed\", : \"index.html\" }"
+	}
+})
+
+
+Explanation of search of { "name" : "resume.pdf" } shows that db uses "name_1" indexName
+mongos> db.userFiles.find( { "name" : "resume.pdf" } ).explain()
+{
+	"queryPlanner" : {
+		"mongosPlannerVersion" : 1,
+		"winningPlan" : {
+			"stage" : "SINGLE_SHARD",
+			"shards" : [
+				{
+					"shardName" : "2b",
+					"connectionString" : "2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001",
+					"serverInfo" : {
+						"host" : "mongod-2-b-2",
+						"port" : 27001,
+						"version" : "3.0.6",
+						"gitVersion" : "1ef45a23a4c5e3480ac919b28afcba3c615488f2"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "ivanoffdb.userFiles",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"name" : {
+							"$eq" : "resume.pdf"
+						}
+					},
+					"winningPlan" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"name" : 1
+							},
+							"indexName" : "name_1",
+							"isMultiKey" : false,
+							"direction" : "forward",
+							"indexBounds" : {
+								"name" : [
+									"[\"resume.pdf\", \"resume.pdf\"]"
+								]
+							}
+						}
+					},
+					"rejectedPlans" : [ ]
+				}
+			]
+		}
+	},
+	"ok" : 1
+}
+
+
+Explanation of search of { "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed" } shows that db uses "masterRegion_1_ownerId_1_name_1" indexName
+mongos> db.userFiles.find( { "masterRegion" : "us-east-1", "ownerId" : "560a72e4c0ca684c0c51d4ed" } ).explain()
+{
+	"queryPlanner" : {
+		"mongosPlannerVersion" : 1,
+		"winningPlan" : {
+			"stage" : "SINGLE_SHARD",
+			"shards" : [
+				{
+					"shardName" : "2b",
+					"connectionString" : "2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001",
+					"serverInfo" : {
+						"host" : "mongod-2-b-2",
+						"port" : 27001,
+						"version" : "3.0.6",
+						"gitVersion" : "1ef45a23a4c5e3480ac919b28afcba3c615488f2"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "ivanoffdb.userFiles",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"$and" : [
+							{
+								"masterRegion" : {
+									"$eq" : "us-east-1"
+								}
+							},
+							{
+								"ownerId" : {
+									"$eq" : "560a72e4c0ca684c0c51d4ed"
+								}
+							}
+						]
+					},
+					"winningPlan" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"masterRegion" : 1,
+								"ownerId" : 1,
+								"name" : 1
+							},
+							"indexName" : "masterRegion_1_ownerId_1_name_1",
+							"isMultiKey" : false,
+							"direction" : "forward",
+							"indexBounds" : {
+								"masterRegion" : [
+									"[\"us-east-1\", \"us-east-1\"]"
+								],
+								"ownerId" : [
+									"[\"560a72e4c0ca684c0c51d4ed\", \"560a72e4c0ca684c0c51d4ed\"]"
+								],
+								"name" : [
+									"[MinKey, MaxKey]"
+								]
+							}
+						}
+					},
+					"rejectedPlans" : [ ]
+				}
+			]
+		}
+	},
+	"ok" : 1
+}
+
+
+Explanation of search of { "ownerId" : "560a72e4c0ca684c0c51d4ed" } shows that db uses no indexes
+mongos> db.userFiles.find( { "ownerId" : "560a72e4c0ca684c0c51d4ed" } ).explain()
+{
+	"queryPlanner" : {
+		"mongosPlannerVersion" : 1,
+		"winningPlan" : {
+			"stage" : "SINGLE_SHARD",
+			"shards" : [
+				{
+					"shardName" : "2b",
+					"connectionString" : "2b/mongod-2-b-0.training-gl.com:27001,mongod-2-b-1.training-gl.com:27001,mongod-2-b-2.training-gl.com:27001",
+					"serverInfo" : {
+						"host" : "mongod-2-b-2",
+						"port" : 27001,
+						"version" : "3.0.6",
+						"gitVersion" : "1ef45a23a4c5e3480ac919b28afcba3c615488f2"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "ivanoffdb.userFiles",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"ownerId" : {
+							"$eq" : "560a72e4c0ca684c0c51d4ed"
+						}
+					},
+					"winningPlan" : {
+						"stage" : "COLLSCAN",
+						"filter" : {
+							"ownerId" : {
+								"$eq" : "560a72e4c0ca684c0c51d4ed"
+							}
+						},
+						"direction" : "forward"
+					},
+					"rejectedPlans" : [ ]
+				}
+			]
+		}
+	},
+	"ok" : 1
+}
+

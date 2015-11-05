@@ -1,0 +1,100 @@
+Trying on training-gl.com full sharding key:
+
+us-east-1
+primary и primaryPreferred: 100% распределение на PRI подшард 1-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { _id : ObjectId("560ebb01948566175dc50c4a"), masterRegion: "us-east-1" } )
+  mongod-1-b-2.training-gl.com:27001     *0    10     *0     *0       0     7|0       0   2.3G  5.8G 526.0M      0   0|0   0|0    2k    26k   23  1b  PRI 10:43:32
+
+secondary и secondaryPreferred: 100% распределение на SEC подшард 1-b-1
+db.getMongo().setReadPref("secondary");db.users2.findOne( { _id : ObjectId("560ebb01948566175dc50c4a"), masterRegion: "us-east-1" } )
+  mongod-1-b-1.training-gl.com:27001     *0    10     *0     *0       0     5|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    2k    15k   29  1b  SEC 10:44:21
+
+nearest: примерно 100% распределяется внутри подшардов 1-b-1 и 1-b-2.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { _id : ObjectId("560ebb01948566175dc50c4a"), masterRegion: "us-east-1" } )
+  mongod-1-b-1.training-gl.com:27001     *0     4     *0     *0       0     2|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    1k    12k   29  1b  SEC 10:45:36
+  mongod-1-b-2.training-gl.com:27001     *0     6     *0     *0       0     4|0       0   2.3G  5.8G 526.0M      0   0|0   0|0    1k    24k   23  1b  PRI 10:45:36
+
+
+eu-west-1:
+primary и primaryPreferred: 100% распределение на PRI подшард 2-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { _id : ObjectId("560a72ddc0ca684c0c51d4eb"), masterRegion: "eu-west-1" } )
+  mongod-2-b-2.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.1G  4.9G 271.0M      0   0|0   0|0    2k    23k   32  2b  PRI 09:54:44
+
+secondary и secondaryPreferred: 100% распределение на SEC подшард 2-b-0
+db.getMongo().setReadPref("secondary");db.users2.findOne( { _id : ObjectId("560a72ddc0ca684c0c51d4eb"), masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:55:59
+
+nearest: 100% распределение на SEC подшард 2-b-0.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { _id : ObjectId("560a72ddc0ca684c0c51d4eb"), masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:56:49
+
+
+
+Trying on training-gl.com but tug only:
+us-east-1
+primary и primaryPreferred: 100% распределение на PRI подшарды 1-a-2 и 1-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-2.training-gl.com:27001     *0    10     *0     *0       0     5|0       0   3.0G  6.8G 701.0M      0   0|0   0|0    2k    24k   35  1a  PRI 09:45:09
+  mongod-1-b-2.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.3G  5.7G 526.0M      0   0|0   0|0    2k    25k   19  1b  PRI 09:45:09
+
+secondary и secondaryPreferred: 100% распределение на SEC подшарды 1-a-1 и 1-b-1
+db.getMongo().setReadPref("secondary");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-1.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   3.0G  6.8G 596.0M      0   0|0   0|0    2k    23k   40  1a  SEC 09:42:48
+  mongod-1-b-1.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    2k    24k   30  1b  SEC 09:42:48
+
+nearest: 100% запросов получают 1-a и 1-b, примерно 50% распределение внутри шардов. Подшарды 1-a-1 и 1-a-2 получают одинаковое кол-во запросов. Подшарды 1-b-1 и 1-b-2 соответственно так же как и на 1-a-1 и 1-a-2.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { masterRegion: "us-east-1" } )
+  mongod-1-a-1.training-gl.com:27001     *0     4     *0     *0       0     4|0       0   3.0G  6.8G 596.0M      0   0|0   0|0  922b    22k   41  1a  SEC 09:48:49
+  mongod-1-a-2.training-gl.com:27001     *0     6     *0     *0       0     4|0       0   3.0G  6.8G 701.0M      0   0|0   0|0    1k    23k   37  1a  PRI 09:48:49
+  mongod-1-b-1.training-gl.com:27001     *0     4     *0     *0       0     5|0       0   2.3G  5.4G 505.0M      0   0|0   0|0    1k    23k   31  1b  SEC 09:48:49
+  mongod-1-b-2.training-gl.com:27001     *0     6     *0     *0       0     4|0       0   2.3G  5.8G 526.0M      0   0|0   0|0    1k    24k   24  1b  PRI 09:48:49
+
+
+eu-west-1:
+primary и primaryPreferred: 100% распределение на PRI подшард 2-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-2.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.1G  4.9G 271.0M      0   0|0   0|0    2k    23k   32  2b  PRI 09:54:44
+
+secondary и secondaryPreferred: 100% распределение на SEC подшард 2-b-0
+db.getMongo().setReadPref("secondary");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:55:59
+
+nearest: 100% распределение на SEC подшард 2-b-0.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { masterRegion: "eu-west-1" } )
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    2k    12k   19  2b  SEC 09:56:49
+
+
+
+Trying on training-gl.com no shard/tug:
+
+name : "Shaun":
+primary и primaryPreferred: 100% распределение на все PRI подшарды 1-a-2, 1-b-2 и 2-b-2
+db.getMongo().setReadPref("primary");db.users2.findOne( { "name" : "Shaun" } )
+  mongod-1-a-2.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   3.0G  6.8G 698.0M      0   0|0   0|0    2k    12k   36  1a  PRI 11:03:34
+  mongod-1-b-2.training-gl.com:27001     *0    10     *0     *0       0     2|0       0   2.3G  5.8G 526.0M      0   0|0   0|0    1k    12k   24  1b  PRI 11:03:34
+  mongod-2-b-2.training-gl.com:27001     *0    10     *0     *0       1     1|0       0   2.1G  4.9G 271.0M      0   0|0   0|0    1k    12k   43  2b  PRI 11:03:33
+
+secondary и secondaryPreferred: 100% распределение на все SEC подшарды 1-a-1, 1-b-1 и 2-b-0
+db.getMongo().setReadPref("secondary");db.users2.findOne( { "name" : "Shaun" } )
+  mongod-1-a-1.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   3.0G  6.8G 596.0M      0   0|0   0|0    2k    12k   39  1a  SEC 11:04:45
+  mongod-1-b-1.training-gl.com:27001     *0    10     *0     *0       0     4|0       0   2.3G  5.4G 526.0M      0   0|0   0|0    2k    11k   29  1b  SEC 11:04:45
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     3|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    1k    12k   20  2b  SEC 11:04:45
+
+nearest: 100% распределение на подшард 2-b-0, По 100% получили 1-a и 1-b, разделив запросы примерно по 50%.
+db.getMongo().setReadPref("nearest");db.users2.findOne( { "name" : "Shaun" } )
+  mongod-1-a-1.training-gl.com:27001     *0     5     *0     *0       0     2|0       0   3.0G  6.8G 596.0M      0   0|0   0|0  868b    11k   39  1a  SEC 11:05:56
+  mongod-1-a-2.training-gl.com:27001     *0     5     *0     *0       1     2|0       0   3.0G  6.8G 698.0M      0   0|0   0|0  915b    12k   41  1a  PRI 11:05:56
+  mongod-1-b-1.training-gl.com:27001     *0     7     *0     *0       0     2|0       0   2.3G  5.4G 526.0M      0   0|0   0|0    1k    11k   29  1b  SEC 11:05:56
+  mongod-1-b-2.training-gl.com:27001     *0     3     *0     *0       0     2|0       0   2.3G  5.8G 526.0M      0   0|0   0|0  614b    11k   29  1b  PRI 11:05:56
+  mongod-2-b-0.training-gl.com:27001     *0    10     *0     *0       0     1|0       0   2.1G  4.9G 294.0M      0   0|0   0|0    1k    12k   20  2b  SEC 11:05:56
+
+
+
+- full shard key, primary: shard1-pr2=100%, shard1-pr1=0%, shard1-pr0=0% || shard2-pr2=0%, shard2-pr1=0%, shard2-pr0=0%
+- full shard key, nearest: shard1-pr2=100%, shard1-pr1=100%, shard1-pr0=0% || shard2-pr2=0%, shard2-pr1=0%, shard2-pr0=0%
+- has tag, primary: shard1-pr2=100%, shard1-pr1=0%, shard1-pr0=0% || shard2-pr2=100%, shard2-pr1=0%, shard2-pr0=0%
+- has tag, nearest: shard1-pr2=50%, shard1-pr1=50%, shard1-pr0=0% || shard2-pr2=50%, shard2-pr1=50%, shard2-pr0=0%
+- no full shard key and no tag, primary: shard1-pr2=100%, shard1-pr1=0%, shard1-pr0=0% || shard2-pr2=100%, shard2-pr1=0%, shard2-pr0=0%
+- no full shard key and no tag, nearest: shard1-pr2=50%, shard1-pr1=50%, shard1-pr0=0% || shard2-pr2=50%, shard2-pr1=50%, shard2-pr0=0%  || shard3-pr2=100%, shard3-pr1=0%, shard3-pr0=0%
+
+
