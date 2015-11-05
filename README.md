@@ -1,4 +1,4 @@
-# S3 gate API
+# Amazon S3 gate API
 
 
 ## What Is This?
@@ -37,7 +37,7 @@ After start you can send requests to http://localhost:3000
 
 
 
-## S3 gate API Main features
+## Amazon S3 gate API Main features
 
 * Based on token authentication
 * Access to following resources without access token: '/', '/login', '/register'
@@ -64,7 +64,7 @@ After start you can send requests to http://localhost:3000
 
 
 
-## S3 gate API documentation version v1
+## Amazon S3 gate API documentation version v1
 
 ####You can find additional information, including raml file in docs/ folder
 
