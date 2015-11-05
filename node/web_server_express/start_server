@@ -1,6 +1,0 @@
-while true; do
-    echo "STARTING S3 GATE API SERVER"
-    node ./index.js
-    echo "PRESS ENTER TO RESTART OR CTRL-C TO EXIT"
-    read
-done

@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"ivanoffdb_w.users"},{"v":1,"unique":true,"key":{"login":1.0},"name":"login_1","ns":"ivanoffdb_w.users"},{"v":1,"unique":true,"key":{"email":1.0},"name":"email_1","ns":"ivanoffdb_w.users"}]}
