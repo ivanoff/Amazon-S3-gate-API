@@ -1,7 +1,7 @@
 {
-  "name": "web_server_express",
-  "version": "0.0.2",
-  "description": "web server using the NodeJS and MongoDB",
+  "name": "amazon-s3-gate-api",
+  "version": "1.0.0",
+  "description": "Amazon S3 gate API",
   "main": "index.js",
   "dependencies": {
     "async": "^1.4.2",
