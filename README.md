@@ -512,6 +512,8 @@ unique index: **name, userType**
 
 There is a count of errors that can be encountered. All these errors are in config file.
   * 21 - Acess denied 
+  * 32 - No read folder access
+  * 33 - No write folder access
   * 91 - Unauthorized 
   * 92 - Bad token 
   * 93 - Token to old 
