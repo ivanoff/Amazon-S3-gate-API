@@ -83,7 +83,8 @@ exports.updateUser = function( req, res, next ) {
         if( req.body.password ) doc.password = md5( doc.password );
 
         UsersModel.validate( doc, function( err ) {
-            if ( err ) { req.status=400; return next(err) }
+            // to-do update validator
+            if ( err ) { res.status=400; return next(err) }
 
             UsersModel.update( req, doc, function( err, result, next ){
                 if ( err ) return req.error(err);

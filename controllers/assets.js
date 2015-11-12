@@ -159,7 +159,8 @@ exports.addAsset = function( req, res, next ) {
         // add asset to database and upload to S3 if it's file type
         function( next ){ 
             AssetsModel.validate( doc, function( err ) {
-                if( err ) { req.status=400; return next(err) }
+                // to-do update validator
+                if( err ) { res.status=400; return next(err) }
 
                 AssetsModel.add( req, doc, function( err, result, next ){
                     if( err ) return req.error(err);
@@ -197,7 +198,8 @@ exports.updateAsset = function( req, res, next ) {
         doc = _.extend( doc, req.body );
 
         AssetsModel.validate( doc, function( err ) {
-            if ( err ) { req.status=400; return next(err) }
+            // to-do update validator
+            if ( err ) { res.status=400; return next(err) }
 
             AssetsModel.update( req, req.params.assetId, doc, function( err, result, next ){
                 if ( err ) return req.error(err);
