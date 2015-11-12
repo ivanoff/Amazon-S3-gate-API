@@ -35,15 +35,14 @@ var log = bunyan.createLogger( {
 
 // error and nice loging function
 var error_and_log = function ( error, res ){
-    if( !error ) error = ERROR.UNKNOWN_ERROR;
-    var e = error; 
+    var e = error || ERROR.UNKNOWN_ERROR;
+    // global error goes to developerMessage
     if( error.errmsg ) {
         e = ERROR.SERVER_ERROR;
         e.developerMessage = error;
     }
+    res.status( e.status || 400 );
     log.error( e );
-    if( e.status ) res.status( e.status )
-    else res.status(400);
     res.json( e );
     return e;
 }
