@@ -34,7 +34,7 @@ var log = bunyan.createLogger( {
 });
 
 // error and nice loging function
-var error_and_log = function ( error ){
+var error_and_log = function ( error, res ){
     if( !error ) error = ERROR.UNKNOWN_ERROR;
     var e = error; 
     if( error.errmsg ) {
@@ -50,7 +50,7 @@ var error_and_log = function ( error ){
 
 app.use( function( req, res, next ){ 
     req.db    = db.get(); 
-    req.error = error_and_log;
+    req.error = function( error ) { error_and_log ( error, res ) };
     next();
 });
 
