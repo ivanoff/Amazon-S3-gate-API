@@ -16,8 +16,8 @@ Simple api for S3 Amazon file storage
 ## Install
 
 ```
-git clone https://github.com/ivanoff/gl/
-cd gl/node/web_server_express/install
+git clone https://github.com/ivanoff/Amazon-S3-gate-API/
+cd Amazon-S3-gate-API/install
 ./mongo_install {DB_URL} {DB_LOGIN} {DB_PASSWORD} {DB_DATABASE}
 cd ../
 ```
