@@ -2,6 +2,7 @@
 
 var vm = require('validate-me');
 var ResourcesModel = require('./resources');
+var aws = require('../lib/aws');
 
 var ERROR = require('config').get('ERRORS');
 
@@ -82,7 +83,7 @@ module.exports = {
                 cursor.each(function(err, item) {
                     if( item ) {
                         ResourcesModel.updateResources( req, item, -1, function(){} )
-                        req.aws.remove( { fileId: item['_id'], userId: req.currentUser._id }, function(){} );
+                        aws.remove( { fileId: item['_id'], userId: req.currentUser._id }, function(){} );
                     }
                 });
                 req.db.collection(this.modelName)

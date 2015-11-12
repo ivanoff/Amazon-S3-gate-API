@@ -3,8 +3,11 @@ var fs     = require( 'fs'     );
 var fs2    = require('fs-extra')
 var mkdirp = require( 'mkdirp' );
 var async  = require( 'async'  );
-var uuid   = require( 'node-uuid' );
-var EasyZip = require('easy-zip').EasyZip;
+var uuid   = require( 'node-uuid'  );
+var _      = require( 'underscore' );
+var EasyZip= require( 'easy-zip'   ).EasyZip;
+
+var aws = require('../lib/aws');
 
 var AssetsModel = require('../models/assets');
 var OptionsModel = require('../models/options');
@@ -57,7 +60,7 @@ exports.getAssetContentById = function( req, res, next ) {
         var dir = '/tmp/'+doc._id;
         if ( doc.type != 'folder' ) {
           // download and send file content with real filename
-          req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+          aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
             res.download(dir, doc['name'], function(){ 
               fs.unlink(dir);
             });
@@ -73,7 +76,7 @@ exports.getAssetContentById = function( req, res, next ) {
                   if( d.type == 'folder' ) d.path += '/'+d.name;
                   mkdirp( d.path, function ( err ) {
                     if( d.type != 'folder' ) {
-                      req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+                      aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
                         res.download(d.path, doc['name'], function(){});
                       });
                     }
@@ -161,7 +164,7 @@ exports.addAsset = function( req, res, next ) {
                 AssetsModel.add( req, doc, function( err, result, next ){
                     if( err ) return req.error(err);
                     if( req.files ) {
-                        req.aws.upload( { filePath: req.files.file.path,
+                        aws.upload( { filePath: req.files.file.path,
                             fileId: doc['_id'], userId: doc['userId'] }, function(){
                                 fs.unlink( req.files.file.path );
                             } );
@@ -191,7 +194,7 @@ exports.updateAsset = function( req, res, next ) {
         if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
 
-        doc = req._.extend( doc, req.body );
+        doc = _.extend( doc, req.body );
 
         AssetsModel.validate( doc, function( err ) {
             if ( err ) { req.status=400; return next(err) }
@@ -290,7 +293,7 @@ exports.removeAsset = function( req, res, next ) {
     AssetsModel.remove( req, function( err, doc ){
         if ( err  ) return req.error(err);
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
-        req.aws.remove( { fileId: req.params.assetId, userId: req.currentUser._id }, function(){} );
+        aws.remove( { fileId: req.params.assetId, userId: req.currentUser._id }, function(){} );
         res.json( { ok : 1, _id: req.params.assetId } );
     });
 };
@@ -300,7 +303,7 @@ exports.removeAsset = function( req, res, next ) {
  */
 exports.removeAllUsersAssets = function( req, res, next ) {
     AssetsModel.removeAll( req, function( err, doc ){
-        req.aws.remove( { fileId: req.currentUser._id }, function(){} );
+        aws.remove( { fileId: req.currentUser._id }, function(){} );
         if ( err ) return req.error(err);
     });
 };

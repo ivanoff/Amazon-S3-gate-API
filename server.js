@@ -6,20 +6,24 @@ var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var _ = require('underscore');
 
+var aws = require('./lib/aws');
+var db  = require('./lib/db');
+
+var app = new express();
+
 var DB_URL   = config.get( 'DB_URL' ) || process.env.DB_URL;
 if( process.env.DB_AUTH ) DB_URL = 'mongodb://'+process.env.DB_AUTH+'@'+DB_URL;
 
-// config preparing
+// config part
 var PORT     = process.env.SERVER_PORT || config.get( 'SERVER_PORT' ) || 3000,
     LOG_PATH = process.env.LOG_PATH    || config.get( 'LOG_PATH' )    || './log',
     AWS      = config.get( 'AWS' ),
-    ERROR    = config.get( 'ERRORS' ),
-    TOKEN_PARAMS = config.get( 'TOKEN' );
+    ERROR    = config.get( 'ERRORS' );
 
 if( process.env.AWS_KEY ) AWS.accessKeyId = process.env.AWS_KEY;
 AWS.secretAccessKey = process.env.AWS_SECRET;
 
-// loging preparing
+// loging part
 var log = bunyan.createLogger( { 
   name: "server",
   port: PORT,
@@ -29,32 +33,25 @@ var log = bunyan.createLogger( {
   ]
 });
 
-var app = new express();
-
-var db  = require('./lib/db');
-var aws = require('./lib/aws');
+// error and nice loging function
+var error_and_log = function ( error ){
+    if( !error ) error = ERROR.UNKNOWN_ERROR;
+    var e = error; 
+    if( error.errmsg ) {
+        e = ERROR.SERVER_ERROR;
+        e.developerMessage = error;
+    }
+    log.error( e );
+    if( e.status ) res.status( e.status )
+    else res.status(400);
+    res.json( e );
+    return e;
+}
 
 app.use( function( req, res, next ){ 
-    req._     = _; 
     req.db    = db.get(); 
-    req.aws   = aws;
-    req.log   = log; 
-    req.TOKEN_PARAMS = TOKEN_PARAMS; 
-    // error module: check error, store to log file, set status
-    req.error = function( error ){
-                    if( !error ) error = ERROR.UNKNOWN_ERROR;
-                    var e = error; 
-                    if( error.errmsg ) {
-                        e = ERROR.SERVER_ERROR;
-                        e.developerMessage = error;
-                    }
-                    req.log.error( e );
-                    if( e.status ) res.status( e.status )
-                    else res.status(400);
-                    res.json( e );
-                    return e;
-                }; 
-    next() 
+    req.error = error_and_log;
+    next();
 });
 
 app.use( bodyParser.json() );

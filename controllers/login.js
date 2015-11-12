@@ -1,6 +1,7 @@
 "use strict"
 var jwt = require('jsonwebtoken');
 var md5 = require('md5');
+var config = require('config');
 
 var UsersModel = require('../models/users');
 
@@ -21,8 +22,8 @@ exports.login = function (req, res, next) {
         if ( err  ) return req.error(err);
         if ( !doc ) return req.error( ERROR.USER_NOT_FOUND );
 
-	var token = jwt.sign( doc['_id'], req.TOKEN_PARAMS.secret , {
-	    expiresIn: req.TOKEN_PARAMS.expire
+	var token = jwt.sign( doc['_id'], config.TOKEN.secret , {
+	    expiresIn: config.TOKEN.expire
 	});
 	res.json( { token: token,
             _links : {
@@ -42,7 +43,7 @@ exports.middleWare = function( req, res, next ){
     var token = req.body.token || req.params.token || req.headers['x-access-token'];
     if( !token ) req.error( ERROR.NO_TOKEN )
     else {
-        jwt.verify(token, req.TOKEN_PARAMS.secret, function(err, decoded) {			
+        jwt.verify(token, config.TOKEN.secret, function(err, decoded) {			
             if (err) { req.error( ERROR.BAD_TOKEN ) }
             else {
                 UsersModel.getById( req, decoded, function( err, doc ){

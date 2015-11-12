@@ -1,6 +1,7 @@
 "use strict"
 var md5  = require('md5');
-var uuid = require( 'node-uuid' );
+var uuid = require('node-uuid' );
+var _    = require('underscore');
 
 var UsersModel      = require('../models/users');
 var assetController = require('./assets');
@@ -78,7 +79,7 @@ exports.updateUser = function( req, res, next ) {
         if ( err  ) return req.error(err);
         if ( !doc ) return req.error( ERROR.USER_NOT_FOUND );
 
-        doc = req._.extend( doc, req.body );
+        doc = _.extend( doc, req.body );
         if( req.body.password ) doc.password = md5( doc.password );
 
         UsersModel.validate( doc, function( err ) {

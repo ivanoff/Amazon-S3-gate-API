@@ -260,6 +260,11 @@ describe('web server express testing', function () {
         ])
     });
 
+// to-do add check uploaded file content
+// to-do add move recursive folder or file
+// to-do add remove recursive folder or file
+// to-do add remove user and all folders and files his own
+
     it('List all files in root folder', function (done) {
         request(url)
         .get('/assets')
