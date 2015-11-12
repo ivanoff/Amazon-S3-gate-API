@@ -1,6 +1,12 @@
 # Amazon S3 gate API
 
 
+## API defenition
+
+http://s3.simpleness.org/API.html
+
+
+
 ## What Is This?
 
 Simple api for S3 Amazon file storage

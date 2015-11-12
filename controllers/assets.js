@@ -3,6 +3,8 @@ var fs     = require( 'fs'     );
 var fs2    = require('fs-extra')
 var mkdirp = require( 'mkdirp' );
 var async  = require( 'async'  );
+var uuid   = require( 'node-uuid' );
+var EasyZip = require('easy-zip').EasyZip;
 
 var AssetsModel = require('../models/assets');
 var OptionsModel = require('../models/options');
@@ -54,40 +56,41 @@ exports.getAssetContentById = function( req, res, next ) {
         if ( !doc ) { return req.error( ERROR.ASSET_NOT_FOUND ) }
         var dir = '/tmp/'+doc._id;
         if ( doc.type != 'folder' ) {
-            // download and send file content with real filename
-            req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
-                res.download(dir, doc['name'], function(){ 
-                    fs.unlink(dir);
-                });
+          // download and send file content with real filename
+          req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+            res.download(dir, doc['name'], function(){ 
+              fs.unlink(dir);
             });
+          });
         } else {
-            // download all directory and send it zipped with dirname.zip name
-            if ( !fs.existsSync(dir) ) fs.mkdirSync(dir);
-            AssetsModel.search( req, { path : new RegExp( '^'+doc.path+'/'+doc.name+'(/.*)?$' ) }, function( err, docs ){
+          // download all directory and send it zipped with dirname.zip name
+          fs.access( dir, fs.W_OK, function( err ){ 
+            if( err ) next( ERROR.FOLDER_NO_WRITE_ACCES );
+            fs.mkdir( dir, function(){
+              AssetsModel.search( req, { path : new RegExp( '^'+doc.path+'/'+doc.name+'(/.*)?$' ) }, function( err, docs ){
                 docs.forEach( function( d ) {
-                    d.path = d.path.replace( new RegExp( '^'+doc.path ), dir );
-                    if( d.type == 'folder' ) d.path += '/'+d.name;
-                    mkdirp( d.path, function ( err ) {
-                        if( d.type != 'folder' ) {
-                            req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
-                                res.download(d.path, doc['name'], function(){});
-                            });
-                        }
-                    });
+                  d.path = d.path.replace( new RegExp( '^'+doc.path ), dir );
+                  if( d.type == 'folder' ) d.path += '/'+d.name;
+                  mkdirp( d.path, function ( err ) {
+                    if( d.type != 'folder' ) {
+                      req.aws.download( { fileId: doc['_id'], userId: doc['userId'] }, function(){
+                        res.download(d.path, doc['name'], function(){});
+                      });
+                    }
+                  });
                 });
+              });
             });
-
-            var EasyZip = require('easy-zip').EasyZip;
             var zip = new EasyZip();
             zip.zipFolder(dir+'/'+doc.name,function(){
                 zip.writeToFile(dir+'.zip', function() {
-                    res.download(dir+'.zip', doc.name+'.zip', function(){ 
-                        fs.unlink(dir+'.zip');
-                        fs2.remove(dir, function(error){});
-                    });
+                  res.download(dir+'.zip', doc.name+'.zip', function(){ 
+                      fs.unlink(dir+'.zip');
+                      fs2.remove(dir, function(error){});
+                  });
                 });
             });
-
+          });  
         }
     });
 };
@@ -101,7 +104,7 @@ exports.getAssetContentById = function( req, res, next ) {
  */
 exports.addAsset = function( req, res, next ) {
     var doc    = req.body;
-    doc['_id'] = req.uuid.v4();
+    doc['_id'] = uuid.v4();
     doc['userId'] = req.currentUser._id;
     if( req.files ) {
         doc['type'] = req.files.file.type.replace(/(\/.*)/,'');

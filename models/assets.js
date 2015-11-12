@@ -74,6 +74,7 @@ module.exports = {
             if ( !doc ) { req.error( 404, ERROR.ASSET_NOT_FOUND ); return next() }
 
             if( doc.type == 'folder' ) {
+//to-do controllers to controllers
                 //delete all nested assets in folder
                 var path = doc.path + '/' + doc.name;
                 var cursor = req.db.collection(this.modelName)

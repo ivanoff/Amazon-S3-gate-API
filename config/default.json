@@ -27,6 +27,14 @@
             "developerMessage" : "Acess to this resource is denied. You can contact administrator in case of mistake.",
             "url" : "https://doc.site.url/errors/21", "status" : "403" },
 
+    "FOLDER_NO_READ_ACCES" : { "code" : "32", "message" : "No read access", 
+            "developerMessage" : "No read access to local folder. We already know about it and try to fix it.",
+            "url" : "https://doc.site.url/errors/32", "status" : "500" },
+
+    "FOLDER_NO_WRITE_ACCES" : { "code" : "33", "message" : "No write access", 
+            "developerMessage" : "No write access to local folder. We already know about it and try to fix it.",
+            "url" : "https://doc.site.url/errors/33", "status" : "500" },
+
     "NO_TOKEN"  : { "code" : "91", "message" : "Unauthorized", 
             "developerMessage" : "No token provided. Please POST login and password to /login to get token",
             "url" : "https://doc.site.url/errors/91", "status" : "401" },

@@ -1,5 +1,6 @@
 "use strict"
-var md5 = require('md5');
+var md5  = require('md5');
+var uuid = require( 'node-uuid' );
 
 var UsersModel      = require('../models/users');
 var assetController = require('./assets');
@@ -41,7 +42,7 @@ exports.getUserById = function( req, res, next ) {
  */
 exports.addUser = function( req, res, next ) {
     var doc    = req.body;
-    doc._id = req.uuid.v4();
+    doc._id = uuid.v4();
     doc.password = md5( doc['password'] );
 
     UsersModel.validate( doc, function( err ) {
